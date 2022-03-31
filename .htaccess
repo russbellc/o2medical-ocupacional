@@ -1,0 +1,6 @@
+IndexIgnore *.php *.js *.css *.png *.jpg *.jpeg *.rar *.zip *.txt *.log  *.db *.pdf *.gif *.svg *.*
+Options +FollowSymlinks
+RewriteEngine on
+RewriteRule ^code/?$ system/loader.php [L,NC]
+RewriteRule ^code/([a-zA-Z0-9\_]+)(/)?([a-zA-Z]+)?(/)?(.*)?$ system/loader.php?sys_acction=$1&format=$3&$5 [L,NC]
+RewriteRule ^images/(.*)?$ system/images/$1 [L,NC]

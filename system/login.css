@@ -1,0 +1,111 @@
+
+/*body {
+    background: url(../../images/codelab.svg) no-repeat;
+    font-family: 'Cabin', helvetica, arial, sans-serif;
+    background-attachment:fixed;
+    background-position:center;
+}*/
+body {
+    background: url(../../images/fondo.svg) no-repeat #023881 center center;
+    /*background: #01285c;*/
+    background-attachment:fixed;
+    background-position:center;
+}
+.login_btn{
+    background-image: url('../../images/login-icon.png') !important;
+}
+input {
+/*  background: #222;
+  background: linear-gradient(#333333, #222222);*/
+  border: 1px solid #444;
+  border-radius: 5px;
+  /*box-shadow: 0 2px 0 #000;*/
+  color: #888;
+  display: block;
+  font-family: 'Cabin', helvetica, arial, sans-serif;
+  font-size: 13px;
+  font-size: 1.3rem;
+  /*height: 40px;*/
+  /*margin: 20px auto 10px;*/
+  padding: 0 10px;
+  text-shadow: 0 -1px 0 #000;
+  /*width: 400px;*/
+}
+input:focus {
+  animation: box-glow 1s ease-out infinite alternate;
+/*  background: #0B4252;
+  background: linear-gradient(#333933, #222922);*/
+  border-color: #01285c;
+  box-shadow: 0 0 5px rgba(0, 255, 253, 0.2), inset 0 0 5px rgba(0, 255, 253, 0.1), 0 2px 0 black;
+  color: #01285c;
+  outline: none;
+}
+.txt-user{
+    background: #fff url('../../images/user-icon.png') no-repeat;
+    background-position: 0px 2px;
+    padding-left: 20px;
+}
+.txt-password{
+    background: #fff url('../../images/password-icon.png') no-repeat;
+    background-position: 0px 2px;
+    padding-left: 20px;
+}
+#images-view .x-panel-body{
+    background: white;
+    font: 11px Arial, Helvetica, sans-serif;
+}
+#images-view .thumb{
+    background: #dddddd;
+    padding: 3px;
+}
+#images-view .thumb img{
+    height: 90px;
+    width: 210px;
+}
+#images-view .thumb-wrap{
+    float: left;
+    margin: 4px;
+    margin-right: 0;
+    padding: 5px;
+}
+#images-view .thumb-wrap span{
+    display: block;
+    overflow: hidden;
+    text-align: center;
+}
+
+#images-view .x-view-over{
+    border:1px solid #dddddd;
+    background: #efefef url(extras/extjs/resources/images/default/grid/row-over.gif) repeat-x left top;
+    padding: 4px;
+}
+
+#images-view .x-view-selected{
+    background: #eff5fb url(images/selected.gif) no-repeat right bottom;
+    border:1px solid #99bbe8;
+    padding: 4px;
+}
+#images-view .x-view-selected .thumb{
+    background:transparent;
+}
+
+#images-view .loading-indicator {
+    font-size:11px;
+    background-image:url('../../resources/images/default/grid/loading.gif');
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left:20px;
+    margin:10px;
+}
+/*.thumb-wrap span{
+        display: block;
+        overflow: hidden;
+        text-align: center;
+}
+.x-view-over{
+    border:1px solid #dddddd;
+    background: #efefef url(extras/images/default/grid/row-over.gif) repeat-x left top;
+        padding: 4px;
+}*/
+.position { position:absolute; }
+.logo { background:transparent url(../../images/img.png) no-repeat;height:100%;left:0px;top:0px;width:100%;}
