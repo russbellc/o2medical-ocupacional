@@ -78,9 +78,8 @@ $pdf->Image('images/bambas.png', 16, 7, 20, '', 'PNG');
 
 $pdf->SetFont('helvetica', 'B', 10);
 //$pdf->Ln(4);
-$pdf->Cell(40, $h * 4, '', 0, 0, 'C', 0);
-$pdf->MultiCell(100, $h * 4, '
-EXAMEN OCUPACIONAL PARA ESPACIOS CONFINADOS', 0, 'C', 0, 0);
+$pdf->Cell(20, $h * 4, '', 0, 0, 'C', 0);
+$pdf->Cell(120, $h * 4, 'EXAMEN OCUPACIONAL PARA ESPACIOS CONFINADOS', 0, 0, 'C', 0);
 $pdf->SetFont('helvetica', 'B', 8);
 $pdf->Cell(40, $h * 4, $altura->data[0]->m_psico_altura_aptitud, 1, 1, 'C', 1);
 //$pdf->Ln(8);
@@ -336,7 +335,8 @@ $pdf->Ln($salto);
 //=====================================================================>>>>>>>> CABEZERA  MATRIZ CENTRAL
 //=====================================================================>>>>>>>> CABEZERA  MATRIZ CENTRAL
 $pdf->SetFont('helvetica', 'B', $titulo);
-$pdf->MultiCell(30, $h * 11, '
+$pdf->Cell(20, $h, 'FRECUENCIA:', 1, 0, 'C', 1);
+// $pdf->MultiCell(30, $h * 11, '
 
 
 
@@ -345,7 +345,7 @@ $pdf->MultiCell(30, $h * 11, '
 
 
 
-TEST DE CAGE', 1, 'C', 1, 0); //===>TITULO
+// TEST DE CAGE', 1, 'C', 1, 0); //===>TITULO
 $pdf->Cell(110, $h, 'PREGUNTAS', 1, 0, 'L', 1); //===>TITULO
 $pdf->Cell(20, $h, 'RESPUESTA', 1, 0, 'C', 1); //===>TITULO
 $pdf->Cell(20, $h, 'PUNTAJE', 1, 1, 'C', 1); //===>TITULO
