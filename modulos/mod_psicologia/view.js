@@ -327,6 +327,9 @@ mod.psicologia.formatos = {
 					} else if (record.get("ex_id") == 59) {
 						//examen ALTURA
 						mod.psicologia.psicologia_altura.init(record);
+					} else if (record.get("ex_id") == 69) {
+						//EXAMEN PARA ESPACIOS CONFINADOS
+						mod.psicologia.psico_confinados.init(record);
 					} else {
 						mod.psicologia.examenPRE.init(record); //
 					}
@@ -435,9 +438,80 @@ mod.psicologia.formatos = {
 									},
 								],
 							}).showAt(event.xy);
+						} else if (record.get("ex_id") == 69) {
+							//PSICOLOGIA - LAS BAMBAS
+							new Ext.menu.Menu({
+								items: [
+									{
+										text:
+											"EXAMEN PARA ESPACIOS CONFINADOS N°: <B>" +
+											record.get("adm") +
+											"<B>",
+										iconCls: "reporte",
+										handler: function () {
+											if (record.get("st") >= 1) {
+												new Ext.Window({
+													title:
+														"EXAMEN OCUPACIONAL PARA ESPACIOS CONFINADOS N° " +
+														record.get("adm"),
+													width: 800,
+													height: 600,
+													maximizable: true,
+													modal: true,
+													closeAction: "close",
+													resizable: true,
+													html:
+														"<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_psicologia&sys_report=formato_altura180&adm=" +
+														record.get("adm") +
+														"'></iframe>",
+												}).show();
+											} else {
+												Ext.MessageBox.alert(
+													"Observaciones",
+													"El paciente no fue registrado correctamente"
+												);
+											}
+										},
+									},
+								],
+							}).showAt(event.xy);
 						}
-					} //
+					}
+					/////////////////////////////////////////////
+					/////////////////////////////////////////////
+					/////////////////////////////////////////////
+					new Ext.menu.Menu({
+						items: [
+							{
+								text:
+									"EXAMEN PARA ESPACIOS CONFINADOS N°: <B>" +
+									record.get("adm") +
+									"<B>",
+								iconCls: "reporte",
+								handler: function () {
+									new Ext.Window({
+										title:
+											"EXAMEN OCUPACIONAL PARA ESPACIOS CONFINADOS N° " +
+											record.get("adm"),
+										width: 800,
+										height: 600,
+										maximizable: true,
+										modal: true,
+										closeAction: "close",
+										resizable: true,
+										html:
+											"<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_psicologia&sys_report=formato_esp_confinados&adm=" +
+											record.get("adm") +
+											"'></iframe>",
+									}).show();
+								},
+							},
+						],
+					}).showAt(event.xy);
 				},
+				/////////////////////////////////////////////
+				/////////////////////////////////////////////
+				/////////////////////////////////////////////
 			},
 			autoExpandColumn: "cuest_desc",
 			columns: [
@@ -5262,6 +5336,1026 @@ mod.psicologia.altura_conclu = {
 			title: "REGISTRO DE RECOMENDACIONES Y CONCLUSIONES",
 			border: false,
 			maximizable: true,
+			resizable: false,
+			draggable: true,
+			closable: true,
+			layout: "border",
+			items: [this.frm],
+		});
+	},
+};
+
+mod.psicologia.psico_confinados = {
+	win: null,
+	frm: null,
+	record: null,
+	init: function (r) {
+		this.record = r;
+		this.crea_stores();
+		this.crea_controles();
+		this.list_conclu_altu_psico.load();
+		if (this.record.get("st") >= 1) {
+			this.cargar_data();
+		}
+		this.win.show();
+	},
+	cargar_data: function () {
+		this.frm.getForm().load({
+			waitMsg: "Recuperando Informacion...",
+			waitTitle: "Espere",
+			params: {
+				acction: "load_psico_confinados",
+				format: "json",
+				adm: mod.psicologia.psico_confinados.record.get("adm"),
+				//                ,examen: mod.psicologia.psico_confinados.record.get('ex_id')
+			},
+			scope: this,
+			success: function (frm, action) {
+				r = action.result.data;
+				//                mod.psicologia.psico_confinados.val_medico.setValue(r.val_medico);
+				//                mod.psicologia.psico_confinados.val_medico.setRawValue(r.medico_nom);
+			},
+		});
+	},
+	crea_stores: function () {
+		this.list_conclu_altu_psico = new Ext.data.JsonStore({
+			url: "<[controller]>",
+			baseParams: {
+				acction: "list_conclu_altu_psico",
+				format: "json",
+			},
+			root: "data",
+			totalProperty: "total",
+			fields: [
+				"conclu_altu_psico_id",
+				"conclu_altu_psico_adm",
+				"conclu_altu_psico_desc",
+			],
+			listeners: {
+				beforeload: function (store, options) {
+					this.baseParams.adm =
+						mod.psicologia.psico_confinados.record.get("adm");
+				},
+			},
+		});
+	},
+	crea_controles: function () {
+		// m_psico_confinados_preg01
+		this.m_psico_confinados_preg01 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_preg01",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_preg02
+		this.m_psico_confinados_preg02 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_preg02",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_preg03
+		this.m_psico_confinados_preg03 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_preg03",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_preg04
+		this.m_psico_confinados_preg04 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_preg04",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_preg05
+		this.m_psico_confinados_preg05 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_preg05",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_preg06
+		this.m_psico_confinados_preg06 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_preg06",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_preg07
+		this.m_psico_confinados_preg07 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_preg07",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_preg08
+		this.m_psico_confinados_preg08 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_preg08",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_preg09
+		this.m_psico_confinados_preg09 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_preg09",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_preg10
+		this.m_psico_confinados_preg10 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_preg10",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_preg11
+		this.m_psico_confinados_preg11 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_preg11",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_preg12
+		this.m_psico_confinados_preg12 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_preg12",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_preg13
+		this.m_psico_confinados_preg13 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_preg13",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_preg14
+		this.m_psico_confinados_preg14 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_preg14",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_entrena_confina
+		this.m_psico_confinados_entrena_confina = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			fieldLabel:
+				"<b>RECIBIÓ ENTRENAMIENTO PARA TRABAJOS EN ESPACIOS CONFINADOS</b>",
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_entrena_confina",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_prim_auxilios
+		this.m_psico_confinados_prim_auxilios = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SI", "SI"],
+					["NO", "NO"],
+					["-", "-"],
+				],
+			}),
+			fieldLabel: "<b>¿RECIBIÓ ENTRENAMIENTO EN PRIMEROS AUXILIOS?</b>",
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_prim_auxilios",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_fobia_claustro
+		this.m_psico_confinados_fobia_claustro = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["APTO", "APTO"],
+					["NO APTO", "NO APTO"],
+					["-", "-"],
+				],
+			}),
+			fieldLabel: "<b>DESCARTE DE FOBIA - CLAUSTROFOBIA</b>",
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_fobia_claustro",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_bat7
+		this.m_psico_confinados_bat7 = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["APTO", "APTO"],
+					["NO APTO", "NO APTO"],
+					["-", "-"],
+				],
+			}),
+			fieldLabel: "<b>BAT-7  (SUB ESCALA DE ORIENTACION ESPACIAL)</b>",
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_bat7",
+			allowBlank: false,
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_psico_confinados_formato
+		this.m_psico_confinados_formato = new Ext.form.TextField({
+			fieldLabel: "<b>Hoja de entrevista formato establecido</b>",
+			allowBlank: false,
+			name: "m_psico_confinados_formato",
+			anchor: "95%",
+		});
+		// m_psico_confinados_cuest_temores
+		this.m_psico_confinados_cuest_temores = new Ext.form.TextField({
+			fieldLabel: "<b>Cuestionario de temores</b>",
+			allowBlank: false,
+			name: "m_psico_confinados_cuest_temores",
+			anchor: "95%",
+		});
+		// m_psico_confinados_aptitud
+		this.m_psico_confinados_aptitud = new Ext.form.RadioGroup({
+			fieldLabel: "<b>APTITUD</b>",
+			itemCls: "x-check-group-alt",
+			columns: 1,
+			items: [
+				{
+					boxLabel: "APTO",
+					name: "m_psico_confinados_aptitud",
+					inputValue: "APTO",
+				},
+				{
+					boxLabel: "APTO CON RESTRICCIONES",
+					name: "m_psico_confinados_aptitud",
+					inputValue: "APTO CON RESTRICCIONES",
+				},
+				{
+					boxLabel: "NO APTO",
+					name: "m_psico_confinados_aptitud",
+					inputValue: "NO APTO",
+				},
+				{
+					boxLabel: "EN PROCESO DE VALIDACION",
+					name: "m_psico_confinados_aptitud",
+					inputValue: "EN PROCESO DE VALIDACION",
+					checked: true,
+				},
+			],
+		});
+
+		this.tbar4 = new Ext.Toolbar({
+			items: [
+				"->",
+				'<b style="color:#000000;">RECOMENDACIONES Y CONCLUSIONES</b>',
+				"-",
+				{
+					text: "Nuevo",
+					iconCls: "nuevo",
+					handler: function () {
+						mod.psicologia.altura_conclu.init(null);
+					},
+				},
+			],
+		});
+		this.dt_grid4 = new Ext.grid.GridPanel({
+			store: this.list_conclu_altu_psico,
+			region: "west",
+			border: true,
+			tbar: this.tbar4,
+			loadMask: true,
+			iconCls: "icon-grid",
+			plugins: new Ext.ux.PanelResizer({
+				minHeight: 100,
+			}),
+			height: 260,
+			listeners: {
+				rowdblclick: function (grid, rowIndex, e) {
+					e.stopEvent();
+					var record2 = grid.getStore().getAt(rowIndex);
+					mod.psicologia.altura_conclu.init(record2);
+				},
+			},
+			autoExpandColumn: "reco_desc",
+			columns: [
+				new Ext.grid.RowNumberer(),
+				{
+					id: "reco_desc",
+					header: "CONCLUSIONES",
+					dataIndex: "conclu_altu_psico_desc",
+				},
+			],
+		});
+
+		this.frm = new Ext.FormPanel({
+			region: "center",
+			url: "<[controller]>",
+			monitorValid: true,
+			border: false,
+			layout: "accordion",
+			layoutConfig: {
+				titleCollapse: true,
+				animate: true,
+				hideCollapseTool: true,
+			},
+			items: [
+				{
+					title: "<b>--->  EXAMEN PARA ESPACIOS CONFINADOS</b>",
+					iconCls: "demo2",
+					layout: "column",
+					autoScroll: true,
+					border: false,
+					bodyStyle: "padding:10px 10px 20px 10px;",
+					labelWidth: 60,
+					items: [
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.99,
+							labelWidth: 800,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									title: "¿CUANDO ESTAS EN UN AMBIENTE CHICO CERRADO SIENTES?",
+									items: [
+										{
+											xtype: "compositefield",
+											items: [
+												{
+													xtype: "displayfield",
+													value: "<center><b>RESPUESTA</b></center>",
+													width: 100,
+												},
+											],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel:
+												"<b>MIEDO INTENSO A MORIR O A ESTAR SUFRIENDO UN ATAQUE CARDÍACO O ALGUNA ENFERMEDAD FÍSICA GRAVE QUE PONGA EN RIESGO LA VIDA<b>",
+											bodyStyle: "padding:3px;",
+											items: [this.m_psico_confinados_preg01],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel:
+												"<b>MIEDO INTENSO A VOLVERSE LOCO O A PERDER EL CONTROL DE SI MISMO<b>",
+											bodyStyle: "padding:3px;",
+											items: [this.m_psico_confinados_preg02],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel:
+												"<b>PALPITACIONES (PERCEPCIÓN DEL LATIDO CARDÍACO) O PULSACIONES ACELERADAS (TAQUICARDIA)<b>",
+											bodyStyle: "padding:3px;",
+											items: [this.m_psico_confinados_preg03],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel: "<b>SUDORACIÓN<b>",
+											bodyStyle: "padding:3px;",
+											items: [this.m_psico_confinados_preg04],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel: "<b>PALIDEZ<b>",
+											bodyStyle: "padding:3px;",
+											items: [this.m_psico_confinados_preg05],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel: "<b>TEMBLORES O SACUDIDAS MUSCULARES<b>",
+											bodyStyle: "padding:3px;",
+											items: [this.m_psico_confinados_preg06],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel: "<b> SENSACIÓN DE AHOGO O FALTA DE AIRE<b>",
+											bodyStyle: "padding:3px;",
+											items: [this.m_psico_confinados_preg07],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel:
+												"<b>OPRESIÓN EN LA GARGANTA (SENSACIÓN DE NO PODER RESPIRAR) O EN EL PECHO<b>",
+											bodyStyle: "padding:3px;",
+											items: [this.m_psico_confinados_preg08],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel:
+												"<b>NÁUSEAS, VÓMITOS O MOLESTIAS Y DOLORES ABDOMINALES<b>",
+											bodyStyle: "padding:3px;",
+											items: [this.m_psico_confinados_preg09],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel: "<b>INESTABILIDAD, MAREOS O DESMAYOS<b>",
+											bodyStyle: "padding:3px;",
+											items: [this.m_psico_confinados_preg10],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel:
+												"<b> SENSACIÓN DE IRREALIDAD (SENTIR AL MUNDO EXTERNO COMO ALGO EXTRAÑO)<b>",
+											bodyStyle: "padding:3px;",
+											items: [this.m_psico_confinados_preg11],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel:
+												"<b>SENSACIÓN DE NO SER UNO MISMO (DESPERSONALIZACIÓN)<b>",
+											bodyStyle: "padding:3px;",
+											items: [this.m_psico_confinados_preg12],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel: "<b>HORMIGUEOS (PARESTESIAS)<b>",
+											bodyStyle: "padding:3px;",
+											items: [this.m_psico_confinados_preg13],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel:
+												"<b>ESCALOFRÍOS O SENSACIÓN DE SUFRIR FRÍO INTENSO<b>",
+											bodyStyle: "padding:3px;",
+											items: [this.m_psico_confinados_preg14],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.999,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "EXAMEN MÉDICO DIRIGIDO",
+									//                                    labelWidth: 220,
+									items: [
+										{
+											columnWidth: 0.6,
+											border: false,
+											layout: "form",
+											//                                            labelWidth: 340,
+											labelAlign: "top",
+											items: [this.m_psico_confinados_entrena_confina],
+										},
+										{
+											columnWidth: 0.4,
+											border: false,
+											layout: "form",
+											//                                            labelWidth: 85,
+											labelAlign: "top",
+											items: [this.m_psico_confinados_prim_auxilios],
+										},
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											//                                            labelWidth: 85,
+											labelAlign: "top",
+											items: [this.m_psico_confinados_fobia_claustro],
+										},
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											//                                            labelWidth: 85,
+											labelAlign: "top",
+											items: [this.m_psico_confinados_bat7],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.999,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "EXAMEN MÉDICO DIRIGIDO",
+									//                                    labelWidth: 220,
+									items: [
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											//                                            labelWidth: 340,
+											labelAlign: "top",
+											items: [this.m_psico_confinados_formato],
+										},
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											//                                            labelWidth: 340,
+											labelAlign: "top",
+											items: [this.m_psico_confinados_cuest_temores],
+										},
+									],
+								},
+							],
+						},
+						{
+							columnWidth: 0.65,
+							labelWidth: 1,
+							labelAlign: "top",
+							layout: "form",
+							border: false,
+							items: [this.dt_grid4],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.35,
+							bodyStyle: "padding:2px 15px 0px 22px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "",
+									items: [
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											//                                            labelAlign: 'top',
+											labelWidth: 60,
+											items: [this.m_psico_confinados_aptitud],
+										},
+									],
+								},
+							],
+						},
+					],
+				},
+			],
+			buttons: [
+				{
+					text: "Guardar",
+					iconCls: "guardar",
+					formBind: true,
+					scope: this,
+					handler: function () {
+						mod.psicologia.psico_confinados.win.el.mask(
+							"Guardando…",
+							"x-mask-loading"
+						);
+						this.frm.getForm().submit({
+							params: {
+								acction:
+									this.record.get("st") >= 1
+										? "update_psico_confinados"
+										: "save_psico_confinados",
+								id: this.record.get("id"),
+								adm: this.record.get("adm"),
+								ex_id: this.record.get("ex_id"),
+							},
+							success: function (form, action) {
+								if (action.result.success === true) {
+									if (action.result.total === 1) {
+										//                                        Ext.MessageBox.alert('En hora buena', 'Se registro correctamente ' + action.result.total);
+										mod.psicologia.formatos.st.reload();
+										mod.psicologia.st.reload();
+										mod.psicologia.psico_confinados.win.el.unmask();
+										mod.psicologia.psico_confinados.win.close();
+									}
+								} else {
+									Ext.Msg.show({
+										title: "Error",
+										buttons: Ext.MessageBox.OK,
+										icon: Ext.MessageBox.ERROR,
+										msg: "Problemas con el registro.",
+									});
+								}
+							},
+							failure: function (form, action) {
+								mod.psicologia.psico_confinados.win.el.unmask();
+								mod.psicologia.psico_confinados.win.close();
+								mod.psicologia.formatos.st.reload();
+								switch (action.failureType) {
+									case Ext.form.Action.CLIENT_INVALID:
+										Ext.Msg.alert("Failure", "Existen valores Invalidos");
+										break;
+									case Ext.form.Action.CONNECT_FAILURE:
+										Ext.Msg.alert(
+											"Failure",
+											"Error de comunicacion con servidor"
+										);
+										break;
+									case Ext.form.Action.SERVER_INVALID:
+										Ext.Msg.alert("Failure mik", action.result.error);
+										break;
+									default:
+										Ext.Msg.alert("Failure", action.result.error);
+								}
+							},
+						});
+					},
+				},
+			],
+		});
+		this.win = new Ext.Window({
+			width: 1000,
+			height: 500,
+			border: false,
+			modal: true,
+			title: "EXAMEN PARA ESPACIOS CONFINADOS: ",
+			maximizable: false,
 			resizable: false,
 			draggable: true,
 			closable: true,
