@@ -477,41 +477,7 @@ mod.psicologia.formatos = {
 							}).showAt(event.xy);
 						}
 					}
-					/////////////////////////////////////////////
-					/////////////////////////////////////////////
-					/////////////////////////////////////////////
-					new Ext.menu.Menu({
-						items: [
-							{
-								text:
-									"EXAMEN PARA ESPACIOS CONFINADOS N°: <B>" +
-									record.get("adm") +
-									"<B>",
-								iconCls: "reporte",
-								handler: function () {
-									new Ext.Window({
-										title:
-											"EXAMEN OCUPACIONAL PARA ESPACIOS CONFINADOS N° " +
-											record.get("adm"),
-										width: 800,
-										height: 600,
-										maximizable: true,
-										modal: true,
-										closeAction: "close",
-										resizable: true,
-										html:
-											"<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_psicologia&sys_report=formato_esp_confinados&adm=" +
-											record.get("adm") +
-											"'></iframe>",
-									}).show();
-								},
-							},
-						],
-					}).showAt(event.xy);
 				},
-				/////////////////////////////////////////////
-				/////////////////////////////////////////////
-				/////////////////////////////////////////////
 			},
 			autoExpandColumn: "cuest_desc",
 			columns: [
