@@ -58,8 +58,10 @@ $pdf->SetFillColor(194, 217, 241);
   -----------------variables declaradas------------------
   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
 $paciente = $model->paciente($_REQUEST['adm']);
-$conclusion = $model->rpt_conclusion($_REQUEST['adm']);
+$conclusion = $model->esp_confin_conclusion($_REQUEST['adm']);
 $altura = $model->carga_psicologia_altura_pdf($_REQUEST['adm']);
+$confinados = $model->carga_psicologia_confinados_pdf($_REQUEST['adm']);
+$manejo = $model->medicina_manejo_pdf($_REQUEST['adm']);
 /* //////////////////////////////////////////////////////
   -----------------variables declaradas------------------
   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
@@ -81,7 +83,7 @@ $pdf->SetFont('helvetica', 'B', 10);
 $pdf->Cell(20, $h * 4, '', 0, 0, 'C', 0);
 $pdf->Cell(120, $h * 4, 'EXAMEN OCUPACIONAL PARA ESPACIOS CONFINADOS', 0, 0, 'C', 0);
 $pdf->SetFont('helvetica', 'B', 8);
-$pdf->Cell(40, $h * 4, $altura->data[0]->m_psico_altura_aptitud, 1, 1, 'C', 1);
+$pdf->Cell(40, $h * 4, $confinados->data[0]->m_psico_confinados_aptitud, 1, 1, 'C', 1);
 //$pdf->Ln(8);
 
 $pdf->Ln($salto);
@@ -355,112 +357,126 @@ $pdf->Cell(15, $h, 'PUNTAJE', 1, 1, 'C', 1); //===>TITULO
 $pdf->SetFont('helvetica', 'B', 5.7);
 $pdf->Cell(150, $h, 'MIEDO INTENSO A MORIR O A ESTAR SUFRIENDO UN ATAQUE CARDÍACO O ALGUNA ENFERMEDAD FÍSICA GRAVE QUE PONGA EN RIESGO LA VIDA', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(15, $h, 'NO', 1, 0, 'C', 0); //////VALUE
-$pdf->Cell(15, $h, '0', 1, 1, 'C', 0); //////VALUE
+$pre01 = $confinados->data[0]->m_psico_confinados_preg01;
+$pdf->Cell(15, $h, $pre01, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(15, $h, ($pre01=='NO')? '0':'1', 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(150, $h, 'MIEDO INTENSO A VOLVERSE LOCO O A PERDER EL CONTROL DE SI MISMO', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(15, $h, 'NO', 1, 0, 'C', 0); //////VALUE
-$pdf->Cell(15, $h, '0', 1, 1, 'C', 0); //////VALUE
+$pre02 = $confinados->data[0]->m_psico_confinados_preg02;
+$pdf->Cell(15, $h, $pre02, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(15, $h, ($pre02=='NO')? '0':'1', 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(150, $h, 'PALPITACIONES (PERCEPCIÓN DEL LATIDO CARDÍACO) O PULSACIONES ACELERADAS (TAQUICARDIA)', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(15, $h, 'NO', 1, 0, 'C', 0); //////VALUE
-$pdf->Cell(15, $h, '0', 1, 1, 'C', 0); //////VALUE
+$pre03 = $confinados->data[0]->m_psico_confinados_preg03;
+$pdf->Cell(15, $h, $pre03, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(15, $h, ($pre03=='NO')? '0':'1', 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(150, $h, 'SUDORACIÓN', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(15, $h, 'NO', 1, 0, 'C', 0); //////VALUE
-$pdf->Cell(15, $h, '0', 1, 1, 'C', 0); //////VALUE
+$pre04 = $confinados->data[0]->m_psico_confinados_preg04;
+$pdf->Cell(15, $h, $pre04, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(15, $h, ($pre04=='NO')? '0':'1', 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(150, $h, 'PALIDEZ', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(15, $h, 'NO', 1, 0, 'C', 0); //////VALUE
-$pdf->Cell(15, $h, '0', 1, 1, 'C', 0); //////VALUE
+$preg05 = $confinados->data[0]->m_psico_confinados_preg05;
+$pdf->Cell(15, $h, $preg05, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(15, $h, ($preg05=='NO')? '0':'1', 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(150, $h, 'TEMBLORES O SACUDIDAS MUSCULARES', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(15, $h, 'NO', 1, 0, 'C', 0); //////VALUE
-$pdf->Cell(15, $h, '0', 1, 1, 'C', 0); //////VALUE
+$preg06 = $confinados->data[0]->m_psico_confinados_preg06;
+$pdf->Cell(15, $h, $preg06, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(15, $h, ($preg06=='NO')? '0':'1', 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(150, $h, 'SENSACIÓN DE AHOGO O FALTA DE AIRE', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(15, $h, 'NO', 1, 0, 'C', 0); //////VALUE
-$pdf->Cell(15, $h, '0', 1, 1, 'C', 0); //////VALUE
+$preg07 = $confinados->data[0]->m_psico_confinados_preg07;
+$pdf->Cell(15, $h, $preg07, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(15, $h, ($preg07=='NO')? '0':'1', 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(150, $h, 'OPRESIÓN EN LA GARGANTA (SENSACIÓN DE NO PODER RESPIRAR) O EN EL PECHO', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(15, $h, 'NO', 1, 0, 'C', 0); //////VALUE
-$pdf->Cell(15, $h, '0', 1, 1, 'C', 0); //////VALUE
+$preg08 = $confinados->data[0]->m_psico_confinados_preg08;
+$pdf->Cell(15, $h, $preg08, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(15, $h, ($preg08=='NO')? '0':'1', 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(150, $h, 'NÁUSEAS, VÓMITOS O MOLESTIAS Y DOLORES ABDOMINALES', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(15, $h, 'NO', 1, 0, 'C', 0); //////VALUE
-$pdf->Cell(15, $h, '0', 1, 1, 'C', 0); //////VALUE
+$preg09 = $confinados->data[0]->m_psico_confinados_preg09;
+$pdf->Cell(15, $h, $preg09, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(15, $h, ($preg09=='NO')? '0':'1', 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(150, $h, 'INESTABILIDAD, MAREOS O DESMAYOS', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(15, $h, 'NO', 1, 0, 'C', 0); //////VALUE
-$pdf->Cell(15, $h, '0', 1, 1, 'C', 0); //////VALUE
+$preg10 = $confinados->data[0]->m_psico_confinados_preg10;
+$pdf->Cell(15, $h, $preg10, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(15, $h, ($preg10=='NO')? '0':'1', 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(150, $h, 'SENSACIÓN DE IRREALIDAD (SENTIR AL MUNDO EXTERNO COMO ALGO EXTRAÑO)', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(15, $h, 'NO', 1, 0, 'C', 0); //////VALUE
-$pdf->Cell(15, $h, '0', 1, 1, 'C', 0); //////VALUE
+$preg11 = $confinados->data[0]->m_psico_confinados_preg11;
+$pdf->Cell(15, $h, $preg11, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(15, $h, ($preg11=='NO')? '0':'1', 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(150, $h, 'SENSACIÓN DE NO SER UNO MISMO (DESPERSONALIZACIÓN)', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(15, $h, 'NO', 1, 0, 'C', 0); //////VALUE
-$pdf->Cell(15, $h, '0', 1, 1, 'C', 0); //////VALUE
+$preg12 = $confinados->data[0]->m_psico_confinados_preg12;
+$pdf->Cell(15, $h, $preg12, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(15, $h, ($preg12=='NO')? '0':'1', 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(150, $h, 'HORMIGUEOS (PARESTESIAS)', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(15, $h, 'NO', 1, 0, 'C', 0); //////VALUE
-$pdf->Cell(15, $h, '0', 1, 1, 'C', 0); //////VALUE
+$preg13 = $confinados->data[0]->m_psico_confinados_preg13;
+$pdf->Cell(15, $h, $preg13, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(15, $h, ($preg13=='NO')? '0':'1', 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(150, $h, 'ESCALOFRÍOS O SENSACIÓN DE SUFRIR FRÍO INTENSO', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(15, $h, 'NO', 1, 0, 'C', 0); //////VALUE
-$pdf->Cell(15, $h, '0', 1, 1, 'C', 0); //////VALUE
+$preg14 = $confinados->data[0]->m_psico_confinados_preg14;
+$pdf->Cell(15, $h, $preg14, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(15, $h, ($preg14=='NO')? '0':'1', 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
@@ -490,7 +506,7 @@ $pdf->MultiCell(30, $h * 15, '
 EXAMEN MÉDICO DIRIGIDO', 1, 'C', 1, 0); //===>TITULO
 $pdf->Cell(130, $h, 'RECIBIÓ ENTRENAMIENTO PARA TRABAJOS EN ESPACIOS CONFINADOS', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(20, $h, 'SI', 1, 1, 'C', 0); //////VALUE
+$pdf->Cell(20, $h, $confinados->data[0]->m_psico_confinados_entrena_confina, 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA  MATRIZ CENTRAL
 //=====================================================================>>>>>>>> CABEZERA  MATRIZ CENTRAL
 //=====================================================================>>>>>>>> CABEZERA  MATRIZ CENTRAL
@@ -498,7 +514,7 @@ $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(30, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(130, $h, '¿RECIBIÓ ENTRENAMIENTO EN PRIMEROS AUXILIOS?', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(20, $h, $altura->data[0]->m_psico_altura_entrena_auxilio, 1, 1, 'C', 0); //////VALUE
+$pdf->Cell(20, $h, $confinados->data[0]->m_psico_confinados_prim_auxilios, 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
@@ -507,7 +523,7 @@ $pdf->Cell(30, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(25, $h * 5, 'TEST', 1, 0, 'C', 1); //===>TITULO
 $pdf->Cell(105, $h, 'DESCARTE DE FOBIA - CLAUSTROFOBIA', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(20, $h, 'APTO', 1, 1, 'C', 0); //////VALUE
+$pdf->Cell(20, $h, $confinados->data[0]->m_psico_confinados_fobia_claustro, 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
@@ -515,7 +531,7 @@ $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(55, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(105, $h, 'BAT-7  (SUB ESCALA DE ORIENTACION ESPACIAL)', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(20, $h, 'APTO', 1, 1, 'C', 0); //////VALUE
+$pdf->Cell(20, $h, $confinados->data[0]->m_psico_confinados_bat7, 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
@@ -524,7 +540,7 @@ $pdf->Cell(55, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(20, $h*3, 'PSICOTECNICO', 1, 0, 'C', 0); //===>TITULO
 $pdf->Cell(85, $h, ' PUNTEADO', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(20, $h, 'APTO', 1, 1, 'C', 0); //////VALUE
+$pdf->Cell(20, $h, $manejo->data[0]->punteado, 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
@@ -533,7 +549,7 @@ $pdf->Cell(55, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(20, $h, '', 0, 0, 'L', 0);
 $pdf->Cell(85, $h, ' PALANCA', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(20, $h, 'APTO', 1, 1, 'C', 0); //////VALUE
+$pdf->Cell(20, $h, $manejo->data[0]->palanca, 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
@@ -542,7 +558,7 @@ $pdf->Cell(55, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(20, $h, '', 0, 0, 'L', 0);
 $pdf->Cell(85, $h, ' REACTIMETRO', 1, 0, 'L', 0); //===>TITULO
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(20, $h, 'APTO', 1, 1, 'C', 0); //////VALUE
+$pdf->Cell(20, $h, $manejo->data[0]->reactimetro, 1, 1, 'C', 0); //////VALUE
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
 //=====================================================================>>>>>>>> CABEZERA
@@ -636,7 +652,7 @@ $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(30, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(70, $h, 'HOJA DE ENTREVISTA FORMATO ESTABLECIDO', 1, 0, 'C', 1);
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(30, $h, $altura->data[0]->m_psico_altura_h_entre_form_est, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(30, $h, $confinados->data[0]->m_psico_confinados_formato, 1, 0, 'C', 0); //////VALUE
 $pdf->Cell(10, $h, '', 0, 0, 'C', 0); //////VALUE
 $pdf->Cell(40, $h, 'RECONOC. DE RIESGOS', 1, 1, 'C', 1); //===>TITULO
 
@@ -644,7 +660,7 @@ $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(30, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(70, $h, 'CUESTIONARIO DE TEMORES', 1, 0, 'C', 1);
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(30, $h, $altura->data[0]->m_psico_altura_temores, 1, 0, 'C', 0); //////VALUE
+$pdf->Cell(30, $h, $confinados->data[0]->m_psico_confinados_cuest_temores, 1, 0, 'C', 0); //////VALUE
 $pdf->Cell(10, $h, '', 0, 0, 'C', 0); //////VALUE
 $pdf->Cell(40, $h, 'CLAUSTROFOBIA', 1, 1, 'C', 1); //===>TITULO
 

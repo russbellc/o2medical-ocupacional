@@ -411,7 +411,9 @@ mod.psicologia.formatos = {
 								items: [
 									{
 										text:
-											"EXAMEN PSICOLOGICO N°: <B>" + record.get("adm") + "<B>",
+											"EXAMEN TRABAJO EN ALTURA MAYOR 1.80 M N°: <B>" +
+											record.get("adm") +
+											"<B>",
 										iconCls: "reporte",
 										handler: function () {
 											if (record.get("st") >= 1) {
@@ -461,7 +463,7 @@ mod.psicologia.formatos = {
 													closeAction: "close",
 													resizable: true,
 													html:
-														"<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_psicologia&sys_report=formato_altura180&adm=" +
+														"<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_psicologia&sys_report=formato_esp_confinados&adm=" +
 														record.get("adm") +
 														"'></iframe>",
 												}).show();
@@ -5319,7 +5321,7 @@ mod.psicologia.psico_confinados = {
 		this.record = r;
 		this.crea_stores();
 		this.crea_controles();
-		this.list_conclu_altu_psico.load();
+		this.list_conclu_confi_psico.load();
 		if (this.record.get("st") >= 1) {
 			this.cargar_data();
 		}
@@ -5330,7 +5332,7 @@ mod.psicologia.psico_confinados = {
 			waitMsg: "Recuperando Informacion...",
 			waitTitle: "Espere",
 			params: {
-				acction: "load_psico_confinados",
+				acction: "load_psicologia_confinados",
 				format: "json",
 				adm: mod.psicologia.psico_confinados.record.get("adm"),
 				//                ,examen: mod.psicologia.psico_confinados.record.get('ex_id')
@@ -5344,18 +5346,18 @@ mod.psicologia.psico_confinados = {
 		});
 	},
 	crea_stores: function () {
-		this.list_conclu_altu_psico = new Ext.data.JsonStore({
+		this.list_conclu_confi_psico = new Ext.data.JsonStore({
 			url: "<[controller]>",
 			baseParams: {
-				acction: "list_conclu_altu_psico",
+				acction: "list_conclu_confi_psico",
 				format: "json",
 			},
 			root: "data",
 			totalProperty: "total",
 			fields: [
-				"conclu_altu_psico_id",
-				"conclu_altu_psico_adm",
-				"conclu_altu_psico_desc",
+				"conclu_confi_psico_id",
+				"conclu_confi_psico_adm",
+				"conclu_confi_psico_desc",
 			],
 			listeners: {
 				beforeload: function (store, options) {
@@ -5912,19 +5914,80 @@ mod.psicologia.psico_confinados = {
 			},
 		});
 		// m_psico_confinados_formato
-		this.m_psico_confinados_formato = new Ext.form.TextField({
+		
+		this.m_psico_confinados_formato = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["APTO", "APTO"],
+					["NO APTO", "NO APTO"],
+					["-", "-"],
+				],
+			}),
 			fieldLabel: "<b>Hoja de entrevista formato establecido</b>",
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_formato",
 			allowBlank: false,
-			name: "m_psico_confinados_formato",
-			anchor: "95%",
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
 		});
+		// this.m_psico_confinados_formato = new Ext.form.TextField({
+		// 	fieldLabel: "<b>Hoja de entrevista formato establecido</b>",
+		// 	allowBlank: false,
+		// 	name: "m_psico_confinados_formato",
+		// 	anchor: "95%",
+		// });
 		// m_psico_confinados_cuest_temores
-		this.m_psico_confinados_cuest_temores = new Ext.form.TextField({
+		this.m_psico_confinados_cuest_temores = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["APTO", "APTO"],
+					["NO APTO", "NO APTO"],
+					["-", "-"],
+				],
+			}),
 			fieldLabel: "<b>Cuestionario de temores</b>",
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_confinados_cuest_temores",
 			allowBlank: false,
-			name: "m_psico_confinados_cuest_temores",
-			anchor: "95%",
+			typeAhead: false,
+			editable: false,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
 		});
+		// this.m_psico_confinados_cuest_temores = new Ext.form.TextField({
+		// 	fieldLabel: "<b>Cuestionario de temores</b>",
+		// 	allowBlank: false,
+		// 	name: "m_psico_confinados_cuest_temores",
+		// 	anchor: "95%",
+		// });
 		// m_psico_confinados_aptitud
 		this.m_psico_confinados_aptitud = new Ext.form.RadioGroup({
 			fieldLabel: "<b>APTITUD</b>",
@@ -5964,13 +6027,13 @@ mod.psicologia.psico_confinados = {
 					text: "Nuevo",
 					iconCls: "nuevo",
 					handler: function () {
-						mod.psicologia.altura_conclu.init(null);
+						mod.psicologia.confinados_conclu.init(null);
 					},
 				},
 			],
 		});
 		this.dt_grid4 = new Ext.grid.GridPanel({
-			store: this.list_conclu_altu_psico,
+			store: this.list_conclu_confi_psico,
 			region: "west",
 			border: true,
 			tbar: this.tbar4,
@@ -5984,7 +6047,7 @@ mod.psicologia.psico_confinados = {
 				rowdblclick: function (grid, rowIndex, e) {
 					e.stopEvent();
 					var record2 = grid.getStore().getAt(rowIndex);
-					mod.psicologia.altura_conclu.init(record2);
+					mod.psicologia.confinados_conclu.init(record2);
 				},
 			},
 			autoExpandColumn: "reco_desc",
@@ -5993,7 +6056,7 @@ mod.psicologia.psico_confinados = {
 				{
 					id: "reco_desc",
 					header: "CONCLUSIONES",
-					dataIndex: "conclu_altu_psico_desc",
+					dataIndex: "conclu_confi_psico_desc",
 				},
 			],
 		});
@@ -6265,8 +6328,8 @@ mod.psicologia.psico_confinados = {
 							params: {
 								acction:
 									this.record.get("st") >= 1
-										? "update_psico_confinados"
-										: "save_psico_confinados",
+										? "update_psicologia_confinados"
+										: "save_psicologia_confinados",
 								id: this.record.get("id"),
 								adm: this.record.get("adm"),
 								ex_id: this.record.get("ex_id"),
@@ -6331,4 +6394,171 @@ mod.psicologia.psico_confinados = {
 	},
 };
 
+mod.psicologia.confinados_conclu = {
+	record2: null,
+	win: null,
+	frm: null,
+	conclu_confi_psico_desc: null,
+	init: function (r) {
+		this.record2 = r;
+		this.crea_stores();
+		this.st_busca_conclu_confi_psico.load();
+		this.crea_controles();
+		if (this.record2 !== null) {
+			this.cargar_data();
+		}
+		this.win.show();
+	},
+	cargar_data: function () {
+		this.frm.getForm().load({
+			waitMsg: "Recuperando Informacion...",
+			waitTitle: "Espere",
+			params: {
+				acction: "load_conclu_confi_psico",
+				format: "json",
+				conclu_confi_psico_id: this.record2.get("conclu_confi_psico_id"),
+				conclu_confi_psico_adm: this.record2.get("conclu_confi_psico_adm"),
+			},
+			scope: this,
+			success: function (frm, action) {
+				r = action.result.data;
+			},
+		});
+	},
+	crea_stores: function () {
+		this.st_busca_conclu_confi_psico = new Ext.data.JsonStore({
+			url: "<[controller]>",
+			baseParams: {
+				acction: "st_busca_conclu_confi_psico",
+				format: "json",
+			},
+			fields: ["conclu_confi_psico_desc"],
+			root: "data",
+		});
+	},
+	crea_controles: function () {
+		this.resultTpl = new Ext.XTemplate(
+			'<tpl for="."><div class="search-item">',
+			'<div class="div-table-col">',
+			"<h3><span>{conclu_confi_psico_desc}</span></h3>",
+			"</div>",
+			"</div></tpl>"
+		);
+
+		this.conclu_confi_psico_desc = new Ext.form.ComboBox({
+			store: this.st_busca_conclu_confi_psico,
+			loadingText: "Searching...",
+			pageSize: 10,
+			tpl: this.resultTpl,
+			hideTrigger: true,
+			itemSelector: "div.search-item",
+			selectOnFocus: true,
+			minChars: 3,
+			hiddenName: "conclu_confi_psico_desc",
+			displayField: "conclu_confi_psico_desc",
+			valueField: "conclu_confi_psico_desc",
+			allowBlank: false,
+			typeAhead: false,
+			triggerAction: "all",
+			fieldLabel: "<b>RECOMENDACIONES Y CONCLUSIONES</b>",
+			mode: "local",
+			anchor: "99%",
+		});
+		this.frm = new Ext.FormPanel({
+			region: "center",
+			url: "<[controller]>",
+			monitorValid: true,
+			frame: true,
+			layout: "column",
+			bodyStyle: "padding:5px;",
+			labelWidth: 99,
+			items: [
+				{
+					columnWidth: 0.999,
+					border: false,
+					labelAlign: "top",
+					layout: "form",
+					items: [this.conclu_confi_psico_desc],
+				},
+			],
+			buttons: [
+				{
+					text: "Guardar",
+					iconCls: "guardar",
+					formBind: true,
+					scope: this,
+					handler: function () {
+						mod.psicologia.confinados_conclu.win.el.mask(
+							"Guardando…",
+							"x-mask-loading"
+						);
+						var metodo;
+						var conclu_confi_psico_id;
+						if (this.record2 !== null) {
+							metodo = "update";
+							conclu_confi_psico_id =
+								mod.psicologia.confinados_conclu.record2.get(
+									"conclu_confi_psico_id"
+								);
+						} else {
+							metodo = "save";
+							conclu_confi_psico_id = "";
+						}
+
+						this.frm.getForm().submit({
+							params: {
+								acction: metodo + "_conclu_confi_psico",
+								conclu_confi_psico_adm:
+									mod.psicologia.psico_confinados.record.get("adm"),
+								conclu_confi_psico_id: conclu_confi_psico_id,
+							},
+							success: function (form, action) {
+								obj = Ext.util.JSON.decode(action.response.responseText);
+								//                                Ext.MessageBox.alert('En hora buena', 'El paciente se registro correctamente');
+								mod.psicologia.confinados_conclu.win.el.unmask();
+								mod.psicologia.psico_confinados.list_conclu_confi_psico.reload();
+								mod.psicologia.confinados_conclu.win.close();
+							},
+							failure: function (form, action) {
+								mod.psicologia.confinados_conclu.win.el.unmask();
+								switch (action.failureType) {
+									case Ext.form.Action.CLIENT_INVALID:
+										Ext.Msg.alert("Failure", "Existen valores Invalidos");
+										break;
+									case Ext.form.Action.CONNECT_FAILURE:
+										Ext.Msg.alert(
+											"Failure",
+											"Error de comunicacion con servidor"
+										);
+										break;
+									case Ext.form.Action.SERVER_INVALID:
+										Ext.Msg.alert("Failure mik", action.result.error);
+										break;
+									default:
+										Ext.Msg.alert("Failure", action.result.error);
+								}
+								mod.psicologia.psico_confinados.list_conclu_confi_psico.reload();
+								mod.psicologia.confinados_conclu.win.close();
+							},
+						});
+					},
+				},
+			],
+		});
+
+		this.win = new Ext.Window({
+			width: 950,
+			height: 140,
+			modal: true,
+			title: "REGISTRO DE RECOMENDACIONES Y CONCLUSIONES",
+			border: false,
+			maximizable: true,
+			resizable: false,
+			draggable: true,
+			closable: true,
+			layout: "border",
+			items: [this.frm],
+		});
+	},
+};
 Ext.onReady(mod.psicologia.init, mod.psicologia);

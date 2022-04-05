@@ -1,8 +1,10 @@
 <?php
 
-class model extends core {
+class model extends core
+{
 
-    public function list_paciente() {
+    public function list_paciente()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $usuario = $this->user->us_id;
@@ -59,7 +61,8 @@ class model extends core {
         return $sql;
     }
 
-    public function list_formatos() {
+    public function list_formatos()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $adm_id = isset($_POST['adm']) ? $_POST['adm'] : NULL;
@@ -89,7 +92,8 @@ class model extends core {
 
     //LOAD SAVE UPDATE LABORATORIO
 
-    public function load_examenLab() {
+    public function load_examenLab()
+    {
         $adm = $_POST['adm'];
         $examen = $_POST['examen'];
         $query = "SELECT * FROM mod_psicologia_informe where m_psico_inf_adm='$adm' and m_lab_exam_examen='$examen';";
@@ -97,7 +101,8 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function save_exaLab() {
+    public function save_exaLab()
+    {
 
         $adm = $_POST['adm'];
         $exa = $_POST['ex_id'];
@@ -159,7 +164,8 @@ class model extends core {
         }
     }
 
-    public function update_exaLab() {
+    public function update_exaLab()
+    {
         $params = array();
 
         $params[':usuario'] = $this->user->us_id;
@@ -200,15 +206,17 @@ class model extends core {
 
     //LOAD SAVE UPDATE psico_informe
 
-    public function load_psico_informe() {
+    public function load_psico_informe()
+    {
         $adm = $_POST['adm'];
-//        $examen = $_POST['examen'];
+        //        $examen = $_POST['examen'];
         $query = "SELECT * FROM mod_psicologia_informe where m_psico_inf_adm='$adm';";
         $q = $this->sql($query);
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function save_psico_informe() {
+    public function save_psico_informe()
+    {
 
         $adm = $_POST['adm'];
         $exa = $_POST['ex_id'];
@@ -336,7 +344,8 @@ class model extends core {
         }
     }
 
-    public function update_psico_informe() {
+    public function update_psico_informe()
+    {
         $this->begin();
 
         $params_1 = array();
@@ -447,15 +456,17 @@ class model extends core {
 
     //LOAD SAVE UPDATE psico_examen
 
-    public function load_psico_examen() {
+    public function load_psico_examen()
+    {
         $adm = $_POST['adm'];
-//        $examen = $_POST['examen'];
+        //        $examen = $_POST['examen'];
         $query = "SELECT * FROM mod_psicologia_examen where m_psico_exam_adm='$adm';";
         $q = $this->sql($query);
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function save_psico_examen() {
+    public function save_psico_examen()
+    {
 
         $adm = $_POST['adm'];
         $exa = $_POST['ex_id'];
@@ -603,7 +614,8 @@ class model extends core {
         }
     }
 
-    public function update_psico_examen() {
+    public function update_psico_examen()
+    {
         $this->begin();
 
         $params_1 = array();
@@ -733,15 +745,17 @@ class model extends core {
 
     //LOAD SAVE UPDATE psico_ALTURA
 
-    public function load_psicologia_altura() {
+    public function load_psicologia_altura()
+    {
         $adm = $_POST['adm'];
-//        $examen = $_POST['examen'];
+        //        $examen = $_POST['examen'];
         $query = "SELECT * FROM mod_psicologia_altura where m_psico_altura_adm='$adm';";
         $q = $this->sql($query);
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function save_psicologia_altura() {
+    public function save_psicologia_altura()
+    {
 
         $adm = $_POST['adm'];
         $exa = $_POST['ex_id'];
@@ -933,7 +947,8 @@ class model extends core {
         }
     }
 
-    public function update_psicologia_altura() {
+    public function update_psicologia_altura()
+    {
         $this->begin();
 
         $params_1 = array();
@@ -1110,7 +1125,8 @@ class model extends core {
     //LOAD SAVE UPDATE CONCLUSIONES
 
 
-    public function list_conclu_altu_psico() {
+    public function list_conclu_altu_psico()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $adm = $_POST['adm'];
@@ -1122,7 +1138,8 @@ class model extends core {
         return $sql;
     }
 
-    public function save_conclu_altu_psico() {
+    public function save_conclu_altu_psico()
+    {
         $params = array();
         $params[':conclu_altu_psico_adm'] = $_POST['conclu_altu_psico_adm'];
         $params[':conclu_altu_psico_desc'] = $_POST['conclu_altu_psico_desc'];
@@ -1134,7 +1151,8 @@ class model extends core {
         return $this->sql($q, $params);
     }
 
-    public function update_conclu_altu_psico() {
+    public function update_conclu_altu_psico()
+    {
         $params = array();
         $params[':conclu_altu_psico_id'] = $_POST['conclu_altu_psico_id'];
         $params[':conclu_altu_psico_adm'] = $_POST['conclu_altu_psico_adm'];
@@ -1156,7 +1174,8 @@ class model extends core {
         }
     }
 
-    public function st_busca_conclu_altu_psico() {
+    public function st_busca_conclu_altu_psico()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT conclu_altu_psico_desc FROM mod_psicologia_altura_conclu
                             where
@@ -1165,7 +1184,8 @@ class model extends core {
         return $sql;
     }
 
-    public function load_conclu_altu_psico() {
+    public function load_conclu_altu_psico()
+    {
         $reco_id = $_POST['conclu_altu_psico_id'];
         $reco_adm = $_POST['conclu_altu_psico_adm'];
         $query = "SELECT
@@ -1180,7 +1200,283 @@ class model extends core {
 
     //LOAD SAVE UPDATE psico_examen
 
-    public function paciente($adm) {
+    public function list_conclu_confi_psico()
+    {
+        $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
+        $start = isset($_POST['start']) ? $_POST['start'] : 0;
+        $adm = $_POST['adm'];
+        $q = "SELECT conclu_confi_psico_id, conclu_confi_psico_adm, conclu_confi_psico_desc
+                FROM mod_psicologia_confina_conclu
+                where conclu_confi_psico_adm=$adm;";
+        $sql = $this->sql($q);
+        $sql->data = array_slice($sql->data, $start, $limit);
+        return $sql;
+    }
+
+    public function save_conclu_confi_psico()
+    {
+        $params = array();
+        $params[':conclu_confi_psico_adm'] = $_POST['conclu_confi_psico_adm'];
+        $params[':conclu_confi_psico_desc'] = $_POST['conclu_confi_psico_desc'];
+
+        $q = 'INSERT INTO mod_psicologia_confina_conclu VALUES 
+                (NULL,
+                :conclu_confi_psico_adm,
+                UPPER(:conclu_confi_psico_desc))';
+        return $this->sql($q, $params);
+    }
+
+    public function update_conclu_confi_psico()
+    {
+        $params = array();
+        $params[':conclu_confi_psico_id'] = $_POST['conclu_confi_psico_id'];
+        $params[':conclu_confi_psico_adm'] = $_POST['conclu_confi_psico_adm'];
+        $params[':conclu_confi_psico_desc'] = $_POST['conclu_confi_psico_desc'];
+
+        $this->begin();
+        $q = 'Update mod_psicologia_confina_conclu set
+                conclu_confi_psico_desc=UPPER(:conclu_confi_psico_desc)
+                where
+                conclu_confi_psico_id=:conclu_confi_psico_id and conclu_confi_psico_adm=:conclu_confi_psico_adm;';
+        $sql1 = $this->sql($q, $params);
+
+        if ($sql1->success) {
+            $pac_id = $_POST['conclu_confi_psico_adm'];
+            $this->commit();
+            return array('success' => true, 'data' => $pac_id);
+        } else {
+            $this->rollback();
+        }
+    }
+
+    public function st_busca_conclu_confi_psico()
+    {
+        $query = isset($_POST['query']) ? $_POST['query'] : NULL;
+        $sql = $this->sql("SELECT conclu_confi_psico_desc FROM mod_psicologia_confina_conclu
+                            where
+                            conclu_confi_psico_desc like '%$query%'
+                            group by conclu_confi_psico_desc");
+        return $sql;
+    }
+
+    public function load_conclu_confi_psico()
+    {
+        $reco_id = $_POST['conclu_confi_psico_id'];
+        $reco_adm = $_POST['conclu_confi_psico_adm'];
+        $query = "SELECT
+            conclu_confi_psico_id, conclu_confi_psico_adm, conclu_confi_psico_desc
+            FROM mod_psicologia_confina_conclu
+            where
+            conclu_confi_psico_id=$reco_id and
+            conclu_confi_psico_adm=$reco_adm;";
+        $q = $this->sql($query);
+        return array('success' => true, 'data' => $q->data[0]);
+    }
+
+    //LOAD SAVE UPDATE ESPACIOS CONFINADOS
+
+    public function load_psicologia_confinados()
+    {
+        $adm = $_POST['adm'];
+        //        $examen = $_POST['examen'];
+        $query = "SELECT * FROM mod_psicologia_confinados where m_psico_confinados_adm='$adm';";
+        $q = $this->sql($query);
+        return array('success' => true, 'data' => $q->data[0]);
+    }
+
+    public function save_psicologia_confinados()
+    {
+
+        $adm = $_POST['adm'];
+        $exa = $_POST['ex_id'];
+
+        $this->begin();
+
+        $params_1 = array();
+        $params_1[':adm'] = $_POST['adm'];
+        $params_1[':sede'] = $this->user->con_sedid;
+        $params_1[':usuario'] = $this->user->us_id;
+        $params_1[':ex_id'] = $_POST['ex_id'];
+
+        $q_1 = "INSERT INTO mod_psicologia VALUES
+                (NULL,
+                :adm,
+                :sede,
+                :usuario,
+                now(),
+                null,
+                1,
+                :ex_id);";
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////
+
+        $params_2 = array();
+        $params_2[':adm'] = $_POST['adm'];
+        $params_2[':m_psico_confinados_preg01'] = $_POST['m_psico_confinados_preg01'];
+        $params_2[':m_psico_confinados_preg02'] = $_POST['m_psico_confinados_preg02'];
+        $params_2[':m_psico_confinados_preg03'] = $_POST['m_psico_confinados_preg03'];
+        $params_2[':m_psico_confinados_preg04'] = $_POST['m_psico_confinados_preg04'];
+        $params_2[':m_psico_confinados_preg05'] = $_POST['m_psico_confinados_preg05'];
+        $params_2[':m_psico_confinados_preg06'] = $_POST['m_psico_confinados_preg06'];
+        $params_2[':m_psico_confinados_preg07'] = $_POST['m_psico_confinados_preg07'];
+        $params_2[':m_psico_confinados_preg08'] = $_POST['m_psico_confinados_preg08'];
+        $params_2[':m_psico_confinados_preg09'] = $_POST['m_psico_confinados_preg09'];
+        $params_2[':m_psico_confinados_preg10'] = $_POST['m_psico_confinados_preg10'];
+        $params_2[':m_psico_confinados_preg11'] = $_POST['m_psico_confinados_preg11'];
+        $params_2[':m_psico_confinados_preg12'] = $_POST['m_psico_confinados_preg12'];
+        $params_2[':m_psico_confinados_preg13'] = $_POST['m_psico_confinados_preg13'];
+        $params_2[':m_psico_confinados_preg14'] = $_POST['m_psico_confinados_preg14'];
+        $params_2[':m_psico_confinados_entrena_confina'] = $_POST['m_psico_confinados_entrena_confina'];
+        $params_2[':m_psico_confinados_prim_auxilios'] = $_POST['m_psico_confinados_prim_auxilios'];
+        $params_2[':m_psico_confinados_fobia_claustro'] = $_POST['m_psico_confinados_fobia_claustro'];
+        $params_2[':m_psico_confinados_bat7'] = $_POST['m_psico_confinados_bat7'];
+        $params_2[':m_psico_confinados_formato'] = $_POST['m_psico_confinados_formato'];
+        $params_2[':m_psico_confinados_cuest_temores'] = $_POST['m_psico_confinados_cuest_temores'];
+        $params_2[':m_psico_confinados_aptitud'] = $_POST['m_psico_confinados_aptitud'];
+
+        $q_2 = "INSERT INTO mod_psicologia_confinados VALUES 
+                (null,
+                :adm,
+                :m_psico_confinados_preg01,
+				:m_psico_confinados_preg02,
+				:m_psico_confinados_preg03,
+				:m_psico_confinados_preg04,
+				:m_psico_confinados_preg05,
+				:m_psico_confinados_preg06,
+				:m_psico_confinados_preg07,
+				:m_psico_confinados_preg08,
+				:m_psico_confinados_preg09,
+				:m_psico_confinados_preg10,
+				:m_psico_confinados_preg11,
+				:m_psico_confinados_preg12,
+				:m_psico_confinados_preg13,
+				:m_psico_confinados_preg14,
+				:m_psico_confinados_entrena_confina,
+				:m_psico_confinados_prim_auxilios,
+				:m_psico_confinados_fobia_claustro,
+				:m_psico_confinados_bat7,
+				:m_psico_confinados_formato,
+				:m_psico_confinados_cuest_temores,
+				:m_psico_confinados_aptitud);";
+
+        $verifica = $this->sql("SELECT 
+		m_psicologia_adm, concat(usu_nombres,' ',usu_appat,' ',usu_apmat) usuario 
+		FROM mod_psicologia 
+		inner join sys_usuario on usu_id=m_psicologia_usu 
+		where 
+		m_psicologia_adm='$adm' and m_psicologia_examen='$exa';");
+        if ($verifica->total > 0) {
+            $this->rollback();
+            return array('success' => false, "error" => 'Paciente ya fue registrado por ' . $verifica->data[0]->usuario);
+        } else {
+            $sql_1 = $this->sql($q_1, $params_1);
+            if ($sql_1->success) {
+                $sql_2 = $this->sql($q_2, $params_2);
+                if ($sql_2->success) {
+                    $this->commit();
+                    return $sql_2;
+                } else {
+                    $this->rollback();
+                    return array('success' => false, 'error' => 'Problemas con el registro.');
+                }
+            } else {
+                $this->rollback();
+                return array('success' => false, 'error' => 'Problemas con el registro.');
+            }
+        }
+    }
+
+
+    public function update_psicologia_confinados()
+    {
+        $this->begin();
+
+        $params_1 = array();
+        $params_1[':usuario'] = $this->user->us_id;
+        $params_1[':id'] = $_POST['id'];
+        $params_1[':adm'] = $_POST['adm'];
+        $params_1[':ex_id'] = $_POST['ex_id'];
+        $q_1 = 'Update mod_psicologia set
+                    m_psicologia_usu=:usuario,
+                    m_psicologia_fech_update=now()
+                where
+                m_psicologia_id=:id and m_psicologia_adm=:adm and m_psicologia_examen=:ex_id;';
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////
+
+        $params_2 = array();
+        $params_2[':adm'] = $_POST['adm'];
+        $params_2[':m_psico_confinados_preg01'] = $_POST['m_psico_confinados_preg01'];
+        $params_2[':m_psico_confinados_preg02'] = $_POST['m_psico_confinados_preg02'];
+        $params_2[':m_psico_confinados_preg03'] = $_POST['m_psico_confinados_preg03'];
+        $params_2[':m_psico_confinados_preg04'] = $_POST['m_psico_confinados_preg04'];
+        $params_2[':m_psico_confinados_preg05'] = $_POST['m_psico_confinados_preg05'];
+        $params_2[':m_psico_confinados_preg06'] = $_POST['m_psico_confinados_preg06'];
+        $params_2[':m_psico_confinados_preg07'] = $_POST['m_psico_confinados_preg07'];
+        $params_2[':m_psico_confinados_preg08'] = $_POST['m_psico_confinados_preg08'];
+        $params_2[':m_psico_confinados_preg09'] = $_POST['m_psico_confinados_preg09'];
+        $params_2[':m_psico_confinados_preg10'] = $_POST['m_psico_confinados_preg10'];
+        $params_2[':m_psico_confinados_preg11'] = $_POST['m_psico_confinados_preg11'];
+        $params_2[':m_psico_confinados_preg12'] = $_POST['m_psico_confinados_preg12'];
+        $params_2[':m_psico_confinados_preg13'] = $_POST['m_psico_confinados_preg13'];
+        $params_2[':m_psico_confinados_preg14'] = $_POST['m_psico_confinados_preg14'];
+        $params_2[':m_psico_confinados_entrena_confina'] = $_POST['m_psico_confinados_entrena_confina'];
+        $params_2[':m_psico_confinados_prim_auxilios'] = $_POST['m_psico_confinados_prim_auxilios'];
+        $params_2[':m_psico_confinados_fobia_claustro'] = $_POST['m_psico_confinados_fobia_claustro'];
+        $params_2[':m_psico_confinados_bat7'] = $_POST['m_psico_confinados_bat7'];
+        $params_2[':m_psico_confinados_formato'] = $_POST['m_psico_confinados_formato'];
+        $params_2[':m_psico_confinados_cuest_temores'] = $_POST['m_psico_confinados_cuest_temores'];
+        $params_2[':m_psico_confinados_aptitud'] = $_POST['m_psico_confinados_aptitud'];
+
+        $q_2 = 'Update mod_psicologia_confinados set
+				m_psico_confinados_preg01=:m_psico_confinados_preg01,
+				m_psico_confinados_preg02=:m_psico_confinados_preg02,
+				m_psico_confinados_preg03=:m_psico_confinados_preg03,
+				m_psico_confinados_preg04=:m_psico_confinados_preg04,
+				m_psico_confinados_preg05=:m_psico_confinados_preg05,
+				m_psico_confinados_preg06=:m_psico_confinados_preg06,
+				m_psico_confinados_preg07=:m_psico_confinados_preg07,
+				m_psico_confinados_preg08=:m_psico_confinados_preg08,
+				m_psico_confinados_preg09=:m_psico_confinados_preg09,
+				m_psico_confinados_preg10=:m_psico_confinados_preg10,
+				m_psico_confinados_preg11=:m_psico_confinados_preg11,
+				m_psico_confinados_preg12=:m_psico_confinados_preg12,
+				m_psico_confinados_preg13=:m_psico_confinados_preg13,
+				m_psico_confinados_preg14=:m_psico_confinados_preg14,
+				m_psico_confinados_entrena_confina=:m_psico_confinados_entrena_confina,
+				m_psico_confinados_prim_auxilios=:m_psico_confinados_prim_auxilios,
+				m_psico_confinados_fobia_claustro=:m_psico_confinados_fobia_claustro,
+				m_psico_confinados_bat7=:m_psico_confinados_bat7,
+				m_psico_confinados_formato=:m_psico_confinados_formato,
+				m_psico_confinados_cuest_temores=:m_psico_confinados_cuest_temores,
+				m_psico_confinados_aptitud=:m_psico_confinados_aptitud
+                where
+                m_psico_confinados_adm=:adm;';
+
+        $sql_2 = $this->sql($q_2, $params_2);
+        if ($sql_2->success) {
+            $sql_1 = $this->sql($q_1, $params_1);
+            if ($sql_1->success && $sql_1->total == 1) {
+                $this->commit();
+                return $sql_1;
+            } else {
+                $this->rollback();
+                return array('success' => false, 'error' => 'Problemas con el registro.');
+            }
+        } else {
+            $this->rollback();
+            return array('success' => false, 'error' => 'Problemas con el registro.');
+        }
+    }
+
+
+    //LOAD SAVE UPDATE ESPACIOS CONFINADOS
+
+
+    public function paciente($adm)
+    {
         $sql = $this->sql("SELECT
             adm_id as adm
             ,concat(pac_nombres,', ',pac_appat,' ',pac_apmat) nom_ap
@@ -1218,33 +1514,57 @@ class model extends core {
         return $sql;
     }
 
-    public function carga_psico_informe_pdf($adm) {
+    public function carga_psico_informe_pdf($adm)
+    {
         $query = "SELECT * FROM mod_psicologia_informe
             where m_psico_inf_adm='$adm';";
         return $this->sql($query);
     }
 
-    public function carga_psico_examen_pdf($adm) {
+    public function carga_psico_examen_pdf($adm)
+    {
         $query = "SELECT * FROM mod_psicologia_examen
             where m_psico_exam_adm='$adm';";
         return $this->sql($query);
     }
 
-    public function carga_psicologia_altura_pdf($adm) {
+    public function carga_psicologia_altura_pdf($adm)
+    {
         $query = "SELECT * FROM mod_psicologia_altura
             where m_psico_altura_adm='$adm';";
         return $this->sql($query);
     }
 
-    public function rpt_conclusion($adm) {
+    public function carga_psicologia_confinados_pdf($adm)
+    {
+        $query = "SELECT * FROM mod_psicologia_confinados
+            where m_psico_confinados_adm='$adm';";
+        return $this->sql($query);
+    }
+
+    public function rpt_conclusion($adm)
+    {
         $q = "SELECT upper(conclu_altu_psico_desc) obs_desc
                 FROM mod_psicologia_altura_conclu where conclu_altu_psico_adm=$adm";
         return $this->sql($q);
     }
 
+    public function esp_confin_conclusion($adm)
+    {
+        $q = "SELECT upper(conclu_confi_psico_desc) obs_desc
+                FROM mod_psicologia_confina_conclu where conclu_confi_psico_adm=$adm";
+        return $this->sql($q);
+    }
+    public function medicina_manejo_pdf($adm)
+    {
+        $q = "SELECT m_med_manejo_test_puntea as punteado,
+                m_med_manejo_test_palanca as palanca,
+                m_med_manejo_test_reactimetro as reactimetro
+                FROM mod_medicina_manejo where m_med_manejo_adm =$adm";
+        return $this->sql($q);
+    }
 }
 
 //$sesion = new model(); 
 //echo json_encode($sesion->save());
 //http://localhost/ocupacional/system/loader.php?sys_acction=sys_loadmodel&sys_modname=mod_hruta
-?>
