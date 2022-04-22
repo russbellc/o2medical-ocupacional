@@ -64,6 +64,7 @@ mod.medicina = {
 				"nom",
 				"pac_sexo",
 				"fecha",
+				"adm_aptitud",
 				"nro_examenes",
 			],
 		});
@@ -249,6 +250,33 @@ mod.medicina = {
 					header: "TIPO DE FICHA",
 					dataIndex: "tfi_desc",
 					width: 125,
+				},
+				{
+					header: "APTITUD",
+					dataIndex: "adm_aptitud",
+					align: "center",
+					width: 151,
+					renderer: function (val, meta, record) {
+                        if (val == 'APTO') {
+                            meta.css = 'stkGreen';
+                        } else if (val == 'APTO CON OBSERVACIONES') {
+                            meta.css = 'stkYellow';
+                        } else if (val == 'APTO CON RESTRICCIÓN') {
+                            meta.css = 'stkYellow';
+                            return val;
+                        } else if (val == 'NO APTO TEMPORAL') {
+                            meta.css = 'stkRed';
+                        } else if (val == 'NO APTO DEFINITIVO') {
+                            meta.css = 'stkRed';
+                        } else if (val == 'EN PROCESO DE VALIDACION') {
+                            meta.css = 'stkBlak';
+                        } else if (val == 'NO APTO TEMPORAL') {
+                            meta.css = 'stkblue';
+                        } else {
+                            return  '<b><center><h3>N/R</h3></center></b>';
+                        }
+                        return '<b><center><h3>' + val + '</h3></center></b>';
+                    }
 				},
 				{
 					header: "FECHA DE ADMISIÓN",

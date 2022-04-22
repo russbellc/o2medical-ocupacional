@@ -16,7 +16,7 @@ class model extends core {
                     ,concat(pac_nombres)as nom
                     ,concat(pac_appat,' ',pac_apmat)as ape
                     ,pac_sexo, adm_fech fecha
-                    ,count(adm_id) nro_examenes
+                    ,count(adm_id) nro_examenes,adm_aptitud
                     #,if((aud_pdf)=1,1,0) pdf
                     FROM admision
                     inner join paciente on adm_pac=pac_id
@@ -1155,8 +1155,13 @@ class model extends core {
                 $params[':m_med_medico_auditor'] = $medico_audita;
                 $sql = $this->sql($q, $params);
                 if ($sql->success) {
-                    $this->commit();
-                    return $sql;
+                    $adm = $_POST['adm'];
+                    $aptitud = $_POST['m_med_aptitud'];
+                    $sql_aptitud = $this->sql("update admision set adm_aptitud='$aptitud', adm_val=1 where adm_id=$adm;");
+                    if ($sql_aptitud->success) {
+                        $this->commit();
+                        return $sql;
+                    }                    
                 } else {
                     $this->rollback();
                     return array('success' => false);
@@ -1527,8 +1532,13 @@ class model extends core {
 
             $sql1 = $this->sql($q, $params);
             if ($sql1->success) {
-                $this->commit();
-                return $sql1;
+                    $adm = $_POST['adm'];
+                    $aptitud = $_POST['m_med_aptitud'];
+                    $sql_aptitud = $this->sql("update admision set adm_aptitud='$aptitud', adm_val=1 where adm_id=$adm;");
+                    if ($sql_aptitud->success) {
+                        $this->commit();
+                        return $sql1;
+                    }
             } else {
                 $this->rollback();
                 return array('success' => false);

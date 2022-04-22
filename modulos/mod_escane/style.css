@@ -4,17 +4,8 @@
 .window{
     background-image: url(<[sys_images]>/user-icon.png) !important;
 }
-.biggertext {
-    font-size: 32px;
-} 
-.cam{
-    background-image: url(<[sys_images]>/cam.png) !important;
-}
 .add{
     background-image: url(<[sys_images]>/add.png) !important;
-}
-.list{
-    background-image: url(<[sys_images]>/list.png) !important;
 }
 .homes{
     background-image: url(<[sys_images]>/home_1.png) !important;
@@ -43,7 +34,14 @@
 .imprimir{
     background-image: url(<[sys_images]>/icon_print.png) !important;
 }
-
+.upload-icon {
+    background-image: url(<[sys_images]>/image_add.png) !important;
+    /*background: url(<[sys_images]>/image_add.png) no-repeat 0 0 !important;*/
+}
+.upload {
+    background-image: url(<[sys_images]>/upload.png) !important;
+    /*background: url(<[sys_images]>/image_add.png) no-repeat 0 0 !important;*/
+}
 .child-blue{ 
     background-color: #b8c7ff; 
     color: #004c99; 
@@ -58,6 +56,12 @@
     background-color: #e2ffe2; 
     color: #007b00; 
 }
+
+.upload-icon {
+    background-image: url(<[sys_images]>/image_add.png) !important;
+    /*background: url(<[sys_images]>/image_add.png) no-repeat 0 0 !important;*/
+}
+
 
 
 
@@ -127,3 +131,4 @@
     font-weight: bold;
     text-align: right;
 }
+
