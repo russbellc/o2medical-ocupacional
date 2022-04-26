@@ -25,7 +25,7 @@ mod.escaner = {
             },
             root: 'data',
             totalProperty: 'total',
-            fields: ['adm', 'st_id', 'pdf', 'tfi_desc', 'emp_acro', 'pac_ndoc', 'nombre', 'pac_sexo', 'FECHA', 'usu', 'val_aptitu', 'edad', 'adm_act', 'reg_id']
+            fields: ['adm', 'st_id', 'pdf', 'tfi_desc', 'emp_acro', 'pac_ndoc', 'nombre', 'pac_sexo', 'FECHA', 'usu', 'val_aptitu', 'edad', 'reg_id']
         });
     },
     crea_controles: function () {
@@ -89,32 +89,7 @@ mod.escaner = {
 //                        var rg = record.get('val_aptitu');
 //                        if (rg == 'APTO' | rg == 'APTO CON RESTRICCIONES' | rg == 'APTO CON OBSERVACIONES' | rg == 'NO APTO' | rg == 'RETIRO') 
 //                        {
-                            Ext.Ajax.request({
-                                url: '<[controller]>',
-                                params: {
-                                    acction: (record.get('st_id') == 1) ? 'update' : 'save',
-                                    format: 'json',
-                                    adm_id: record.get('adm')
-                                },
-                                success: function () {
-                                    //mod.escaner.st.load();
-                                },
-                                failure: function (form, action) {
-                                    switch (action.failureType) {
-                                        case Ext.form.Action.CLIENT_INVALID:
-                                            Ext.Msg.alert('Failure', 'Existen valores Invalidos');
-                                            break;
-                                        case Ext.form.Action.CONNECT_FAILURE:
-                                            Ext.Msg.alert('Failure', 'Error de comunicacion con servidor');
-                                            break;
-                                        case Ext.form.Action.SERVER_INVALID:
-                                            Ext.Msg.alert('Failure', action.result.error);
-                                            break;
-                                        default:
-                                            Ext.Msg.alert('Failure', action.result.error);
-                                    }
-                                }
-                            });
+                            
 //                        }
                         if (record.get('val_aptitu') == 'Apto') {
                             mod.escaner.munici.init(record);
@@ -169,7 +144,7 @@ mod.escaner = {
                     header: 'ST',
                     width: 25,
                     sortable: true,
-                    dataIndex: 'st_id',
+                    dataIndex: 'pdf',
                     renderer: function renderIcon(val) {
                         if (val == 0 || val == 2) {
                             return  '<img src="<[images]>/not.png" title="No visto" height="15">';
@@ -274,7 +249,7 @@ mod.escaner = {
             ],
             viewConfig: {
                 getRowClass: function (record, index) {
-                    var st = record.get('st_id');
+                    var st = record.get('pdf');
                     if (st == '0') {
                         return  'child-row';
                     } else if (st == '2') {
@@ -439,7 +414,7 @@ mod.escaner.municipa = {
             modal: true,
             closeAction: 'close',
             resizable: true,
-            html: "<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_escane&sys_report=municipalidad_1&" + params + "'></iframe>"
+            html: "<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_escane&sys_report=municipalidad&" + params + "'></iframe>"
         });
         this.win.show();
     }

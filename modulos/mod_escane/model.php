@@ -1,29 +1,32 @@
 <?php
 
-class model extends core {
+class model extends core
+{
 
-    public function list_resumen() {
+    public function list_resumen()
+    {
         $usuario = $this->user->us_id;
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $columna = isset($_POST['columna']) ? $_POST['columna'] : NULL;
         $query = isset($_POST['query']) ? sprintf($_POST['query']) : NULL;
         $sql1 = ("SELECT
-                    adm_id as adm
-                    ,IF((adm_pdf) = 1,IF((reg_st)=1,1,2),0) as st_id
-                    ,tfi_desc,emp_acro, pac_ndoc
-                    ,adm_fechc AS FECHA
+                    adm_id as adm,adm_foto
+                    #,IF((adm_pdf) = 1,IF((reg_st)=1,1,2),0) as st_id
+                    ,tfi_desc,emp_desc, pac_ndoc
+                    ,adm_fech AS FECHA
                     ,concat(pac_appat,' ',pac_apmat,' ',pac_nombres)as nombre,pac_sexo
                     ,'admin' as usu
                     ,adm_aptitud as val_aptitu
-                    ,concat(TIMESTAMPDIFF(YEAR,pac_nacfec,CURRENT_DATE),' AÑOS') as edad
-                    ,adm_act, if((adm_pdf)=1,1,0) pdf,reg_id
+                    ,concat(TIMESTAMPDIFF(YEAR,pac_fech_nac,CURRENT_DATE),' AÑOS') as edad
+                    , if((adm_pdf)=1,1,0) pdf
+                    #,reg_id
                     FROM admision
-                    inner join paciente on adm_pacid=pac_id
-                    inner join pack on adm_pkid=pk_id
-                    left join empresa on pk_empid=emp_id
-                    left join tficha on adm_tfiid=tfi_id
-                    left join reg_escaneados on reg_adm=adm_id
+                    inner join paciente on adm_pac=pac_id
+                    inner join pack on adm_ruta=pk_id
+                    left join empresa on pk_emp=emp_id
+                    left join tficha on adm_tficha=tfi_id
+                    #left join reg_escaneados on reg_adm=adm_id
                     ");
 
         $verifica = $this->sql("SELECT acc_st, acc_emp FROM acceso_empresa where acc_usu='$usuario';");
@@ -43,43 +46,51 @@ class model extends core {
                     }
                     $string = $string . $verifica->data[$i]->acc_emp . $coma;
                 }
-                $sql1.=" where emp_id IN ($string) ";
+                $sql1 .= " where emp_id IN ($string) ";
                 $and = 'and';
             }
             if (!is_null($columna) && !is_null($query)) {
                 if ($columna == "1") {
-                    $sql1.="$and adm_id=$query";
+                    $sql1 .= "$and adm_id=$query";
                 } else if ($columna == "2") {
-                    $sql1.="and pac_ndoc=$query";
+                    $sql1 .= "and pac_ndoc=$query";
                 } else if ($columna == "3") {
-                    $sql1.="$and concat(pac_appat,' ',pac_apmat,' ',pac_nombres) like '%$query%'";
+                    $sql1 .= "$and concat(pac_appat,' ',pac_apmat,' ',pac_nombres) like '%$query%'";
                 } else if ($columna == "4") {
-                    $sql1.="$and concat(emp_acro,emp_desc,emp_id) like '%$query%'";
+                    $sql1 .= "$and concat(emp_acro,emp_desc,emp_id) like '%$query%'";
                 } else if ($columna == "5") {
-                    $sql1.="$and tfi_desc LIKE '%$query%'";
+                    $sql1 .= "$and tfi_desc LIKE '%$query%'";
                 }
-                $sql1.=" and DATE(adm_fechc)>=date('2015-02-03 00:00:00') group by adm_id order by adm_id DESC;";
-                $sql = $this->sql($sql1);
-                $sql->data = array_slice($sql->data, $start, $limit);
+                $sql1 .= " and DATE(adm_fech)>=date('2015-02-03 00:00:00') group by adm_id order by adm_id DESC;";
             } else {
-                $sql1.=" and DATE(adm_fechc)>=date('2015-02-03 00:00:00') group by adm_id order by adm_id DESC;";
-                $sql = $this->sql($sql1);
-                $sql->data = array_slice($sql->data, $start, $limit);
+                $sql1 .= " and DATE(adm_fech)>=date('2015-02-03 00:00:00') group by adm_id order by adm_id DESC;";
             }
+
+            $sql = $this->sql($sql1);
+            foreach ($sql->data as $i => $value) {
+                $adm_id = $value->adm;
+                $nro_examenes = $value->nro_examenes;
+                $verifica = $this->sql("SELECT count(m_medicina_adm)total FROM mod_medicina where m_medicina_adm=$adm_id;");
+                $total = $verifica->data[0]->total;
+                $value->st_id = ($nro_examenes == $total) ? '1' : '0';
+            }
+            $sql->data = array_slice($sql->data, $start, $limit);
             return $sql;
         } else {
             return array('success' => false, "error" => 'Usuario no tiene accseso : ' . $usuario);
         }
     }
 
-    public function load_pdf() {
+    public function load_pdf()
+    {
         $params = array();
         $params[':adm_id'] = $_POST['adm_id'];
         $q = ' UPDATE admision SET adm_pdf=1 WHERE adm_id=:adm_id;';
         return $this->sql($q, $params);
     }
 
-    public function save() {
+    public function save()
+    {
         $params = array();
         $params[':reg_adm'] = $_POST['adm_id'];
         $params[':reg_st'] = '1';
@@ -98,7 +109,7 @@ class model extends core {
             :reg_st);';
             $query = $this->sql($q, $params);
             if ($query->success) {
-//                $id = $this->getId();
+                //                $id = $this->getId();
                 $params = array();
                 $params[':his_reg'] = $adm;
                 $params[':his_usu'] = $this->user->us_id;
@@ -115,7 +126,8 @@ class model extends core {
         }
     }
 
-    public function update() {
+    public function update()
+    {
         $params = array();
         $params[':reg_adm'] = $_POST['adm_id'];
         $params[':reg_st'] = '1';
@@ -148,7 +160,8 @@ class model extends core {
         }
     }
 
-    public function municip() {
+    public function municip()
+    {
         $usu = $this->user->us_id;
         $q = "SELECT
             acc_usu, acc_tipe
@@ -157,5 +170,4 @@ class model extends core {
             acc_usu='$usu'";
         return $this->sql($q);
     }
-
 }

@@ -17,7 +17,7 @@ class model extends core {
                     ,concat(pac_appat,' ',pac_apmat)as ape
                     ,pac_sexo, adm_fech fecha
                     ,count(adm_id) nro_examenes,adm_aptitud
-                    #,if((aud_pdf)=1,1,0) pdf
+                    #,if((adm_pdf)=1,1,0) pdf
                     FROM admision
                     inner join paciente on adm_pac=pac_id
                     inner join pack on adm_ruta=pk_id
