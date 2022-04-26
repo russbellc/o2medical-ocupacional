@@ -193,33 +193,35 @@ mod.escaner = {
                     dataIndex: 'tfi_desc',
                     align: 'center',
                     width: 130
-                }, {
-                    header: 'APTITUD',
-                    dataIndex: 'val_aptitu',
-                    align: 'center',
-                    width: 160,
-                    renderer: function (val, meta, record) {
+                }, 
+                {
+					header: "APTITUD",
+					dataIndex: "val_aptitu",
+					align: "center",
+					width: 151,
+					renderer: function (val, meta, record) {
                         if (val == 'APTO') {
                             meta.css = 'stkGreen';
-                        } else if (val == 'APTO CON RESTRICCIONES') {
-                            meta.css = 'stkYellow';
                         } else if (val == 'APTO CON OBSERVACIONES') {
                             meta.css = 'stkYellow';
+                        } else if (val == 'APTO CON RESTRICCIÓN') {
+                            meta.css = 'stkYellow';
                             return val;
-                        } else if (val == 'NO APTO') {
+                        } else if (val == 'NO APTO TEMPORAL') {
                             meta.css = 'stkRed';
-                        } else if (val == 'OBSERVADO') {
+                        } else if (val == 'NO APTO DEFINITIVO') {
                             meta.css = 'stkRed';
                         } else if (val == 'EN PROCESO DE VALIDACION') {
                             meta.css = 'stkBlak';
-                        } else if (val == 'RETIRO') {
+                        } else if (val == 'NO APTO TEMPORAL') {
                             meta.css = 'stkblue';
                         } else {
                             return  '<b><center><h3>N/R</h3></center></b>';
                         }
                         return '<b><center><h3>' + val + '</h3></center></b>';
                     }
-                }, 
+				},
+                // {
 //                {
 //                    id: 'tri_usu',
 //                    header: 'USUARIO',
