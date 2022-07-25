@@ -223,26 +223,26 @@ mod.admision = {
 					align: "center",
 					width: 151,
 					renderer: function (val, meta, record) {
-                        if (val == 'APTO') {
-                            meta.css = 'stkGreen';
-                        } else if (val == 'APTO CON OBSERVACIONES') {
-                            meta.css = 'stkYellow';
-                        } else if (val == 'APTO CON RESTRICCIÓN') {
-                            meta.css = 'stkYellow';
-                            return val;
-                        } else if (val == 'NO APTO TEMPORAL') {
-                            meta.css = 'stkRed';
-                        } else if (val == 'NO APTO DEFINITIVO') {
-                            meta.css = 'stkRed';
-                        } else if (val == 'EN PROCESO DE VALIDACION') {
-                            meta.css = 'stkBlak';
-                        } else if (val == 'NO APTO TEMPORAL') {
-                            meta.css = 'stkblue';
-                        } else {
-                            return  '<b><center><h3>N/R</h3></center></b>';
-                        }
-                        return '<b><center><h3>' + val + '</h3></center></b>';
-                    }
+						if (val == "APTO") {
+							meta.css = "stkGreen";
+						} else if (val == "APTO CON OBSERVACIONES") {
+							meta.css = "stkYellow";
+						} else if (val == "APTO CON RESTRICCIÓN") {
+							meta.css = "stkYellow";
+							return val;
+						} else if (val == "NO APTO TEMPORAL") {
+							meta.css = "stkRed";
+						} else if (val == "NO APTO DEFINITIVO") {
+							meta.css = "stkRed";
+						} else if (val == "EN PROCESO DE VALIDACION") {
+							meta.css = "stkBlak";
+						} else if (val == "NO APTO TEMPORAL") {
+							meta.css = "stkblue";
+						} else {
+							return "<b><center><h3>N/R</h3></center></b>";
+						}
+						return "<b><center><h3>" + val + "</h3></center></b>";
+					},
 				},
 				{
 					header: "FECHA",
@@ -308,7 +308,7 @@ mod.admision.foto = {
 			frame: true,
 			monitorValid: true,
 			autoLoad: {
-				url: "../librerias/scriptcam/firme.htm",
+				url: "./extras/camara.html",
 				scripts: true,
 			},
 			items: [],
@@ -319,14 +319,14 @@ mod.admision.foto = {
 					formBind: true,
 					scope: this,
 					handler: function () {
-						mod.admision.registro.foto_desc.setValue(
-							$.scriptcam.getFrameAsBase64()
-						);
+						const imagen = document.querySelector(".imagenText");
+						console.log(imagen.textContent);
+						mod.admision.registro.foto_desc.setValue(imagen.textContent);
 						mod.admision.registro.imgStore.removeAll();
 						var store = mod.admision.registro.imgStore;
 						var record = new store.recordType({
 							id: "",
-							foto: "data:image/png;base64," + $.scriptcam.getFrameAsBase64(),
+							foto: imagen.textContent,
 						});
 						store.add(record);
 						mod.admision.registro.adm_foto.setValue("1");
@@ -337,8 +337,8 @@ mod.admision.foto = {
 		});
 		this.win = new Ext.Window({
 			title: "Foto DNI: ",
-			height: 510,
-			width: 348,
+			height: 550,
+			width: 690,
 			modal: true,
 			border: false,
 			frame: true,
