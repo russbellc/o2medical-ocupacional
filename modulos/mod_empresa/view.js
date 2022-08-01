@@ -2393,11 +2393,11 @@ mod.empresa.rutasEdit = {
                     text: 'AGREGAR EXAMEN',
                     iconCls: 'nuevo',
                     handler: function () {
-                        if (mod.empresa.rutasEdit.record.get('horas') <= 24) {
+                        if (mod.empresa.rutasEdit.record.get('horas') <= 168) {
                             var records = mod.empresa.rutasEdit.record;
                             mod.empresa.addExamen.init(records);
                         } else {
-                            Ext.Msg.alert('Alerta', 'Ya transcurrieron las 24 horas. No puede agregar un examen');
+                            Ext.Msg.alert('Alerta', 'Ya transcurrieron las  1 semana. No puede agregar un examen');
                         }
                     }
                 }, '->', '-', {
