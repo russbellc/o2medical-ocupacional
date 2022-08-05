@@ -281,7 +281,7 @@ script;
                 if ($verifica->total > 0) {
                     $acceso = $verifica->data[0]->access_st;
                     if ($verifica->data[0]->access_st == "1") {
-                        $empresas = '';
+                        $empresas = "";
                     } else {
                         $string = "";
                         $total = $verifica->total;
@@ -508,4 +508,3 @@ if (isset($_REQUEST['sys_acction']) && !empty($_REQUEST['sys_acction'])) {
 else {
     throw new Exception("Este documento no se puede Visualizar");
 }
-?>

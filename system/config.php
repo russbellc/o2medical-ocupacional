@@ -15,7 +15,7 @@ define("__log", __DIR__."/errors.log.txt")
 #datos configuracion local solo emergencias
 define("__driver","mysql");
 define("__dbserver", "localhost");
-define("__dbname", "db_kaori_bk_38");
+define("__dbname", "db_kaori_bk_1");
 define("__dbuser", "root");
 define("__dbpass", "");
 define("__sesname","code");

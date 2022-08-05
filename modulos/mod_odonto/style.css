@@ -1,0 +1,315 @@
+.win {
+    background-image: url(<[images]>/icon.png) !important;
+}
+.win2 {
+    background-image: url(<[images]>/icon2.png) !important;
+}
+.odo1 {
+    background-image: url(<[images]>/odo1.png) !important;
+}
+.odo2 {
+    background-image: url(<[images]>/odo2.png) !important;
+}
+.nuevo{
+    background-image: url(<[sys_images]>/nuevo.png) !important;
+}
+.window{
+    background-image: url(<[sys_images]>/user-icon.png) !important;
+}
+.excel{
+    background-image: url(<[sys_images]>/excel.png) !important;
+}
+.add{
+    background-image: url(<[sys_images]>/add.png) !important;
+}
+.homes{
+    background-image: url(<[sys_images]>/home_1.png) !important;
+}
+.homes2{
+    background-image: url(<[sys_images]>/home2.png) !important;
+}
+.guardar{
+    background-image: url(<[sys_images]>/save.png) !important;
+}
+.limpiar{
+    background-image: url(<[sys_images]>/clearIcon.png) !important;
+}
+.editar{
+    background-image: url(<[sys_images]>/icon_edit.png) !important;
+}
+.modificar{
+    background-image: url(<[sys_images]>/icon_edit.png) !important;
+}
+.eliminar{
+    background-image: url(<[sys_images]>/icon_cancel.png) !important;
+}
+.reporte{
+    background-image: url(<[sys_images]>/icon_report.png) !important;
+}
+.imprimir{
+    background-image: url(<[sys_images]>/icon_print.png) !important;
+}
+.diente_pz1{
+    text-align: center;
+    height: 157px;
+    width: 20px;
+}
+.caries{
+    background-image: url(<[images]>/caries.png) !important;
+}
+.restauracion{
+    background-image: url(<[images]>/restauracion.png) !important;
+}
+.ausente{
+    background-image: url(<[images]>/ausente.png) !important;
+}
+.extraer{
+    background-image: url(<[images]>/extraer.png) !important;
+}
+.cbueno{
+    background-image: url(<[images]>/cbueno.png) !important;
+}
+.cmalo{
+    background-image: url(<[images]>/cmalo.png) !important;
+}
+.placa{
+    background-image: url(<[images]>/placa.png) !important;
+}
+
+
+
+
+
+
+#dientes_view .x-panel-body{
+    background: white;
+    font: 11px Arial, Helvetica, sans-serif;
+}
+#dientes_view .thumb-wrap2{
+    /*height: 149px;*/
+    float: left;
+    margin: 0px;
+    margin-right: 0;
+    padding: 0px;
+}
+#dientes_view .thumb-wrap2 span{
+    /*height: 149px;*/
+    display: block;
+    overflow: hidden;
+    text-align: center;
+}
+
+#dientes_view .x-view-over{
+    border:1px solid #dddddd;
+    -webkit-box-shadow:1px 1px 3px 2px #010101;
+    box-shadow:1px 1px 3px 2px #010101;
+    cursor:pointer;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    background: #ffffff url(extras/extjs/resources/images/default/grid/row-over.gif) repeat-x left top;
+    padding: 0px;
+}
+
+#dientes_view .x-view-selected{
+    background: #eff5fb url(images/selected.gif) no-repeat right bottom;
+    border:1px solid #99bbe8;
+    padding: 0px;
+}
+#dientes_view .x-view-selected .thumb{
+    background:transparent;
+}
+
+#dientes_view .loading-indicator {
+    font-size:11px;
+    background-image:url('../../resources/images/default/grid/loading.gif');
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left:0px;
+    margin:0px;
+}
+
+
+
+
+
+#dientes_view1 .x-panel-body{
+    background: white;
+    font: 11px Arial, Helvetica, sans-serif;
+}
+#dientes_view1 .thumb-wrap2{
+    /*height: 149px;*/
+    float: left;
+    margin: 0px;
+    margin-right: 0;
+    padding: 0px;
+}
+#dientes_view1 .thumb-wrap2 span{
+    /*height: 149px;*/
+    display: block;
+    overflow: hidden;
+    text-align: center;
+}
+
+#dientes_view1 .x-view-over{
+    border:1px solid #dddddd;
+    -webkit-box-shadow:1px 1px 3px 2px #010101;
+    box-shadow:1px 1px 3px 2px #010101;
+    cursor:pointer;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    background: #ffffff url(extras/extjs/resources/images/default/grid/row-over.gif) repeat-x left top;
+    padding: 0px;
+}
+
+#dientes_view1 .x-view-selected{
+    background: #eff5fb url(images/selected.gif) no-repeat right bottom;
+    border:1px solid #99bbe8;
+    padding: 0px;
+}
+#dientes_view1 .x-view-selected .thumb{
+    background:transparent;
+}
+
+#dientes_view1 .loading-indicator {
+    font-size:11px;
+    background-image:url('../../resources/images/default/grid/loading.gif');
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left:0px;
+    margin:0px;
+}
+
+
+
+
+
+
+
+
+
+
+
+#dientes_view2 .x-panel-body{
+    background: white;
+    font: 11px Arial, Helvetica, sans-serif;
+}
+#dientes_view2 .thumb-wrap2{
+    /*height: 149px;*/
+    float: left;
+    margin: 0px;
+    margin-right: 0;
+    padding: 0px;
+}
+#dientes_view2 .thumb-wrap2 span{
+    /*height: 149px;*/
+    display: block;
+    overflow: hidden;
+    text-align: center;
+}
+
+#dientes_view2 .x-view-over{
+    border:1px solid #dddddd;
+    -webkit-box-shadow:1px 1px 3px 2px #010101;
+    box-shadow:1px 1px 3px 2px #010101;
+    cursor:pointer;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    background: #ffffff url(extras/extjs/resources/images/default/grid/row-over.gif) repeat-x left top;
+    padding: 0px;
+}
+
+#dientes_view2 .x-view-selected{
+    background: #eff5fb url(images/selected.gif) no-repeat right bottom;
+    border:1px solid #99bbe8;
+    padding: 0px;
+}
+#dientes_view2 .x-view-selected .thumb{
+    background:transparent;
+}
+
+#dientes_view2 .loading-indicator {
+    font-size:11px;
+    background-image:url('../../resources/images/default/grid/loading.gif');
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left:0px;
+    margin:0px;
+}
+
+
+
+
+
+
+
+
+
+#dientes_view3 .x-panel-body{
+    background: white;
+    font: 11px Arial, Helvetica, sans-serif;
+}
+#dientes_view3 .thumb-wrap2{
+    /*height: 149px;*/
+    float: left;
+    margin: 0px;
+    margin-right: 0;
+    padding: 0px;
+}
+#dientes_view3 .thumb-wrap2 span{
+    /*height: 149px;*/
+    display: block;
+    overflow: hidden;
+    text-align: center;
+}
+
+#dientes_view3 .x-view-over{
+    border:1px solid #dddddd;
+    -webkit-box-shadow:1px 1px 3px 2px #010101;
+    box-shadow:1px 1px 3px 2px #010101;
+    cursor:pointer;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    background: #ffffff url(extras/extjs/resources/images/default/grid/row-over.gif) repeat-x left top;
+    padding: 0px;
+}
+
+#dientes_view3 .x-view-selected{
+    background: #eff5fb url(images/selected.gif) no-repeat right bottom;
+    border:1px solid #99bbe8;
+    padding: 0px;
+}
+#dientes_view3 .x-view-selected .thumb{
+    background:transparent;
+}
+
+#dientes_view3 .loading-indicator {
+    font-size:11px;
+    background-image:url('../../resources/images/default/grid/loading.gif');
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left:0px;
+    margin:0px;
+}
+#a29{
+    background-image:<[images]>/dientes/a29.png;
+}
+
+
+.child-blue{ 
+    background-color: #b8c7ff; 
+    color: #004c99; 
+} 
+
+.child-row{ 
+    background-color: #ffe2e2; 
+    color: #900; 
+} 
+
+.adult-row{ 
+    background-color: #e2ffe2; 
+    color: #007b00; 
+}

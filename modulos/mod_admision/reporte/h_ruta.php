@@ -1,16 +1,14 @@
 <?php
 
-class MYPDF extends TCPDF
-{
+class MYPDF extends TCPDF {
 
     public $user;
 
-    public function Header()
-    {
+    public function Header() {
+        
     }
 
-    function zerofill($entero, $largo)
-    {
+    function zerofill($entero, $largo) {
         $entero = (int) $entero;
         $largo = (int) $largo;
         $relleno = '';
@@ -21,13 +19,13 @@ class MYPDF extends TCPDF
         return $relleno . $entero;
     }
 
-    public function Footer()
-    {
+    public function Footer() {
         $this->SetY(-15);
         $this->SetFont('helvetica', 'I', 8);
         $this->Cell(0, 10, $this->user->sed_desc, 0, false, 'L', 0, '', 0, false, 'T', 'M');
         $this->Cell(0, 10, 'Pagina - ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, false, 'R', 0, '', 0, false, 'T', 'M');
     }
+
 }
 
 $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -44,8 +42,8 @@ $pdf->SetKeywords('');
 
 // Contenido de la cabecera
 // Fuente de la cabecera y el pie de página
-$pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-$pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
 // Márgenes
 $pdf->SetMargins(PDF_MARGIN_LEFT, 13, PDF_MARGIN_RIGHT);
@@ -63,34 +61,47 @@ $pdf->SetFont('helvetica', 'B', 25);
 
 // Añadir página
 $pac = $model->report($_GET['adm']);
+$pdf->AddPage();
 
 
-$pdf->AddPage('P', 'A4');
 
-
-//IMAGENES
 $pdf->setJPEGQuality(100);
-$pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
-$pdf->Image('images/formato/contactos_o2.jpg', 145, 5, 50, '', 'JPEG');
+//$pdf->Image('images/logo.png', 15, 5, 50, '', 'PNG');
 // $pdf->ImageSVG('images/logo_pdf.svg', 4, 6, '', '', $link = '', '', 'T');
-
-// TITULO
-$pdf->SetFont('helveticaB', 'B', 12);
-$pdf->Cell(0, 0, 'HOJA DE RUTA - EMO: ' . $pac->data[0]->adm_id, 0, 1, 'C');
-$pdf->Ln(8);
-
-// VARIABLES
+$pdf->SetFont('helvetica', 'BU', 12);
+$pdf->Cell(0, 0, 'HOJA DE EXAMEN MEDICO OCUPACIONAL', 0, 1, 'C');
+$pdf->Ln(10);
+$f = 0;
 $h = 5.3;
-$textTitulo = 7;
-$texto = 7;
+$w = 40;
+$w2 = 50;
+$w3 = 8;
+$texh = 8;
+$texh2 = 7;
+$ali = 'L';
+$id = isset($_GET['adm']) ? $_GET['adm'] : null;
 
-//CABECERA
-$pdf->SetFont('helvetica', 'B', 8);
-$pdf->Cell(145, $h, $pac->data[0]->emp_desc, 1, 0, 'C');
-$pdf->Cell(5, $h, '', 0, 0);
+
+$pdf->SetFont('helvetica', 'B', $texh);
+$pdf->Cell($w2, $h, 'DATOS GENERALES', 1, 1);
+$pdf->Cell(0, 6 * $h, '', 1);
+$pdf->ln(0);
+
+$pdf->Cell(25, $h, 'EMPRESA', $f, 0, $ali);
+$pdf->SetFont('helvetica', '', $texh2);
+$pdf->Cell(155, $h, ':' . $pac->data[0]->emp_desc, $f, 1);
 
 
+$pdf->SetFont('helvetica', 'B', $texh);
+$pdf->Cell(25, $h, 'NOMBRES', $f, 0, $ali);
+$pdf->SetFont('helvetica', '', $texh2);
+$pdf->Cell(75, $h, ': ' . $pac->data[0]->pac_nombres, 0, 0);
 
+
+$cod = $pdf->zerofill($pac->data[0]->adm_id, 10);
+$pdf->SetFont('helvetica', '', 'C');
+//$pdf->write1DBarcode($cod, 'C39', '', '', 81, 10, 0.4)
+$pdf->Cell(0, $h, $pdf->write1DBarcode($cod, 'C39', '', '', '', 10, 0.4, $style), $f, 1, 'R');
 $style = array(
     'position' => '',
     'align' => 'C',
@@ -107,122 +118,162 @@ $style = array(
     'fontsize' => 8,
     'stretchtext' => 4
 );
-$cod = $pdf->zerofill($pac->data[0]->adm_id, 10);
-$pdf->Cell(30, 30, $pdf->write2DBarcode($cod, 'QRCODE,Q', '', '', 30, 30, $styles), 0, 0, 'C');
+
+
+$pdf->SetFont('helvetica', 'B', $texh);
+$pdf->Cell(25, $h, 'APELLIDOS ', $f, 0, $ali);
+$pdf->SetFont('helvetica', '', $texh2);
+$pdf->Cell(90, $h, ': ' . $pac->data[0]->pac_appat . ' ' . $pac->data[0]->pac_apmat, $f, 1);
+
+
+$pdf->SetFont('helvetica', 'B', $texh);
+$pdf->Cell(25, $h, 'TIPO DE FICHA', $f, 0, $ali);
+$pdf->SetFont('helvetica', '', $texh2);
+$pdf->Cell(88, $h, ': ' . $pac->data[0]->tfi_desc, $f, 0);
+
+
+$pdf->SetFont('helvetica', 'B', 14);
+$pdf->Cell(5, $h, 'N° H.R.', $f, 0, $ali);
+$pdf->Cell(48, $h, $pdf->zerofill($pac->data[0]->adm_id, 10), $f, 0, 'R');
+$pdf->ln($h);
+
+
+$pdf->SetFont('helvetica', 'B', $texh);
+$pdf->Cell(25, $h, 'PUESTO', $f, 0, $ali);
+$pdf->SetFont('helvetica', '', $texh2);
+$pdf->Cell(75, $h, ': ' . $pac->data[0]->puesto, $f, 0);
 
 
 
+$pdf->SetFont('helvetica', 'B', $texh);
+$pdf->Cell($w, $h, 'FECHA DE ADMISIÓN ', $f, 0, $ali);
+$pdf->SetFont('helvetica', '', $texh2);
+$pdf->Cell($w2, $h, ': ' . $pac->data[0]->adm_fech, $f, 1);
 
 
 
-$pdf->Ln(8);
-$pdf->Cell(145, (4 * $h) + 1, '', 1);
-$pdf->ln(1);
-
-////////////////////////////////////////////////////////////////////
-$pdf->SetFont('helvetica', 'B', $textTitulo);
-$pdf->Cell(30, $h, 'TIPO DE EVALUACION', 0, 0, 'L');
-$pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(80, $h, ': ' . $pac->data[0]->tfi_desc, 0, 0);
-$pdf->SetFont('helvetica', 'B', 8);
-$pdf->Cell(40, $h, 'N° H.R.' . $pdf->zerofill($pac->data[0]->adm_id, 10), 0, 0, 'L');
+$pdf->SetFont('helvetica', 'B', $texh);
+$pdf->Cell(25, $h, $pac->data[0]->tdoc_desc, $f, 0, $ali);
+$pdf->SetFont('helvetica', '', $texh2);
+$pdf->Cell(45, $h, ': ' . $pac->data[0]->pac_ndoc, $f, 0);
 
 
-$pdf->Cell(17, $h, '', 0, 1);
+
+$pdf->SetFont('helvetica', 'B', $texh);
+$pdf->Cell(15, $h, 'CELULAR', $f, 0, $ali);
+$pdf->SetFont('helvetica', '', $texh2);
+$pdf->Cell(25, $h, ': ' . $pac->data[0]->pac_cel, $f, 0);
 
 
-////////////////////////////////////////////////////////////////////
 
-$pdf->SetFont('helvetica', 'B', $textTitulo);
-$pdf->Cell(30, $h, 'APELLIDOS Y NOMBRES', 0, 0, 'L');
-$pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(81, $h, ': ' . $pac->data[0]->pac_appat . ' ' . $pac->data[0]->pac_apmat . ', ' . $pac->data[0]->pac_nombres, 0, 0);
-$pdf->SetFont('helvetica', 'B', $textTitulo);
-$pdf->Cell(6, $h, 'SEXO', 0, 0, 'C');
+$pdf->SetFont('helvetica', 'B', $texh);
+$pdf->Cell(10, $h, 'SEXO', $f, 0, $ali);
+$pdf->SetFont('helvetica', '', $texh);
+$pdf->Cell(30, $h, ': ' . (($pac->data[0]->pac_sexo == 'M') ? 'MASCULINO' : 'FEMENINO'), $f, 0);
 
-$pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(19, $h, ': ' . (($pac->data[0]->pac_sexo == 'M') ? 'MASCULINO' : 'FEMENINO'), 0, 1);
-////////////////////////////////////////////////////////////////////
-
-$pdf->SetFont('helvetica', 'B', $textTitulo);
-$pdf->Cell(33, $h, ($pac->data[0]->tdoc_desc == 'DNI') ? 'NÚMERO DE DNI' : $pac->data[0]->tdoc_desc, 0, 0, 'L');
-$pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(30, $h, ': ' . $pac->data[0]->pac_ndoc, 0, 0);
-
-$pdf->SetFont('helvetica', 'B', $textTitulo);
-$pdf->Cell(5, $h, 'EDAD', 0, 0, 'C');
-$pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(25, $h, ': ' . $pac->data[0]->edad . ' Años', 0, 0);
-
-$pdf->SetFont('helvetica', 'B', $textTitulo);
-$pdf->Cell(24, $h, 'FECHA DE ADMISIÓN', 0, 0, 'C');
-$pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(27, $h, ': ' . $pac->data[0]->adm_fech, 0, 1);
+$pdf->SetFont('helvetica', 'B', $texh);
+$pdf->Cell(10, $h, 'EDAD', $f, 0, $ali);
+$pdf->SetFont('helvetica', '', $texh2);
+$pdf->Cell(20, $h, ': ' . $pac->data[0]->edad . ' Años.', $f, 1);
 
 
-////////////////////////////////////////////////////////////////////
+$w2 = 60;
+$h = 9;
+$pdf->Cell($w2, 3, "", 0, 1);
+$pdf->SetFont('helvetica', 'B', $texh);
+$pdf->Cell(87, 5, "SERVICIOS", 0, 0, 'C');
+$pdf->Cell(35, 5, "FIRMA", 0, 0, 'C');
+$pdf->Cell(13, 5, "", 0, 0, 'C');
+$pdf->Cell(45, 55, (($pac->data[0]->adm_foto == '1') ? $pdf->Image("images/fotos/" . $_GET['adm'] . ".png", '', '', 43.8, '', '') : 'FOTO'), 1, 0, 'C');
 
-$pdf->SetFont('helvetica', 'B', $textTitulo);
-$pdf->Cell(32, $h, 'AREA - PUESTO LABORAL', 0, 0, 'L');
-$pdf->SetFont('helvetica', '', $texto);
-$pdf->Cell(93, $h, ': ' . $pac->data[0]->puesto, 0, 1);
-
-
-$pdf->ln(2);
-
-
-$pdf->SetFont('helvetica', 'B', $textTitulo);
-$pdf->Cell(80, $h, "EXAMENES", 1, 0, 'C');
-$pdf->Cell(50, $h, "PRUEBA REALIZADA POR", 1, 0, 'C');
-$pdf->Cell(50, $h, "OBSERVACIONES", 1, 1, 'C');
-
-
-$pdf->SetFont('helvetica', '', $texto);
-
-
+if ($pac->data[0]->adm_foto == '1') {
+    //$pdf->Image("images/fotos/" . $_GET['adm'] . ".png", 150.6, 68.5, 43.8, '','','PNG');
+	//$pdf->Image('images/osteoMuscular/10.jpg', '', '', 20, '', 'JPG');
+    //$pdf->Image("images/fotos/1346.png", 150.6, 68.5, 43.8, '','','PNG');
+}
 $sexo = $pac->data[0]->pac_sexo;
 $area = $model->area($_GET['adm'], $sexo); //psico_paquete
 $ar = 0;
-
+$pdf->Ln(7);
+$rpr_prueba = 0;
+$hcg = 0;
 foreach ($area->data as $i => $row) {
     if ($row->ar_id != $ar) {
         $ar = $row->ar_id;
         $j = 1;
         $pdf->SetFont('helvetica', 'B', 7);
-        $pdf->Cell(80, 3, $row->ar_desc, 'T', 0);
-        $pdf->Cell(50, 3, "", 'LTR', 0);
-        $pdf->Cell(50, 3, "", 'LTR', 0);
-        $pdf->Cell(17, 5, "", 0, 1, 'C');
+        $pdf->Cell(5, 3, "", 1, 0);
+        $pdf->Cell(82, 3, $row->ar_desc, 0, 0);
+        $pdf->Cell(35, 3, "", 0, 0);
+        $pdf->Cell(7, 5, "", 0, 1, 'C');
 
         $pdf->SetFont('helvetica', '', 7);
+        $pdf->Cell(5, 3, "", 0, 0);
         $pdf->Cell(5, 3, "", 1, 0);
-        $pdf->Cell(75, 3, $j++ . ".-" . $row->ex_desc, 0, 0);
-        $pdf->Cell(50, 3, "", 'LR', 0);
-        $pdf->Cell(50, 3, "", 'LR', 0);
-        $pdf->Cell(17, 5, "", 0, 1, 'C');
+        $pdf->Cell(82, 3, $j++ . ".-" . $row->ex_desc, 0, 0);
+        $pdf->Cell(40, 3, "", 0, 0);
+        $pdf->Cell(7, 5, "", 0, 1, 'C');
     } else {
         $pdf->SetFont('helvetica', '', 7);
+        $pdf->Cell(5, 3, "", 0, 0);
         $pdf->Cell(5, 3, "", 1, 0);
-        $pdf->Cell(75, 3, $j++ . ".-" . $row->ex_desc, 0, 0);
-        $pdf->Cell(50, 3, "", 'LR', 0);
-        $pdf->Cell(50, 3, "", 'LR', 0);
-        $pdf->Cell(17, 5, "", 0, 1, 'C');
+        $pdf->Cell(70, 3, $j++ . ".-" . $row->ex_desc, 0, 0);
+        $pdf->Cell(40, 3, "", 0, 0);
+        $pdf->Cell(7, 5, "", 0, 1, 'C');
     }
+    $rpr_prueba += ($row->ex_id == '54') ? 1 : 0;
+    $hcg += ($row->ex_id == '57') ? 1 : 0;
 }
 
-$pdf->Cell(180, $h, "", 'T', 1, 'C');
-$pdf->ln(2);
+
+
+
+/*
+  $psico_paquete = $model->psico_paquete($pac->data[0]->adm_id); //psico_paquete
+
+  $j = 0;
+  foreach ($area->data as $i => $row) {
+  if ($row->ar_id < 5) {
+  if ($row->ex_desc == 'PSICOLOGIA') {
+  $string = "";
+  foreach ($psico_paquete->data as $i => $rows) {
+  $string .= $rows->examen . " - ";
+  }
+  $pdf->SetFont('helvetica', '', 7);
+  $pdf->Cell($w2, $h, $i + 1 . ".-" . $row->ex_desc . ' (' . $string . ')', 1, 0);
+  $pdf->Cell($w2, $h, "", 1, 0);
+  $pdf->Cell(7, 5, "", 0, 0, 'C');
+  $pdf->Ln(9);
+  } else {
+  $pdf->SetFont('helvetica', '', 7);
+  $pdf->Cell($w2, $h, $i + 1 . ".-" . $row->ex_desc, 1, 0);
+  $pdf->Cell($w2, $h, "", 1, 0);
+  $pdf->Cell(7, 5, "", 0, 0, 'C');
+  $pdf->Ln(9);
+  }
+  } elseif ($row->ar_id == 5) {
+  $j += 1;
+  $pdf->SetFont('helvetica', 'B', 8);
+  $j == 1 ? $pdf->Cell($w2, 3, 'LABORATORIO', 1, 1) : "";
+  $pdf->SetFont('helvetica', '', 7);
+  $pdf->Cell($w2, 3, $j . ".-" . $row->ex_desc, 1, 0);
+  $pdf->Cell($w2, 3, "(  )", 1, 1, 'C');
+  }
+  }
+
+ */
+$pdf->ln(1);
 $pdf->SetFont('helvetica', 'B', 8);
-$pdf->Cell(180, 5, '** OJO: AL CONCLUIR ENTREGAR ESTA HOJA EN TECNOLOGIA DE LA INFORMACIÓN', 0, 0, 'L');
+$pdf->Cell(180, 5, '** OJO: AL CONCLUIR ENTREGAR ESTA HOJA EN ADMISIÓN', 0, 0, 'L');
+//$pdf->setVisibility('screen');
+////$pdf->SetAlpha(0.1);
+//$pdf->ImageSVG("images/fondo_pdf.svg", 50, 90, 110, '', $link = '', '', 'T', false, 300, '', false, false, 0, false, false, false);
+////$pdf->setVisibility('all');
+
 $pdf->setVisibility('screen');
-$pdf->SetAlpha(0.1);
+$pdf->ImageSVG("images/fondo_pdf.svg", 50, 90, 110, '', $link = '', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
-$pdf->Image('images/formato/marca_agua_o2.jpg', 25, 70, 160, '', 'JPEG');
-$pdf->setVisibility('all');
-
-
-
-$pdf->AddPage('P', 'A4');
+$pdf->AddPage();
 $pdf->setJPEGQuality(100);
 //$pdf->Image('images/logo.png', 15, 5, 50, '', 'PNG');
 $pdf->ImageSVG('images/logo_pdf.svg', 8, 6, '', '', $link = '', '', 'T');
@@ -234,7 +285,7 @@ $pdf->Cell(0, 0, 'PARA LA REALIZACION DEL EXAMEN MEDICO OCUPACIONAL', 0, 1, 'C')
 $pdf->Ln(5);
 $pdf->SetFont('helvetica', '', 13);
 
-$pdf->MultiCell(180, 1, "Yo, {$pac->data[0]->pac_appat} {$pac->data[0]->pac_apmat} {$pac->data[0]->pac_nombres}  identificado(a) con {$pac->data[0]->tdoc_desc} N° {$pac->data[0]->pac_ndoc}; trabajador de la Empresa {$pac->data[0]->emp_desc}, con domicilio en {$pac->data[0]->pac_domdir} Distrito de {$pac->data[0]->dis_desc} Provincia de {$pac->data[0]->prov_desc}  Departamento de {$pac->data[0]->dep_desc}; en pleno uso de mis facultades, libre y voluntariamente, DECLARO QUE HE SIDO DEBIDAMENTE INFORMADO, acerca del EXAMEN MEDICO OCUPACIONAL: {$pac->data[0]->tfi_desc} que se me realizara en OPTIMA S.A.C. , por lo que ACEPTO la realización del mismo (tanto exámenes médicos/odontológicos, procedimientos de ayuda diagnostica ocupacional, así como exámenes auxiliares de laboratorio e imagenologicos relacionados al riesgo de exposición).
+$pdf->MultiCell(180, 1, "Yo, {$pac->data[0]->pac_appat} {$pac->data[0]->pac_apmat} {$pac->data[0]->pac_nombres}  identificado(a) con {$pac->data[0]->tdoc_desc} N° {$pac->data[0]->pac_ndoc}; trabajador de la Empresa {$pac->data[0]->emp_desc}, con domicilio en {$pac->data[0]->pac_domdir} Distrito de {$pac->data[0]->dis_desc } Provincia de {$pac->data[0]->prov_desc}  Departamento de {$pac->data[0]->dep_desc}; en pleno uso de mis facultades, libre y voluntariamente, DECLARO QUE HE SIDO DEBIDAMENTE INFORMADO, acerca del EXAMEN MEDICO OCUPACIONAL: {$pac->data[0]->tfi_desc} que se me realizara en OPTIMA S.A.C. , por lo que ACEPTO la realización del mismo (tanto exámenes médicos/odontológicos, procedimientos de ayuda diagnostica ocupacional, así como exámenes auxiliares de laboratorio e imagenologicos relacionados al riesgo de exposición).
 
   Asimismo declaro que MIS RESPUESTAS dadas durante el EXAMEN MEDICO OCUPACIONAL son VERDADERAS; consciente de que al ocultar o falsear la información proporcionada, puedo causar daño a mi salud o que puedan interpretarse erróneamente mis probables diagnósticos,  por lo que ASUMO LA RESPONSABILIDAD DE LAS MISMAS.
 
@@ -263,8 +314,7 @@ $pdf->MultiCell(180, 1, "* • El presente consentimiento se ampara en lo dispue
   ", 0);
 
 
-
-$pdf->AddPage('P', 'A4');
+$pdf->AddPage();
 $pdf->setJPEGQuality(100);
 $pdf->ImageSVG('images/logo_pdf.svg', 8, 6, 50, '', $link = '', '', 'T');
 
@@ -278,7 +328,7 @@ $pdf->Ln(10);
 
 $pdf->SetFont('helvetica', '', 13);
 $pdf->Cell(10, 0, '', 0, 0, 'C');
-$pdf->MultiCell(160, 1, "Yo, {$pac->data[0]->pac_appat} {$pac->data[0]->pac_apmat} {$pac->data[0]->pac_nombres} ,trabajador de la empresa {$pac->data[0]->emp_desc} identificado(a) con {$pac->data[0]->tdoc_desc} N° {$pac->data[0]->pac_ndoc}; con domicilio en {$pac->data[0]->pac_domdir} Distrito de {$pac->data[0]->dis_desc} Provincia de {$pac->data[0]->prov_desc}  Departamento de {$pac->data[0]->dep_desc}.
+$pdf->MultiCell(160, 1, "Yo, {$pac->data[0]->pac_appat} {$pac->data[0]->pac_apmat} {$pac->data[0]->pac_nombres} ,trabajador de la empresa {$pac->data[0]->emp_desc} identificado(a) con {$pac->data[0]->tdoc_desc} N° {$pac->data[0]->pac_ndoc}; con domicilio en {$pac->data[0]->pac_domdir} Distrito de {$pac->data[0]->dis_desc } Provincia de {$pac->data[0]->prov_desc}  Departamento de {$pac->data[0]->dep_desc}.
     
 Declaro que, en forma libre y espontánea, autorizo a el Centro Medico Optima S.R.L. a proporcionar información con respecto a mi estado de salud, resultados auxiliares, mis resultados de evaluación medico ocupacionales, contenidas en mi Historia clínica, al responsable del Área de Salud Ocupacional De La Compañía Minera las Bambas S.A.
 
@@ -306,8 +356,7 @@ $pdf->Cell(75, $h, 'FECHA: ' . $pac->data[0]->adm_fech, 0, 1, 'C', 1);
 
 
 
-
-$pdf->AddPage('P', 'A4');
+$pdf->AddPage();
 $pdf->setJPEGQuality(100);
 $pdf->ImageSVG('images/logo_pdf.svg', 8, 6, 50, '', $link = '', '', 'T');
 
@@ -321,7 +370,7 @@ $pdf->Ln(10);
 
 $pdf->SetFont('helvetica', '', 13);
 $pdf->Cell(10, 0, '', 0, 0, 'C');
-$pdf->MultiCell(160, 1, "Yo, {$pac->data[0]->pac_appat} {$pac->data[0]->pac_apmat} {$pac->data[0]->pac_nombres} ,trabajador de la empresa {$pac->data[0]->emp_desc} identificado(a) con {$pac->data[0]->tdoc_desc} N° {$pac->data[0]->pac_ndoc}; con domicilio en {$pac->data[0]->pac_domdir} Distrito de {$pac->data[0]->dis_desc} Provincia de {$pac->data[0]->prov_desc}  Departamento de {$pac->data[0]->dep_desc}, por el presente acepto que se me realice el examen médico:
+$pdf->MultiCell(160, 1, "Yo, {$pac->data[0]->pac_appat} {$pac->data[0]->pac_apmat} {$pac->data[0]->pac_nombres} ,trabajador de la empresa {$pac->data[0]->emp_desc} identificado(a) con {$pac->data[0]->tdoc_desc} N° {$pac->data[0]->pac_ndoc}; con domicilio en {$pac->data[0]->pac_domdir} Distrito de {$pac->data[0]->dis_desc } Provincia de {$pac->data[0]->prov_desc}  Departamento de {$pac->data[0]->dep_desc}, por el presente acepto que se me realice el examen médico:
     
     - {$pac->data[0]->tfi_desc}
     
@@ -354,8 +403,7 @@ $pdf->Cell(75, $h, 'FECHA: ' . $pac->data[0]->adm_fech, 0, 1, 'C', 1);
 if ($rpr_prueba == 1) {
 
 
-
-    $pdf->AddPage('P', 'A4');
+    $pdf->AddPage();
     $pdf->setJPEGQuality(100);
     $pdf->ImageSVG('images/logo_pdf.svg', 8, 6, 50, '', $link = '', '', 'T');
 
@@ -413,8 +461,7 @@ Se me ha explicado la razón de la prueba y sus fines, en tal sentido por medio 
 if ($hcg == 1 && $pac->data[0]->pac_sexo == 'F') {
 
 
-
-    $pdf->AddPage('P', 'A4');
+    $pdf->AddPage();
     $pdf->setJPEGQuality(100);
     $pdf->ImageSVG('images/logo_pdf.svg', 8, 6, 50, '', $link = '', '', 'T');
 
@@ -476,3 +523,4 @@ $pdf->ImageSVG("images/fondo_pdf.svg", 50, 90, 110, '', $link = '', '', 'T', fal
 
 
 $pdf->Output('HOJA DE RUTA.pdf', 'I');
+?>
