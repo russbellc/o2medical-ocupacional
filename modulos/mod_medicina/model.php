@@ -1,8 +1,10 @@
 <?php
 
-class model extends core {
+class model extends core
+{
 
-    public function list_paciente() {
+    public function list_paciente()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $columna = isset($_POST['columna']) ? $_POST['columna'] : NULL;
@@ -56,7 +58,8 @@ class model extends core {
         return $sql;
     }
 
-    public function list_formatos() {
+    public function list_formatos()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $adm_id = isset($_POST['adm']) ? $_POST['adm'] : NULL;
@@ -81,7 +84,8 @@ class model extends core {
         return $sql;
     }
 
-    public function list_empre() {
+    public function list_empre()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $q = "SELECT emp_id, emp_desc, emp_acro FROM empresa where ";
         $empresa = $this->user->empresas;
@@ -90,7 +94,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_puesto_postula() {
+    public function st_busca_puesto_postula()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_puesto_postula FROM mod_medicina_anexo16
                             where
@@ -99,7 +104,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_area() {
+    public function st_busca_area()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_area FROM mod_medicina_anexo16
                             where
@@ -108,7 +114,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_puesto_actual() {
+    public function st_busca_puesto_actual()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_puesto_actual FROM mod_medicina_anexo16
                             where
@@ -117,7 +124,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_eq_opera() {
+    public function st_busca_eq_opera()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_eq_opera FROM mod_medicina_anexo16
                             where
@@ -126,7 +134,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_piel_desc() {
+    public function st_busca_piel_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_piel_desc FROM mod_medicina_anexo16
                             where
@@ -135,7 +144,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_piel_dx() {
+    public function st_busca_piel_dx()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_piel_dx FROM mod_medicina_anexo16
                             where
@@ -144,7 +154,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_cabeza_desc() {
+    public function st_busca_cabeza_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_cabeza_desc FROM mod_medicina_anexo16
                             where
@@ -153,7 +164,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_cabeza_dx() {
+    public function st_busca_cabeza_dx()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_cabeza_dx FROM mod_medicina_anexo16
                             where
@@ -162,7 +174,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_cuello_desc() {
+    public function st_busca_cuello_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_cuello_desc FROM mod_medicina_anexo16
                             where
@@ -171,7 +184,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_cuello_dx() {
+    public function st_busca_cuello_dx()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_cuello_dx FROM mod_medicina_anexo16
                             where
@@ -180,7 +194,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_nariz_desc() {
+    public function st_busca_nariz_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_nariz_desc FROM mod_medicina_anexo16
                             where
@@ -189,7 +204,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_nariz_dx() {
+    public function st_busca_nariz_dx()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_nariz_dx FROM mod_medicina_anexo16
                             where
@@ -198,7 +214,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_boca_desc() {
+    public function st_busca_boca_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_boca_desc FROM mod_medicina_anexo16
                             where
@@ -207,7 +224,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_boca_dx() {
+    public function st_busca_boca_dx()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_boca_dx FROM mod_medicina_anexo16
                             where
@@ -216,7 +234,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_torax_desc() {
+    public function st_busca_torax_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_torax_desc FROM mod_medicina_anexo16
                             where
@@ -225,7 +244,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_torax_dx() {
+    public function st_busca_torax_dx()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_torax_dx FROM mod_medicina_anexo16
                             where
@@ -234,7 +254,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_corazon_desc() {
+    public function st_busca_corazon_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_corazon_desc FROM mod_medicina_anexo16
                             where
@@ -243,7 +264,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_corazon_dx() {
+    public function st_busca_corazon_dx()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_corazon_dx FROM mod_medicina_anexo16
                             where
@@ -252,7 +274,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_mamas_derecho() {
+    public function st_busca_mamas_derecho()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_mamas_derecho FROM mod_medicina_anexo16
                             where
@@ -261,7 +284,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_mamas_izquier() {
+    public function st_busca_mamas_izquier()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_mamas_izquier FROM mod_medicina_anexo16
                             where
@@ -270,7 +294,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_pulmon_desc() {
+    public function st_busca_pulmon_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_pulmon_desc FROM mod_medicina_anexo16
                             where
@@ -279,7 +304,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_pulmon_dx() {
+    public function st_busca_pulmon_dx()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_pulmon_dx FROM mod_medicina_anexo16
                             where
@@ -288,7 +314,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_abdomen() {
+    public function st_busca_abdomen()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_abdomen FROM mod_medicina_anexo16
                             where
@@ -297,7 +324,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_abdomen_desc() {
+    public function st_busca_abdomen_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_abdomen_desc FROM mod_medicina_anexo16
                             where
@@ -306,7 +334,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_tacto_desc() {
+    public function st_busca_tacto_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_tacto_desc FROM mod_medicina_anexo16
                             where
@@ -315,7 +344,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_anillos_desc() {
+    public function st_busca_anillos_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_anillos_desc FROM mod_medicina_anexo16
                             where
@@ -324,7 +354,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_hernia_desc() {
+    public function st_busca_hernia_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_hernia_desc FROM mod_medicina_anexo16
                             where
@@ -333,7 +364,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_varices_desc() {
+    public function st_busca_varices_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_varices_desc FROM mod_medicina_anexo16
                             where
@@ -342,7 +374,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_genitales_desc() {
+    public function st_busca_genitales_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_genitales_desc FROM mod_medicina_anexo16
                             where
@@ -351,7 +384,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_genitales_dx() {
+    public function st_busca_genitales_dx()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_genitales_dx FROM mod_medicina_anexo16
                             where
@@ -360,7 +394,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_ganglios_desc() {
+    public function st_busca_ganglios_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_ganglios_desc FROM mod_medicina_anexo16
                             where
@@ -369,7 +404,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_ganglios_dx() {
+    public function st_busca_ganglios_dx()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_ganglios_dx FROM mod_medicina_anexo16
                             where
@@ -378,7 +414,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_lenguaje_desc() {
+    public function st_busca_lenguaje_desc()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_lenguaje_desc FROM mod_medicina_anexo16
                             where
@@ -387,7 +424,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_lenguaje_dx() {
+    public function st_busca_lenguaje_dx()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_med_lenguaje_dx FROM mod_medicina_anexo16
                             where
@@ -396,7 +434,8 @@ class model extends core {
         return $sql;
     }
 
-    public function list_cie10() {
+    public function list_cie10()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT cie4_id, cie4_cie3id
                 , concat(cie4_id,' - ',cie4_desc) cie4_desc
@@ -407,8 +446,9 @@ class model extends core {
         return $sql;
     }
 
-//DIAGNOSTICO
-    public function list_diag() {
+    //DIAGNOSTICO
+    public function list_diag()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $adm = $_POST['adm'];
@@ -420,7 +460,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_diag() {
+    public function st_busca_diag()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT diag_desc FROM diagnostico
                             where
@@ -429,7 +470,8 @@ class model extends core {
         return $sql;
     }
 
-    public function save_diag() {
+    public function save_diag()
+    {
         $params = array();
         $params[':diag_adm'] = $_POST['diag_adm'];
         ($_POST['diag_tipo'] == 1) ? $params[':diag_desc'] = $_POST['diag_desc'] : $params[':diag_desc'] = $_POST['diag_cie'];
@@ -441,7 +483,8 @@ class model extends core {
         return $this->sql($q, $params);
     }
 
-    public function update_diag() {
+    public function update_diag()
+    {
         $params = array();
         $params[':diag_id'] = $_POST['diag_id'];
         $params[':diag_adm'] = $_POST['diag_adm'];
@@ -464,7 +507,8 @@ class model extends core {
         }
     }
 
-    public function load_diag() {
+    public function load_diag()
+    {
         $diag_adm = $_POST['diag_adm'];
         $diag_id = $_POST['diag_id'];
         $query = "SELECT
@@ -477,8 +521,9 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-//OBSERVACIONES/////////////////
-    public function list_obs() {
+    //OBSERVACIONES/////////////////
+    public function list_obs()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $adm = $_POST['adm'];
@@ -490,7 +535,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_obs() {
+    public function st_busca_obs()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT obs_desc FROM observaciones
                             where
@@ -499,7 +545,8 @@ class model extends core {
         return $sql;
     }
 
-    public function save_obs() {
+    public function save_obs()
+    {
         $params = array();
         $params[':obs_adm'] = $_POST['obs_adm'];
         $params[':obs_desc'] = $_POST['obs_desc'];
@@ -512,7 +559,8 @@ class model extends core {
         return $this->sql($q, $params);
     }
 
-    public function update_obs() {
+    public function update_obs()
+    {
         $params = array();
         $params[':obs_id'] = $_POST['obs_id'];
         $params[':obs_adm'] = $_POST['obs_adm'];
@@ -536,7 +584,8 @@ class model extends core {
         }
     }
 
-    public function load_obs() {
+    public function load_obs()
+    {
         $obs_adm = $_POST['obs_adm'];
         $obs_id = $_POST['obs_id'];
         $query = "SELECT
@@ -549,8 +598,9 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-//RESTRICCIONES
-    public function list_restric() {
+    //RESTRICCIONES
+    public function list_restric()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $adm = $_POST['adm'];
@@ -562,7 +612,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_restric() {
+    public function st_busca_restric()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT restric_desc FROM restricciones
                             where
@@ -571,7 +622,8 @@ class model extends core {
         return $sql;
     }
 
-    public function save_restric() {
+    public function save_restric()
+    {
         $params = array();
         $params[':restric_adm'] = $_POST['restric_adm'];
         $params[':restric_desc'] = $_POST['restric_desc'];
@@ -585,7 +637,8 @@ class model extends core {
         return $this->sql($q, $params);
     }
 
-    public function update_restric() {
+    public function update_restric()
+    {
         $params = array();
         $params[':restric_id'] = $_POST['restric_id'];
         $params[':restric_adm'] = $_POST['restric_adm'];
@@ -610,7 +663,8 @@ class model extends core {
         }
     }
 
-    public function load_restric() {
+    public function load_restric()
+    {
         $restric_adm = $_POST['restric_adm'];
         $restric_id = $_POST['restric_id'];
         $query = "SELECT
@@ -623,8 +677,9 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-//INTERCONSULTAS
-    public function list_inter() {
+    //INTERCONSULTAS
+    public function list_inter()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $adm = $_POST['adm'];
@@ -636,7 +691,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_inter() {
+    public function st_busca_inter()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT inter_desc FROM interconsultas
                             where
@@ -645,7 +701,8 @@ class model extends core {
         return $sql;
     }
 
-    public function save_inter() {
+    public function save_inter()
+    {
         $params = array();
         $params[':inter_adm'] = $_POST['inter_adm'];
         $params[':inter_desc'] = $_POST['inter_desc'];
@@ -659,7 +716,8 @@ class model extends core {
         return $this->sql($q, $params);
     }
 
-    public function update_inter() {
+    public function update_inter()
+    {
         $params = array();
         $params[':inter_id'] = $_POST['inter_id'];
         $params[':inter_adm'] = $_POST['inter_adm'];
@@ -684,7 +742,8 @@ class model extends core {
         }
     }
 
-    public function load_inter() {
+    public function load_inter()
+    {
         $inter_adm = $_POST['inter_adm'];
         $inter_id = $_POST['inter_id'];
         $query = "SELECT
@@ -697,8 +756,9 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-//RECOMENDACIONES
-    public function list_recom() {
+    //RECOMENDACIONES
+    public function list_recom()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $adm = $_POST['adm'];
@@ -710,7 +770,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_recom() {
+    public function st_busca_recom()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT recom_desc FROM recomendaciones
                             where
@@ -719,7 +780,8 @@ class model extends core {
         return $sql;
     }
 
-    public function save_recom() {
+    public function save_recom()
+    {
         $params = array();
         $params[':recom_adm'] = $_POST['recom_adm'];
         $params[':recom_desc'] = $_POST['recom_desc'];
@@ -733,7 +795,8 @@ class model extends core {
         return $this->sql($q, $params);
     }
 
-    public function update_recom() {
+    public function update_recom()
+    {
         $params = array();
         $params[':recom_id'] = $_POST['recom_id'];
         $params[':recom_adm'] = $_POST['recom_adm'];
@@ -758,7 +821,8 @@ class model extends core {
         }
     }
 
-    public function load_recom() {
+    public function load_recom()
+    {
         $recom_adm = $_POST['recom_adm'];
         $recom_id = $_POST['recom_id'];
         $query = "SELECT
@@ -771,9 +835,10 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-//SAVE UPDATE LOAD NuevoAnexo16
+    //SAVE UPDATE LOAD NuevoAnexo16
 
-    public function load_nuevoAnexo16() {
+    public function load_nuevoAnexo16()
+    {
         $ficha7c_adm = $_POST['ficha7c_adm'];
         $ficha7c_exa = $_POST['ficha7c_exa'];
         $query = "SELECT * FROM mod_medicina_anexo16 where m_med_adm='$ficha7c_adm' and m_med_exa='$ficha7c_exa';";
@@ -781,7 +846,8 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function save_nuevoAnexo16() {
+    public function save_nuevoAnexo16()
+    {
         $params = array();
         $params[':sede'] = $this->user->con_sedid;
         $params[':usuario'] = $this->user->us_id;
@@ -793,8 +859,8 @@ class model extends core {
         $usuario = $this->user->us_id;
 
         $params[':m_medicina_st'] = '1'; //modulo principal
-//        $params[':m_med_adm'] = $_POST['adm'];
-//        $params[':m_med_exa'] = $_POST['ex_id'];
+        //        $params[':m_med_adm'] = $_POST['adm'];
+        //        $params[':m_med_exa'] = $_POST['ex_id'];
 
 
         $params[':m_med_contac_nom'] = $_POST['m_med_contac_nom'];
@@ -1161,7 +1227,7 @@ class model extends core {
                     if ($sql_aptitud->success) {
                         $this->commit();
                         return $sql;
-                    }                    
+                    }
                 } else {
                     $this->rollback();
                     return array('success' => false);
@@ -1173,7 +1239,8 @@ class model extends core {
         }
     }
 
-    public function update_nuevoAnexo16() {
+    public function update_nuevoAnexo16()
+    {
         $params = array();
 
         $usuario = $this->user->us_id;
@@ -1532,13 +1599,13 @@ class model extends core {
 
             $sql1 = $this->sql($q, $params);
             if ($sql1->success) {
-                    $adm = $_POST['adm'];
-                    $aptitud = $_POST['m_med_aptitud'];
-                    $sql_aptitud = $this->sql("update admision set adm_aptitud='$aptitud', adm_val=1 where adm_id=$adm;");
-                    if ($sql_aptitud->success) {
-                        $this->commit();
-                        return $sql1;
-                    }
+                $adm = $_POST['adm'];
+                $aptitud = $_POST['m_med_aptitud'];
+                $sql_aptitud = $this->sql("update admision set adm_aptitud='$aptitud', adm_val=1 where adm_id=$adm;");
+                if ($sql_aptitud->success) {
+                    $this->commit();
+                    return $sql1;
+                }
             } else {
                 $this->rollback();
                 return array('success' => false);
@@ -1549,12 +1616,31 @@ class model extends core {
         }
     }
 
-    public function paciente($adm) {
+    public function mod_medicina_antece($adm) {
+        $sql = "SELECT
+            m_antec_id, m_antec_adm, m_antec_exa,
+            m_antec_fech_ini, m_antec_fech_fin, m_antec_suelo,
+            m_antec_cargo, m_antec_empresa, m_antec_proyec,
+            m_antec_alti,
+            if(m_antec_fisico=1,'FISICO','') m_antec_fisico,
+            if(m_antec_quinico=1,'QUIMICO','') m_antec_quinico,
+            if(m_antec_biologico=1,'BIOLOGICO','') m_antec_biologico,
+            if(m_antec_ergonom=1,'ERGONOMICO','') m_antec_ergonom,
+            if(m_antec_otros=1,'OTROS','') m_antec_otros,m_antec_obser
+            FROM mod_medicina_antece_16v
+            WHERE
+            m_antec_adm=$adm;";
+        $area = $this->sql($sql);
+        return $area;
+    }
+
+    public function paciente($adm)
+    {
         $sql = $this->sql("SELECT
             adm_id as adm
             ,concat(pac_nombres,', ',pac_appat,' ',pac_apmat) nom_ap
             ,concat(pac_nombres) nombre,concat(pac_appat,' ',pac_apmat) apellidos
-            , emp_desc,concat(adm_puesto,' - ',adm_area)as puesto,adm_puesto,adm_area
+            , emp_desc,emp_direc,emp_id,concat(adm_puesto,' - ',adm_area)as puesto,adm_puesto,adm_area,pac_profe
             ,Date_format(adm_fech,'%d-%m-%Y %h:%i %p') fech_reg_copleto
             ,Date_format(adm_fech,'%d-%m-%Y') fech_reg
             ,if(tdoc_id=0,'NÚMERO DE DNI',tdoc_desc) documento,pac_ndoc
@@ -1587,7 +1673,8 @@ class model extends core {
         return $sql;
     }
 
-    public function mod_medicina_anexo16($adm) {
+    public function mod_medicina_anexo16($adm)
+    {
         $sql = $this->sql("SELECT * FROM mod_medicina_anexo16
             where
             m_med_adm=$adm;
@@ -1595,39 +1682,46 @@ class model extends core {
         return $sql;
     }
 
-    public function diagnostico($adm) {
+    public function diagnostico($adm)
+    {
         $q = "SELECT upper(diag_desc) diag_desc FROM diagnostico where diag_adm=$adm";
         return $this->sql($q);
     }
 
-    public function observaciones($adm) {
+    public function observaciones($adm)
+    {
         $q = "SELECT upper(obs_desc) obs_desc, obs_plazo FROM observaciones where obs_adm=$adm";
         return $this->sql($q);
     }
 
-    public function restricciones($adm) {
+    public function restricciones($adm)
+    {
         $q = "SELECT upper(restric_desc) restric_desc, restric_plazo FROM restricciones where restric_adm=$adm";
         return $this->sql($q);
     }
 
-    public function interconsultas($adm) {
+    public function interconsultas($adm)
+    {
         $q = "SELECT upper(inter_desc) inter_desc, inter_plazo FROM interconsultas where inter_adm=$adm";
         return $this->sql($q);
     }
 
-    public function recomendaciones($adm) {
+    public function recomendaciones($adm)
+    {
         $q = "SELECT upper(recom_desc) recom_desc, recom_plazo FROM recomendaciones where recom_adm=$adm";
         return $this->sql($q);
     }
 
-    public function medico($med) {
+    public function medico($med)
+    {
         $q = "SELECT concat(medico_nombre,', ', medico_apepat,' ', medico_apemat) medico_nombres
             ,medico_cmp
             FROM medico where medico_id =$med";
         return $this->sql($q);
     }
 
-    public function list_ante16() {
+    public function list_ante16()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $adm = $_POST['adm'];
@@ -1641,7 +1735,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_m_antec_16_ocupacion() {
+    public function st_m_antec_16_ocupacion()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_antec_16_ocupacion FROM mod_medicina_antecede_16
                             where
@@ -1650,7 +1745,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_m_antec_16_empresa() {
+    public function st_m_antec_16_empresa()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_antec_16_empresa FROM mod_medicina_antecede_16
                             where
@@ -1659,7 +1755,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_m_antec_16_actividad() {
+    public function st_m_antec_16_actividad()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_antec_16_actividad FROM mod_medicina_antecede_16
                             where
@@ -1668,7 +1765,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_m_antec_16_area_trab() {
+    public function st_m_antec_16_area_trab()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_antec_16_area_trab FROM mod_medicina_antecede_16
                             where
@@ -1677,7 +1775,8 @@ class model extends core {
         return $sql;
     }
 
-    public function load_antec_16() {
+    public function load_antec_16()
+    {
         $adm = $_POST['m_antec_16_adm'];
         $id = $_POST['m_antec_16_id'];
         $query = "SELECT * FROM mod_medicina_antecede_16
@@ -1687,7 +1786,8 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function save_nuevo_antecedentes16() {
+    public function save_nuevo_antecedentes16()
+    {
         $params = array();
         $this->begin();
         $params[':adm'] = $_POST['adm'];
@@ -1846,7 +1946,8 @@ class model extends core {
         }
     }
 
-    public function update_nuevo_antecedentes16() {
+    public function update_nuevo_antecedentes16()
+    {
         $params = array();
 
         $params[':usuario'] = $this->user->us_id;
@@ -1949,7 +2050,8 @@ class model extends core {
         }
     }
 
-    public function mod_medicina_antecede_16($adm) {
+    public function mod_medicina_antecede_16($adm)
+    {
         $sql = "SELECT *
             FROM mod_medicina_antecede_16
             WHERE
@@ -1957,7 +2059,8 @@ class model extends core {
         return $this->sql($sql);
     }
 
-    public function st_m_antec_retiro_cmedico() {
+    public function st_m_antec_retiro_cmedico()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_antec_retiro_cmedico FROM mod_medicina_antece_16v
                             where
@@ -1966,7 +2069,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_m_antec_proyec() {
+    public function st_m_antec_proyec()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_antec_proyec FROM mod_medicina_antece_16v
                             where
@@ -1975,7 +2079,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_m_antec_empresa() {
+    public function st_m_antec_empresa()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_antec_empresa FROM mod_medicina_antece_16v
                             where
@@ -1984,7 +2089,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_m_antec_cargo() {
+    public function st_m_antec_cargo()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_antec_cargo FROM mod_medicina_antece_16v
                             where
@@ -1993,7 +2099,8 @@ class model extends core {
         return $sql;
     }
 
-    public function load_antece_16v() {
+    public function load_antece_16v()
+    {
         $adm = $_POST['m_antec_adm'];
         $id = $_POST['m_antec_id'];
         $query = "SELECT * FROM mod_medicina_antece_16v
@@ -2003,7 +2110,8 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function list_antece_16v() {
+    public function list_antece_16v()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $adm = $_POST['adm'];
@@ -2015,7 +2123,8 @@ class model extends core {
         return $sql;
     }
 
-    public function save_nuevo_antece16_viejo() {
+    public function save_nuevo_antece16_viejo()
+    {
         $params = array();
         $this->begin();
         $params[':adm'] = $_POST['adm'];
@@ -2162,7 +2271,8 @@ class model extends core {
         }
     }
 
-    public function update_nuevo_antece16_viejo() {
+    public function update_nuevo_antece16_viejo()
+    {
         $params = array();
 
         $params[':usuario'] = $this->user->us_id;
@@ -2257,15 +2367,17 @@ class model extends core {
         }
     }
 
-    public function antece_7c($adm) {
+    public function antece_7c($adm)
+    {
         $sql = "SELECT * FROM mod_medicina_antece_16v
             WHERE
             m_antec_adm=$adm;";
         return $this->sql($sql);
     }
 
-//osteo conclusiones y recomendaciones
-    public function list_osteo_conclu() {
+    //osteo conclusiones y recomendaciones
+    public function list_osteo_conclu()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $adm = $_POST['adm'];
@@ -2277,7 +2389,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_osteo_conclu() {
+    public function st_busca_osteo_conclu()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT osteo_conclu_desc 
                             FROM mod_medicina_osteo_conclusion
@@ -2287,7 +2400,8 @@ class model extends core {
         return $sql;
     }
 
-    public function save_osteo_conclusion() {
+    public function save_osteo_conclusion()
+    {
         $params = array();
         $params[':osteo_conclu_adm'] = $_POST['osteo_conclu_adm'];
         $params[':osteo_conclu_desc'] = $_POST['osteo_conclu_desc'];
@@ -2299,7 +2413,8 @@ class model extends core {
         return $this->sql($q, $params);
     }
 
-    public function update_osteo_conclusion() {
+    public function update_osteo_conclusion()
+    {
         $params = array();
         $params[':osteo_conclu_id'] = $_POST['osteo_conclu_id'];
         $params[':osteo_conclu_adm'] = $_POST['osteo_conclu_adm'];
@@ -2322,7 +2437,8 @@ class model extends core {
         }
     }
 
-    public function load_osteo_conclu() {
+    public function load_osteo_conclu()
+    {
         $osteo_conclu_adm = $_POST['osteo_conclu_adm'];
         $osteo_conclu_id = $_POST['osteo_conclu_id'];
         $query = "SELECT
@@ -2335,7 +2451,8 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function load_nuevoOsteo() {
+    public function load_nuevoOsteo()
+    {
         $m_osteo_adm = $_POST['m_osteo_adm'];
         $m_osteo_exa = $_POST['m_osteo_exa'];
         $query = "SELECT * FROM mod_medicina_osteo
@@ -2345,7 +2462,8 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function save_nuevoOsteo() {
+    public function save_nuevoOsteo()
+    {
 
         $adm = $_POST['adm'];
         $exa = $_POST['ex_id'];
@@ -2445,7 +2563,7 @@ class model extends core {
         $params[':m_osteo_pies_i_dura_dolor'] = $_POST['m_osteo_pies_i_dura_dolor'];
         $params[':m_osteo_pies_i_recib_trata'] = $_POST['m_osteo_pies_i_recib_trata'];
         $params[':m_osteo_pies_i_dias_trata'] = $_POST['m_osteo_pies_i_dias_trata'];
-//        
+        //        
         $params[':m_osteo_anames_obs'] = $_POST['m_osteo_anames_obs'];
         $params[':m_osteo_lordo_cervic'] = $_POST['m_osteo_lordo_cervic'];
         $params[':m_osteo_cifosis'] = $_POST['m_osteo_cifosis'];
@@ -3045,7 +3163,8 @@ class model extends core {
         }
     }
 
-    public function update_nuevoOsteo() {
+    public function update_nuevoOsteo()
+    {
         $params = array();
 
         $params[':usuario'] = $this->user->us_id;
@@ -3137,7 +3256,7 @@ class model extends core {
         $params[':m_osteo_pies_i_dura_dolor'] = $_POST['m_osteo_pies_i_dura_dolor'];
         $params[':m_osteo_pies_i_recib_trata'] = $_POST['m_osteo_pies_i_recib_trata'];
         $params[':m_osteo_pies_i_dias_trata'] = $_POST['m_osteo_pies_i_dias_trata'];
-//        
+        //        
         $params[':m_osteo_anames_obs'] = $_POST['m_osteo_anames_obs'];
         $params[':m_osteo_lordo_cervic'] = $_POST['m_osteo_lordo_cervic'];
         $params[':m_osteo_cifosis'] = $_POST['m_osteo_cifosis'];
@@ -3721,8 +3840,9 @@ class model extends core {
         }
     }
 
-//medicina anexo 16a_obs
-    public function list_16a_obs() {
+    //medicina anexo 16a_obs
+    public function list_16a_obs()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $adm = $_POST['adm'];
@@ -3734,7 +3854,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_16a_obs() {
+    public function st_busca_16a_obs()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT obs_16a_desc 
                             FROM mod_medicina_16a_obs
@@ -3744,7 +3865,8 @@ class model extends core {
         return $sql;
     }
 
-    public function save_16a_obs() {
+    public function save_16a_obs()
+    {
         $params = array();
         $params[':obs_16a_adm'] = $_POST['obs_16a_adm'];
         $params[':obs_16a_desc'] = $_POST['obs_16a_desc'];
@@ -3758,7 +3880,8 @@ class model extends core {
         return $this->sql($q, $params);
     }
 
-    public function update_16a_obs() {
+    public function update_16a_obs()
+    {
         $params = array();
         $params[':obs_16a_id'] = $_POST['obs_16a_id'];
         $params[':obs_16a_adm'] = $_POST['obs_16a_adm'];
@@ -3783,7 +3906,8 @@ class model extends core {
         }
     }
 
-    public function load_16a_obs() {
+    public function load_16a_obs()
+    {
         $obs_16a_adm = $_POST['obs_16a_adm'];
         $obs_16a_id = $_POST['obs_16a_id'];
         $query = "SELECT
@@ -3796,9 +3920,10 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-//SAVE UPDATE LOAD anexo_16a
+    //SAVE UPDATE LOAD anexo_16a
 
-    public function load_anexo_16a() {
+    public function load_anexo_16a()
+    {
         $anexo_16a_adm = $_POST['anexo_16a_adm'];
         $anexo_16a_exa = $_POST['anexo_16a_exa'];
         $query = "SELECT * FROM mod_medicina_16a where anexo_16a_adm='$anexo_16a_adm' and anexo_16a_exa='$anexo_16a_exa';";
@@ -3806,7 +3931,8 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function save_anexo_16a() {
+    public function save_anexo_16a()
+    {
         $params = array();
         $params[':sede'] = $this->user->con_sedid;
         $params[':usuario'] = $this->user->us_id;
@@ -3887,7 +4013,8 @@ class model extends core {
         }
     }
 
-    public function update_anexo_16a() {
+    public function update_anexo_16a()
+    {
         $params = array();
 
         $usuario = $this->user->us_id;
@@ -3952,7 +4079,8 @@ class model extends core {
         }
     }
 
-    public function mod_medicina_16a($adm) {
+    public function mod_medicina_16a($adm)
+    {
         $sql = $this->sql("SELECT
         anexo_16a_seguros, anexo_16a_clinica
         , anexo_16a_anfitrion, anexo_16a_fech_visita, anexo_16a_aptitud,
@@ -3966,18 +4094,21 @@ class model extends core {
         return $sql;
     }
 
-    public function observaciones_16a($adm) {
+    public function observaciones_16a($adm)
+    {
         $q = "SELECT upper(obs_16a_desc) obs_desc, obs_16a_plazo obs_plazo FROM mod_medicina_16a_obs where obs_16a_adm=$adm";
         return $this->sql($q);
     }
 
-    public function osteo_conclusion($adm) {
+    public function osteo_conclusion($adm)
+    {
         $q = "SELECT upper(osteo_conclu_desc) obs_desc
             FROM mod_medicina_osteo_conclusion where osteo_conclu_adm=$adm";
         return $this->sql($q);
     }
 
-    public function mod_medicina_osteo_musc($adm) {
+    public function mod_medicina_osteo_musc($adm)
+    {
         $sql = $this->sql("SELECT *
         FROM mod_medicina_osteo
         where
@@ -3987,15 +4118,17 @@ class model extends core {
 
     //LOAD SAVE UPDATE MEDICINA MANEJO
 
-    public function load_medicina_manejo() {
+    public function load_medicina_manejo()
+    {
         $adm = $_POST['adm'];
-//        $examen = $_POST['examen'];
+        //        $examen = $_POST['examen'];
         $query = "SELECT * FROM mod_medicina_manejo where m_med_manejo_adm='$adm';";
         $q = $this->sql($query);
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function save_medicina_manejo() {
+    public function save_medicina_manejo()
+    {
 
         $adm = $_POST['adm'];
         $exa = $_POST['ex_id'];
@@ -4096,7 +4229,8 @@ class model extends core {
         }
     }
 
-    public function update_medicina_manejo() {
+    public function update_medicina_manejo()
+    {
         $params = array();
 
         $params[':usuario'] = $this->user->us_id;
@@ -4175,7 +4309,8 @@ class model extends core {
 
     //LOAD SAVE UPDATE MEDICINA MANEJO
 
-    public function list_manejo_conclu() {
+    public function list_manejo_conclu()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $adm = $_POST['adm'];
@@ -4187,7 +4322,8 @@ class model extends core {
         return $sql;
     }
 
-    public function save_manejo_conclu() {
+    public function save_manejo_conclu()
+    {
         $params = array();
         $params[':conclu_conduc_med_adm'] = $_POST['conclu_conduc_med_adm'];
         $params[':conclu_conduc_med_desc'] = $_POST['conclu_conduc_med_desc'];
@@ -4199,7 +4335,8 @@ class model extends core {
         return $this->sql($q, $params);
     }
 
-    public function update_manejo_conclu() {
+    public function update_manejo_conclu()
+    {
         $params = array();
         $params[':conclu_conduc_med_id'] = $_POST['conclu_conduc_med_id'];
         $params[':conclu_conduc_med_adm'] = $_POST['conclu_conduc_med_adm'];
@@ -4221,7 +4358,8 @@ class model extends core {
         }
     }
 
-    public function st_busca_manejo_conclu() {
+    public function st_busca_manejo_conclu()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT conclu_conduc_med_desc FROM mod_medicina_manejo_conclu
                             where
@@ -4230,7 +4368,8 @@ class model extends core {
         return $sql;
     }
 
-    public function load_manejo_conclu() {
+    public function load_manejo_conclu()
+    {
         $reco_id = $_POST['conclu_conduc_med_id'];
         $reco_adm = $_POST['conclu_conduc_med_adm'];
         $query = "SELECT
@@ -4243,19 +4382,22 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function carga_medicina_manejo_pdf($adm) {
+    public function carga_medicina_manejo_pdf($adm)
+    {
         $query = "SELECT * FROM mod_medicina_manejo
             where m_med_manejo_adm='$adm';";
         return $this->sql($query);
     }
 
-    public function rpt_conclusion($adm) {
+    public function rpt_conclusion($adm)
+    {
         $q = "SELECT upper(conclu_conduc_med_desc) obs_desc
                 FROM mod_medicina_manejo_conclu where conclu_conduc_med_adm=$adm";
         return $this->sql($q);
     }
 
-    public function rpt_antecedentes_v1($adm) {
+    public function rpt_antecedentes_v1($adm)
+    {
         $q = "SELECT
     concat(m_antec_cargo,'/',m_antec_suelo,'/',m_antec_empresa,'/',m_antec_fech_ini,' hasta ', m_antec_fech_fin,'/',m_antec_obser) obs_desc
                 FROM mod_medicina_antece_16v 
@@ -4263,21 +4405,24 @@ class model extends core {
         return $this->sql($q);
     }
 
-    public function rpt_triaje($adm) {
+    public function rpt_triaje($adm)
+    {
         $q = "SELECT *
                 FROM mod_triaje_triaje 
                 where m_tri_triaje_adm=$adm";
         return $this->sql($q);
     }
 
-    public function rpt_oftalmo($adm) {
+    public function rpt_oftalmo($adm)
+    {
         $q = "SELECT *
                 FROM mod_oftalmo_oftalmo 
                 where m_oft_oftalmo_adm=$adm";
         return $this->sql($q);
     }
 
-    public function rpt_oftalmo_diag($adm) {
+    public function rpt_oftalmo_diag($adm)
+    {
         $q = "SELECT upper(diag_ofta_desc) diag
                 FROM mod_oftalmo_diag 
                 where diag_ofta_adm=$adm";
@@ -4293,14 +4438,16 @@ class model extends core {
         return $verifica;
     }
 
-    public function rpt_audiometria($adm) {
+    public function rpt_audiometria($adm)
+    {
         $q = "SELECT *
                 FROM mod_audio_audio 
                 where m_a_audio_adm='$adm';";
         return $this->sql($q);
     }
 
-    public function rpt_osteo_conclu($adm) {
+    public function rpt_osteo_conclu($adm)
+    {
         $q = "SELECT upper(osteo_conclu_desc) conclu
                 FROM mod_medicina_osteo_conclusion 
                 where osteo_conclu_adm=$adm";
@@ -4316,13 +4463,15 @@ class model extends core {
         return $verifica;
     }
 
-    public function rpt_osteo($adm) {
+    public function rpt_osteo($adm)
+    {
         $q = "SELECT m_osteo_aptitud FROM mod_medicina_osteo 
                 where m_osteo_adm='$adm';";
         return $this->sql($q);
     }
 
-    public function rpt_rayosx($adm) {
+    public function rpt_rayosx($adm)
+    {
         $q = "SELECT
                     m_rx_rayosx_vertice,
                     m_rx_rayosx_mediastinos,
@@ -4345,31 +4494,36 @@ class model extends core {
         return $this->sql($q);
     }
 
-    public function rpt_lab_hemograma($adm) {
+    public function rpt_lab_hemograma($adm)
+    {
         $q = "SELECT * FROM mod_laboratorio_hemograma 
                 where m_lab_hemo_adm='$adm';";
         return $this->sql($q);
     }
 
-    public function rpt_lab_lipido($adm) {
+    public function rpt_lab_lipido($adm)
+    {
         $q = "SELECT * FROM mod_laboratorio_p_lipidido 
                 where m_lab_p_lipido_adm='$adm';";
         return $this->sql($q);
     }
 
-    public function rpt_lab_examen($adm, $examen) {
+    public function rpt_lab_examen($adm, $examen)
+    {
         $q = "SELECT m_lab_exam_resultado FROM mod_laboratorio_exam 
                 where m_lab_exam_adm='$adm' and m_lab_exam_examen='$examen';";
         return $this->sql($q);
     }
 
-    public function rpt_lab_drogas($adm) {
+    public function rpt_lab_drogas($adm)
+    {
         $q = "SELECT * FROM mod_laboratorio_drogas_10
             where m_lab_drogas_10_adm='$adm';";
         return $this->sql($q);
     }
 
-    public function rpt_ekg_conclu($adm) {
+    public function rpt_ekg_conclu($adm)
+    {
         $q = "SELECT upper(conclusion_cardio_desc) conclu
                 FROM mod_cardio_conclusion 
                 where conclusion_cardio_adm=$adm";
@@ -4385,19 +4539,22 @@ class model extends core {
         return $verifica;
     }
 
-    public function rpt_ekg_desc($adm) {
+    public function rpt_ekg_desc($adm)
+    {
         $q = "SELECT m_car_ekg_descripcion FROM mod_cardio_ekg 
                 where m_car_ekg_adm='$adm';";
         return $this->sql($q);
     }
 
-    public function rpt_psico_informe($adm) {
+    public function rpt_psico_informe($adm)
+    {
         $q = "SELECT * FROM mod_psicologia_informe 
                 where m_psico_inf_adm='$adm';";
         return $this->sql($q);
     }
 
-    public function rpt_medicina_manejo($adm) {
+    public function rpt_medicina_manejo($adm)
+    {
         $q = "SELECT
             m_med_manejo_tipo_equipo, m_med_manejo_aptitud
             FROM mod_medicina_manejo 
@@ -4405,7 +4562,8 @@ class model extends core {
         return $this->sql($q);
     }
 
-    public function rpt_psicologia_altura($adm) {
+    public function rpt_psicologia_altura($adm)
+    {
         $q = "SELECT
             m_psico_altura_aptitud
             FROM mod_psicologia_altura 
@@ -4413,6 +4571,685 @@ class model extends core {
         return $this->sql($q);
     }
 
+    public function load_medico()
+    {
+        $sede = $this->user->con_sedid;
+        return $this->sql("SELECT medico_id, concat(medico_apepat,' ',medico_apemat,', ',medico_nombre)as nombre
+        FROM medico
+        where medico_sede=$sede and medico_st=1 and medico_auditor='NO';");
+    }
+
+    public function busca_medico($medico_id)
+    {
+        $sede = $this->user->con_sedid;
+        return $this->sql("SELECT medico_cmp, concat(medico_apepat,' ',medico_apemat,', ',medico_nombre)as nombres
+        FROM medico where medico_id=$medico_id;");
+    }
+
+    public function load_medico_auditor()
+    {
+        $sede = $this->user->con_sedid;
+        return $this->sql("SELECT medico_id, concat(medico_apepat,' ',medico_apemat,', ',medico_nombre)as nombre
+        FROM medico
+        where medico_sede=$sede and medico_st=1 and medico_auditor='OK';");
+    }
+
+    public function load_conclusiones()
+    {
+        $adm = $_POST['adm'];
+        $st = $_POST['st'];
+        $usuario = $this->user->us_id;
+        $medico = "";
+        if ($st < '1') {
+            $medico = ",(SELECT medico_id FROM medico where medico_usu='$usuario') m_312_medico_ocupa
+            ,(SELECT medico_id FROM medico where medico_st=1 and medico_auditor='OK') m_312_medico_auditor";
+        }
+        $query = "SELECT
+            adm_id
+            $medico
+            FROM admision
+            where adm_id=$adm
+            group by adm_id order by adm_id;";
+        $q = $this->sql($query);
+        return array('success' => true, 'data' => $q->data[0]);
+    }
+
+    //////SAVE AND UPDATE MEDICINA ANEXO 312
+
+    public function load_anexo312()
+    {
+        $adm = $_POST['adm'];
+        $exa = $_POST['exa'];
+        $query = "SELECT 
+            m_312_id, m_312_adm, m_312_exa, m_312_residencia, m_312_tiempo, m_312_seguro, m_312_nhijos, m_312_dependiente, m_312_pato_ima, m_312_pato_hta, m_312_pato_acv, m_312_pato_tbc, m_312_pato_ets, m_312_pato_vih, m_312_pato_tec, m_312_pato_alergias, m_312_pato_asma, m_312_pato_bronquitis, m_312_pato_diabetes, m_312_pato_hepatitis, m_312_pato_hernia, m_312_pato_lumbalgia, m_312_pato_tifoidea, m_312_pato_neoplasias, m_312_pato_quemaduras, m_312_pato_discopatias, m_312_pato_convulciones, m_312_pato_gastritis, m_312_pato_ulceras, m_312_pato_enf_psiquia, m_312_pato_enf_cardio, m_312_pato_enf_ocular, m_312_pato_enf_reuma, m_312_pato_enf_pulmon, m_312_pato_alt_piel, m_312_pato_tendinitis, m_312_pato_fractura, m_312_pato_anemia, m_312_pato_obesidad, m_312_pato_dislipidem, m_312_pato_intoxica, m_312_pato_cirugia, m_312_pato_otros, m_312_pato_cirugia_desc, m_312_pato_tbc_fecha, m_312_pato_tbc_tratamiento, m_312_pato_alergias_desc, m_312_pato_observaciones, m_312_alcohol_tipo, m_312_alcohol_cantidad, m_312_alcohol_fre, m_312_tabaco_tipo, m_312_tabaco_cantidad, m_312_tabaco_fre, m_312_drogas_tipo, m_312_drogas_cantidad, m_312_drogas_fre, m_312_medicamentos, m_312_padre, m_312_madre, m_312_conyuge, m_312_hijo_vivo, m_312_hijo_fallecido, m_312_anamnesis, m_312_ectoscopia, m_312_est_mental, m_312_piel, m_312_cabeza, m_312_oidos, m_312_nariz, m_312_boca, m_312_faringe, m_312_cuello, m_312_respiratorio, m_312_cardiovascular, m_312_digestivo, m_312_genitou, m_312_locomotor, m_312_marcha, m_312_columna, m_312_mi_superi, m_312_mi_inferi, m_312_linfatico, m_312_nervio, m_312_osteomuscular, m_312_ef_observaciones, m_312_conclu_psico, m_312_conclu_rx, m_312_conclu_lab, m_312_conclu_audio, m_312_conclu_espiro, m_312_conclu_otros, m_312_diag_cie1, m_312_diag_st1, m_312_diag_cie2, m_312_diag_st2, m_312_diag_cie3, m_312_diag_st3, m_312_diag_cie4, m_312_diag_st4, m_312_diag_cie5, m_312_diag_st5, m_312_diag_cie6, m_312_diag_st6, m_312_diag_cie7, m_312_diag_st7, m_312_diag_cie8, m_312_diag_st8, m_312_fech_val, m_312_fech_vence, m_312_time_aptitud, m_312_restricciones, m_312_observaciones, m_312_aptitud, m_312_medico_ocupa, m_312_medico_auditor
+            ,(SELECT concat(medico_apepat,' ',medico_apemat,', ',medico_nombre)as nombre FROM medico where medico_id=m_312_medico_ocupa) m_312_medico_ocupa_nom
+            ,(SELECT concat(medico_apepat,' ',medico_apemat,', ',medico_nombre)as nombre FROM medico where medico_id=m_312_medico_auditor) m_312_medico_auditor_nom
+            FROM mod_medicina_312 
+        
+            where m_312_adm='$adm' and m_312_exa='$exa';";
+        $q = $this->sql($query);
+        return array('success' => true, 'data' => $q->data[0]);
+    }
+
+    public function save_anexo312()
+    {
+
+        $adm = $_POST['adm'];
+        $exa = $_POST['ex_id'];
+
+        $this->begin();
+
+        $params_1 = array();
+        $params_1[':adm'] = $_POST['adm'];
+        $params_1[':sede'] = $this->user->con_sedid;
+        $params_1[':usuario'] = $this->user->us_id;
+        $params_1[':ex_id'] = $_POST['ex_id'];
+
+        $q_1 = "INSERT INTO mod_medicina VALUES
+                (NULL,
+                :adm,
+                :sede,
+                :usuario,
+                now(),
+                null,
+                1,
+                :ex_id);";
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////
+
+        $params_2 = array();
+        $params_2[':adm'] = $_POST['adm'];
+        $params_2[':ex_id'] = $_POST['ex_id'];
+
+        $params_2[':m_312_residencia'] = $_POST['m_312_residencia'];
+        $params_2[':m_312_tiempo'] = $_POST['m_312_tiempo'];
+        $params_2[':m_312_seguro'] = $_POST['m_312_seguro'];
+        $params_2[':m_312_nhijos'] = $_POST['m_312_nhijos'];
+        $params_2[':m_312_dependiente'] = $_POST['m_312_dependiente'];
+        $params_2[':m_312_pato_ima'] = $_POST['m_312_pato_ima'];
+        $params_2[':m_312_pato_hta'] = $_POST['m_312_pato_hta'];
+        $params_2[':m_312_pato_acv'] = $_POST['m_312_pato_acv'];
+        $params_2[':m_312_pato_tbc'] = $_POST['m_312_pato_tbc'];
+        $params_2[':m_312_pato_ets'] = $_POST['m_312_pato_ets'];
+        $params_2[':m_312_pato_vih'] = $_POST['m_312_pato_vih'];
+        $params_2[':m_312_pato_tec'] = $_POST['m_312_pato_tec'];
+        $params_2[':m_312_pato_alergias'] = $_POST['m_312_pato_alergias'];
+        $params_2[':m_312_pato_asma'] = $_POST['m_312_pato_asma'];
+        $params_2[':m_312_pato_bronquitis'] = $_POST['m_312_pato_bronquitis'];
+        $params_2[':m_312_pato_diabetes'] = $_POST['m_312_pato_diabetes'];
+        $params_2[':m_312_pato_hepatitis'] = $_POST['m_312_pato_hepatitis'];
+        $params_2[':m_312_pato_hernia'] = $_POST['m_312_pato_hernia'];
+        $params_2[':m_312_pato_lumbalgia'] = $_POST['m_312_pato_lumbalgia'];
+        $params_2[':m_312_pato_tifoidea'] = $_POST['m_312_pato_tifoidea'];
+        $params_2[':m_312_pato_neoplasias'] = $_POST['m_312_pato_neoplasias'];
+        $params_2[':m_312_pato_quemaduras'] = $_POST['m_312_pato_quemaduras'];
+        $params_2[':m_312_pato_discopatias'] = $_POST['m_312_pato_discopatias'];
+        $params_2[':m_312_pato_convulciones'] = $_POST['m_312_pato_convulciones'];
+        $params_2[':m_312_pato_gastritis'] = $_POST['m_312_pato_gastritis'];
+        $params_2[':m_312_pato_ulceras'] = $_POST['m_312_pato_ulceras'];
+        $params_2[':m_312_pato_enf_psiquia'] = $_POST['m_312_pato_enf_psiquia'];
+        $params_2[':m_312_pato_enf_cardio'] = $_POST['m_312_pato_enf_cardio'];
+        $params_2[':m_312_pato_enf_ocular'] = $_POST['m_312_pato_enf_ocular'];
+        $params_2[':m_312_pato_enf_reuma'] = $_POST['m_312_pato_enf_reuma'];
+        $params_2[':m_312_pato_enf_pulmon'] = $_POST['m_312_pato_enf_pulmon'];
+        $params_2[':m_312_pato_alt_piel'] = $_POST['m_312_pato_alt_piel'];
+        $params_2[':m_312_pato_tendinitis'] = $_POST['m_312_pato_tendinitis'];
+        $params_2[':m_312_pato_fractura'] = $_POST['m_312_pato_fractura'];
+        $params_2[':m_312_pato_anemia'] = $_POST['m_312_pato_anemia'];
+        $params_2[':m_312_pato_obesidad'] = $_POST['m_312_pato_obesidad'];
+        $params_2[':m_312_pato_dislipidem'] = $_POST['m_312_pato_dislipidem'];
+        $params_2[':m_312_pato_intoxica'] = $_POST['m_312_pato_intoxica'];
+        $params_2[':m_312_pato_cirugia'] = $_POST['m_312_pato_cirugia'];
+        $params_2[':m_312_pato_otros'] = $_POST['m_312_pato_otros'];
+        $params_2[':m_312_pato_cirugia_desc'] = $_POST['m_312_pato_cirugia_desc'];
+        $params_2[':m_312_pato_tbc_tratamiento'] = $_POST['m_312_pato_tbc_tratamiento'];
+        $params_2[':m_312_pato_alergias_desc'] = $_POST['m_312_pato_alergias_desc'];
+        $params_2[':m_312_pato_observaciones'] = $_POST['m_312_pato_observaciones'];
+        $params_2[':m_312_alcohol_tipo'] = $_POST['m_312_alcohol_tipo'];
+        $params_2[':m_312_alcohol_cantidad'] = $_POST['m_312_alcohol_cantidad'];
+        $params_2[':m_312_alcohol_fre'] = $_POST['m_312_alcohol_fre'];
+        $params_2[':m_312_tabaco_tipo'] = $_POST['m_312_tabaco_tipo'];
+        $params_2[':m_312_tabaco_cantidad'] = $_POST['m_312_tabaco_cantidad'];
+        $params_2[':m_312_tabaco_fre'] = $_POST['m_312_tabaco_fre'];
+        $params_2[':m_312_drogas_tipo'] = $_POST['m_312_drogas_tipo'];
+        $params_2[':m_312_drogas_cantidad'] = $_POST['m_312_drogas_cantidad'];
+        $params_2[':m_312_drogas_fre'] = $_POST['m_312_drogas_fre'];
+        $params_2[':m_312_medicamentos'] = $_POST['m_312_medicamentos'];
+        $params_2[':m_312_padre'] = $_POST['m_312_padre'];
+        $params_2[':m_312_madre'] = $_POST['m_312_madre'];
+        $params_2[':m_312_conyuge'] = $_POST['m_312_conyuge'];
+        $params_2[':m_312_hijo_vivo'] = $_POST['m_312_hijo_vivo'];
+        $params_2[':m_312_hijo_fallecido'] = $_POST['m_312_hijo_fallecido'];
+        $params_2[':m_312_anamnesis'] = $_POST['m_312_anamnesis'];
+        $params_2[':m_312_ectoscopia'] = $_POST['m_312_ectoscopia'];
+        $params_2[':m_312_est_mental'] = $_POST['m_312_est_mental'];
+        $params_2[':m_312_piel'] = $_POST['m_312_piel'];
+        $params_2[':m_312_cabeza'] = $_POST['m_312_cabeza'];
+        $params_2[':m_312_oidos'] = $_POST['m_312_oidos'];
+        $params_2[':m_312_nariz'] = $_POST['m_312_nariz'];
+        $params_2[':m_312_boca'] = $_POST['m_312_boca'];
+        $params_2[':m_312_faringe'] = $_POST['m_312_faringe'];
+        $params_2[':m_312_cuello'] = $_POST['m_312_cuello'];
+        $params_2[':m_312_respiratorio'] = $_POST['m_312_respiratorio'];
+        $params_2[':m_312_cardiovascular'] = $_POST['m_312_cardiovascular'];
+        $params_2[':m_312_digestivo'] = $_POST['m_312_digestivo'];
+        $params_2[':m_312_genitou'] = $_POST['m_312_genitou'];
+        $params_2[':m_312_locomotor'] = $_POST['m_312_locomotor'];
+        $params_2[':m_312_marcha'] = $_POST['m_312_marcha'];
+        $params_2[':m_312_columna'] = $_POST['m_312_columna'];
+        $params_2[':m_312_mi_superi'] = $_POST['m_312_mi_superi'];
+        $params_2[':m_312_mi_inferi'] = $_POST['m_312_mi_inferi'];
+        $params_2[':m_312_linfatico'] = $_POST['m_312_linfatico'];
+        $params_2[':m_312_nervio'] = $_POST['m_312_nervio'];
+        $params_2[':m_312_osteomuscular'] = $_POST['m_312_osteomuscular'];
+        $params_2[':m_312_ef_observaciones'] = $_POST['m_312_ef_observaciones'];
+        $params_2[':m_312_conclu_psico'] = $_POST['m_312_conclu_psico'];
+        $params_2[':m_312_conclu_rx'] = $_POST['m_312_conclu_rx'];
+        $params_2[':m_312_conclu_lab'] = $_POST['m_312_conclu_lab'];
+        $params_2[':m_312_conclu_audio'] = $_POST['m_312_conclu_audio'];
+        $params_2[':m_312_conclu_espiro'] = $_POST['m_312_conclu_espiro'];
+        $params_2[':m_312_conclu_otros'] = $_POST['m_312_conclu_otros'];
+        $params_2[':m_312_diag_cie1'] = $_POST['m_312_diag_cie1'];
+        $params_2[':m_312_diag_st1'] = $_POST['m_312_diag_st1'];
+        $params_2[':m_312_diag_cie2'] = $_POST['m_312_diag_cie2'];
+        $params_2[':m_312_diag_st2'] = $_POST['m_312_diag_st2'];
+        $params_2[':m_312_diag_cie3'] = $_POST['m_312_diag_cie3'];
+        $params_2[':m_312_diag_st3'] = $_POST['m_312_diag_st3'];
+        $params_2[':m_312_diag_cie4'] = $_POST['m_312_diag_cie4'];
+        $params_2[':m_312_diag_st4'] = $_POST['m_312_diag_st4'];
+        $params_2[':m_312_diag_cie5'] = $_POST['m_312_diag_cie5'];
+        $params_2[':m_312_diag_st5'] = $_POST['m_312_diag_st5'];
+        $params_2[':m_312_diag_cie6'] = $_POST['m_312_diag_cie6'];
+        $params_2[':m_312_diag_st6'] = $_POST['m_312_diag_st6'];
+        $params_2[':m_312_diag_cie7'] = $_POST['m_312_diag_cie7'];
+        $params_2[':m_312_diag_st7'] = $_POST['m_312_diag_st7'];
+        $params_2[':m_312_diag_cie8'] = $_POST['m_312_diag_cie8'];
+        $params_2[':m_312_diag_st8'] = $_POST['m_312_diag_st8'];
+        $params_2[':m_312_time_aptitud'] = $_POST['m_312_time_aptitud'];
+        $params_2[':m_312_restricciones'] = $_POST['m_312_restricciones'];
+        $params_2[':m_312_observaciones'] = $_POST['m_312_observaciones'];
+        $params_2[':m_312_aptitud'] = $_POST['m_312_aptitud'];
+        $params_2[':m_312_medico_ocupa'] = $_POST['m_312_medico_ocupa'];
+        $params_2[':m_312_medico_auditor'] = $_POST['m_312_medico_auditor'];
+
+        $params_2[':m_312_pato_tbc_fecha'] = $_POST['m_312_pato_tbc_fecha'];
+        $timestamp0 = strtotime($_POST['m_312_pato_tbc_fecha']);
+        $m_312_pato_tbc_fecha = ((strlen($_POST['m_312_pato_tbc_fecha']) > 0) ? date('Y-m-d', $timestamp0) : null);
+        $params_2[':m_312_pato_tbc_fecha'] = $m_312_pato_tbc_fecha;
+
+        // $params_2[':m_312_fech_val'] = $_POST['m_312_fech_val'];
+        $timestamp2 = strtotime($_POST['m_312_fech_val']);
+        $m_312_fech_val = ((strlen($_POST['m_312_fech_val']) > 0) ? date('Y-m-d', $timestamp2) : null);
+        $params_2[':m_312_fech_val'] = $m_312_fech_val;
+
+
+        // $params_2[':m_312_fech_vence'] = $_POST['m_312_fech_vence'];        
+        $timestamp3 = strtotime($_POST['m_312_fech_vence']);
+        $m_312_fech_vence = ((strlen($_POST['m_312_fech_vence']) > 0) ? date('Y-m-d', $timestamp3) : null);
+        $params_2[':m_312_fech_vence'] = $m_312_fech_vence;
+
+
+
+        $q_2 = "INSERT INTO mod_medicina_312 VALUES
+                (NULL,
+                :adm,
+                :ex_id,
+                :m_312_residencia,
+                :m_312_tiempo,
+                :m_312_seguro,
+                :m_312_nhijos,
+                :m_312_dependiente,
+                :m_312_pato_ima,
+                :m_312_pato_hta,
+                :m_312_pato_acv,
+                :m_312_pato_tbc,
+                :m_312_pato_ets,
+                :m_312_pato_vih,
+                :m_312_pato_tec,
+                :m_312_pato_alergias,
+                :m_312_pato_asma,
+                :m_312_pato_bronquitis,
+                :m_312_pato_diabetes,
+                :m_312_pato_hepatitis,
+                :m_312_pato_hernia,
+                :m_312_pato_lumbalgia,
+                :m_312_pato_tifoidea,
+                :m_312_pato_neoplasias,
+                :m_312_pato_quemaduras,
+                :m_312_pato_discopatias,
+                :m_312_pato_convulciones,
+                :m_312_pato_gastritis,
+                :m_312_pato_ulceras,
+                :m_312_pato_enf_psiquia,
+                :m_312_pato_enf_cardio,
+                :m_312_pato_enf_ocular,
+                :m_312_pato_enf_reuma,
+                :m_312_pato_enf_pulmon,
+                :m_312_pato_alt_piel,
+                :m_312_pato_tendinitis,
+                :m_312_pato_fractura,
+                :m_312_pato_anemia,
+                :m_312_pato_obesidad,
+                :m_312_pato_dislipidem,
+                :m_312_pato_intoxica,
+                :m_312_pato_cirugia,
+                :m_312_pato_otros,
+                :m_312_pato_cirugia_desc,
+                :m_312_pato_tbc_fecha,
+                :m_312_pato_tbc_tratamiento,
+                :m_312_pato_alergias_desc,
+                :m_312_pato_observaciones,
+                :m_312_alcohol_tipo,
+                :m_312_alcohol_cantidad,
+                :m_312_alcohol_fre,
+                :m_312_tabaco_tipo,
+                :m_312_tabaco_cantidad,
+                :m_312_tabaco_fre,
+                :m_312_drogas_tipo,
+                :m_312_drogas_cantidad,
+                :m_312_drogas_fre,
+                :m_312_medicamentos,
+                :m_312_padre,
+                :m_312_madre,
+                :m_312_conyuge,
+                :m_312_hijo_vivo,
+                :m_312_hijo_fallecido,
+                :m_312_anamnesis,
+                :m_312_ectoscopia,
+                :m_312_est_mental,
+                :m_312_piel,
+                :m_312_cabeza,
+                :m_312_oidos,
+                :m_312_nariz,
+                :m_312_boca,
+                :m_312_faringe,
+                :m_312_cuello,
+                :m_312_respiratorio,
+                :m_312_cardiovascular,
+                :m_312_digestivo,
+                :m_312_genitou,
+                :m_312_locomotor,
+                :m_312_marcha,
+                :m_312_columna,
+                :m_312_mi_superi,
+                :m_312_mi_inferi,
+                :m_312_linfatico,
+                :m_312_nervio,
+                :m_312_osteomuscular,
+                :m_312_ef_observaciones,
+                :m_312_conclu_psico,
+                :m_312_conclu_rx,
+                :m_312_conclu_lab,
+                :m_312_conclu_audio,
+                :m_312_conclu_espiro,
+                :m_312_conclu_otros,
+                :m_312_diag_cie1,
+                :m_312_diag_st1,
+                :m_312_diag_cie2,
+                :m_312_diag_st2,
+                :m_312_diag_cie3,
+                :m_312_diag_st3,
+                :m_312_diag_cie4,
+                :m_312_diag_st4,
+                :m_312_diag_cie5,
+                :m_312_diag_st5,
+                :m_312_diag_cie6,
+                :m_312_diag_st6,
+                :m_312_diag_cie7,
+                :m_312_diag_st7,
+                :m_312_diag_cie8,
+                :m_312_diag_st8,
+                :m_312_fech_val,
+                :m_312_fech_vence,
+                :m_312_time_aptitud,
+                :m_312_restricciones,
+                :m_312_observaciones,
+                :m_312_aptitud,
+                :m_312_medico_ocupa,
+                :m_312_medico_auditor
+                );";
+
+
+
+
+        $verifica = $this->sql("SELECT m_medicina_adm, concat(usu_nombres,' ',usu_appat,' ',usu_apmat) usuario 
+				FROM mod_medicina inner join sys_usuario on usu_id=m_medicina_usu 
+				where m_medicina_adm='$adm' and m_medicina_examen='$exa';");
+        if ($verifica->total > 0) {
+            $this->rollback();
+            return array('success' => false, "error" => 'Paciente ya fue registrado por ' . $verifica->data[0]->usuario);
+        } else {
+            $sql_1 = $this->sql($q_1, $params_1);
+            if ($sql_1->success) {
+                $sql_2 = $this->sql($q_2, $params_2);
+                if ($sql_2->success) {
+                    $params_3 = array();
+                    $params_3[':adm'] = $_POST['adm'];
+                    $params_3[':aptitud'] = $_POST['m_312_aptitud'];
+
+                    $q_3 = "Update admision set adm_aptitud=:aptitud, adm_val=1 where adm_id=:adm;";
+
+                    $sql_3 = $this->sql($q_3, $params_3);
+                    if ($sql_3->success) {
+                        $this->commit();
+                        return $sql_3;
+                    } else {
+                        $this->rollback();
+                        return array('success' => false, 'error' => 'Problemas con el registro.');
+                    }
+                } else {
+                    $this->rollback();
+                    return array('success' => false, 'error' => 'Problemas con el registro.');
+                }
+            } else {
+                $this->rollback();
+                return array('success' => false, 'error' => 'Problemas con el registro.');
+            }
+        }
+    }
+
+    public function update_anexo312()
+    {
+        $this->begin();
+
+        $params_1 = array();
+        $params_1[':usuario'] = $this->user->us_id;
+        $params_1[':id'] = $_POST['id'];
+        $params_1[':adm'] = $_POST['adm'];
+        $params_1[':ex_id'] = $_POST['ex_id'];
+        $q_1 = 'update mod_medicina set
+                    m_medicina_usu=:usuario,
+					m_medicina_fech_update=now()
+                where
+                m_medicina_id=:id and m_medicina_adm=:adm and m_medicina_examen=:ex_id;';
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////
+        $params_2 = array();
+        $params_2[':adm'] = $_POST['adm'];
+        $params_2[':ex_id'] = $_POST['ex_id'];
+
+        $params_2[':m_312_residencia'] = $_POST['m_312_residencia'];
+        $params_2[':m_312_tiempo'] = $_POST['m_312_tiempo'];
+        $params_2[':m_312_seguro'] = $_POST['m_312_seguro'];
+        $params_2[':m_312_nhijos'] = $_POST['m_312_nhijos'];
+        $params_2[':m_312_dependiente'] = $_POST['m_312_dependiente'];
+        $params_2[':m_312_pato_ima'] = $_POST['m_312_pato_ima'];
+        $params_2[':m_312_pato_hta'] = $_POST['m_312_pato_hta'];
+        $params_2[':m_312_pato_acv'] = $_POST['m_312_pato_acv'];
+        $params_2[':m_312_pato_tbc'] = $_POST['m_312_pato_tbc'];
+        $params_2[':m_312_pato_ets'] = $_POST['m_312_pato_ets'];
+        $params_2[':m_312_pato_vih'] = $_POST['m_312_pato_vih'];
+        $params_2[':m_312_pato_tec'] = $_POST['m_312_pato_tec'];
+        $params_2[':m_312_pato_alergias'] = $_POST['m_312_pato_alergias'];
+        $params_2[':m_312_pato_asma'] = $_POST['m_312_pato_asma'];
+        $params_2[':m_312_pato_bronquitis'] = $_POST['m_312_pato_bronquitis'];
+        $params_2[':m_312_pato_diabetes'] = $_POST['m_312_pato_diabetes'];
+        $params_2[':m_312_pato_hepatitis'] = $_POST['m_312_pato_hepatitis'];
+        $params_2[':m_312_pato_hernia'] = $_POST['m_312_pato_hernia'];
+        $params_2[':m_312_pato_lumbalgia'] = $_POST['m_312_pato_lumbalgia'];
+        $params_2[':m_312_pato_tifoidea'] = $_POST['m_312_pato_tifoidea'];
+        $params_2[':m_312_pato_neoplasias'] = $_POST['m_312_pato_neoplasias'];
+        $params_2[':m_312_pato_quemaduras'] = $_POST['m_312_pato_quemaduras'];
+        $params_2[':m_312_pato_discopatias'] = $_POST['m_312_pato_discopatias'];
+        $params_2[':m_312_pato_convulciones'] = $_POST['m_312_pato_convulciones'];
+        $params_2[':m_312_pato_gastritis'] = $_POST['m_312_pato_gastritis'];
+        $params_2[':m_312_pato_ulceras'] = $_POST['m_312_pato_ulceras'];
+        $params_2[':m_312_pato_enf_psiquia'] = $_POST['m_312_pato_enf_psiquia'];
+        $params_2[':m_312_pato_enf_cardio'] = $_POST['m_312_pato_enf_cardio'];
+        $params_2[':m_312_pato_enf_ocular'] = $_POST['m_312_pato_enf_ocular'];
+        $params_2[':m_312_pato_enf_reuma'] = $_POST['m_312_pato_enf_reuma'];
+        $params_2[':m_312_pato_enf_pulmon'] = $_POST['m_312_pato_enf_pulmon'];
+        $params_2[':m_312_pato_alt_piel'] = $_POST['m_312_pato_alt_piel'];
+        $params_2[':m_312_pato_tendinitis'] = $_POST['m_312_pato_tendinitis'];
+        $params_2[':m_312_pato_fractura'] = $_POST['m_312_pato_fractura'];
+        $params_2[':m_312_pato_anemia'] = $_POST['m_312_pato_anemia'];
+        $params_2[':m_312_pato_obesidad'] = $_POST['m_312_pato_obesidad'];
+        $params_2[':m_312_pato_dislipidem'] = $_POST['m_312_pato_dislipidem'];
+        $params_2[':m_312_pato_intoxica'] = $_POST['m_312_pato_intoxica'];
+        $params_2[':m_312_pato_cirugia'] = $_POST['m_312_pato_cirugia'];
+        $params_2[':m_312_pato_otros'] = $_POST['m_312_pato_otros'];
+        $params_2[':m_312_pato_cirugia_desc'] = $_POST['m_312_pato_cirugia_desc'];
+        $params_2[':m_312_pato_tbc_tratamiento'] = $_POST['m_312_pato_tbc_tratamiento'];
+        $params_2[':m_312_pato_alergias_desc'] = $_POST['m_312_pato_alergias_desc'];
+        $params_2[':m_312_pato_observaciones'] = $_POST['m_312_pato_observaciones'];
+        $params_2[':m_312_alcohol_tipo'] = $_POST['m_312_alcohol_tipo'];
+        $params_2[':m_312_alcohol_cantidad'] = $_POST['m_312_alcohol_cantidad'];
+        $params_2[':m_312_alcohol_fre'] = $_POST['m_312_alcohol_fre'];
+        $params_2[':m_312_tabaco_tipo'] = $_POST['m_312_tabaco_tipo'];
+        $params_2[':m_312_tabaco_cantidad'] = $_POST['m_312_tabaco_cantidad'];
+        $params_2[':m_312_tabaco_fre'] = $_POST['m_312_tabaco_fre'];
+        $params_2[':m_312_drogas_tipo'] = $_POST['m_312_drogas_tipo'];
+        $params_2[':m_312_drogas_cantidad'] = $_POST['m_312_drogas_cantidad'];
+        $params_2[':m_312_drogas_fre'] = $_POST['m_312_drogas_fre'];
+        $params_2[':m_312_medicamentos'] = $_POST['m_312_medicamentos'];
+        $params_2[':m_312_padre'] = $_POST['m_312_padre'];
+        $params_2[':m_312_madre'] = $_POST['m_312_madre'];
+        $params_2[':m_312_conyuge'] = $_POST['m_312_conyuge'];
+        $params_2[':m_312_hijo_vivo'] = $_POST['m_312_hijo_vivo'];
+        $params_2[':m_312_hijo_fallecido'] = $_POST['m_312_hijo_fallecido'];
+        $params_2[':m_312_anamnesis'] = $_POST['m_312_anamnesis'];
+        $params_2[':m_312_ectoscopia'] = $_POST['m_312_ectoscopia'];
+        $params_2[':m_312_est_mental'] = $_POST['m_312_est_mental'];
+        $params_2[':m_312_piel'] = $_POST['m_312_piel'];
+        $params_2[':m_312_cabeza'] = $_POST['m_312_cabeza'];
+        $params_2[':m_312_oidos'] = $_POST['m_312_oidos'];
+        $params_2[':m_312_nariz'] = $_POST['m_312_nariz'];
+        $params_2[':m_312_boca'] = $_POST['m_312_boca'];
+        $params_2[':m_312_faringe'] = $_POST['m_312_faringe'];
+        $params_2[':m_312_cuello'] = $_POST['m_312_cuello'];
+        $params_2[':m_312_respiratorio'] = $_POST['m_312_respiratorio'];
+        $params_2[':m_312_cardiovascular'] = $_POST['m_312_cardiovascular'];
+        $params_2[':m_312_digestivo'] = $_POST['m_312_digestivo'];
+        $params_2[':m_312_genitou'] = $_POST['m_312_genitou'];
+        $params_2[':m_312_locomotor'] = $_POST['m_312_locomotor'];
+        $params_2[':m_312_marcha'] = $_POST['m_312_marcha'];
+        $params_2[':m_312_columna'] = $_POST['m_312_columna'];
+        $params_2[':m_312_mi_superi'] = $_POST['m_312_mi_superi'];
+        $params_2[':m_312_mi_inferi'] = $_POST['m_312_mi_inferi'];
+        $params_2[':m_312_linfatico'] = $_POST['m_312_linfatico'];
+        $params_2[':m_312_nervio'] = $_POST['m_312_nervio'];
+        $params_2[':m_312_osteomuscular'] = $_POST['m_312_osteomuscular'];
+        $params_2[':m_312_ef_observaciones'] = $_POST['m_312_ef_observaciones'];
+        $params_2[':m_312_conclu_psico'] = $_POST['m_312_conclu_psico'];
+        $params_2[':m_312_conclu_rx'] = $_POST['m_312_conclu_rx'];
+        $params_2[':m_312_conclu_lab'] = $_POST['m_312_conclu_lab'];
+        $params_2[':m_312_conclu_audio'] = $_POST['m_312_conclu_audio'];
+        $params_2[':m_312_conclu_espiro'] = $_POST['m_312_conclu_espiro'];
+        $params_2[':m_312_conclu_otros'] = $_POST['m_312_conclu_otros'];
+        $params_2[':m_312_diag_cie1'] = $_POST['m_312_diag_cie1'];
+        $params_2[':m_312_diag_st1'] = $_POST['m_312_diag_st1'];
+        $params_2[':m_312_diag_cie2'] = $_POST['m_312_diag_cie2'];
+        $params_2[':m_312_diag_st2'] = $_POST['m_312_diag_st2'];
+        $params_2[':m_312_diag_cie3'] = $_POST['m_312_diag_cie3'];
+        $params_2[':m_312_diag_st3'] = $_POST['m_312_diag_st3'];
+        $params_2[':m_312_diag_cie4'] = $_POST['m_312_diag_cie4'];
+        $params_2[':m_312_diag_st4'] = $_POST['m_312_diag_st4'];
+        $params_2[':m_312_diag_cie5'] = $_POST['m_312_diag_cie5'];
+        $params_2[':m_312_diag_st5'] = $_POST['m_312_diag_st5'];
+        $params_2[':m_312_diag_cie6'] = $_POST['m_312_diag_cie6'];
+        $params_2[':m_312_diag_st6'] = $_POST['m_312_diag_st6'];
+        $params_2[':m_312_diag_cie7'] = $_POST['m_312_diag_cie7'];
+        $params_2[':m_312_diag_st7'] = $_POST['m_312_diag_st7'];
+        $params_2[':m_312_diag_cie8'] = $_POST['m_312_diag_cie8'];
+        $params_2[':m_312_diag_st8'] = $_POST['m_312_diag_st8'];
+        $params_2[':m_312_time_aptitud'] = $_POST['m_312_time_aptitud'];
+        $params_2[':m_312_restricciones'] = $_POST['m_312_restricciones'];
+        $params_2[':m_312_observaciones'] = $_POST['m_312_observaciones'];
+        $params_2[':m_312_aptitud'] = $_POST['m_312_aptitud'];
+        $params_2[':m_312_medico_ocupa'] = $_POST['m_312_medico_ocupa'];
+        $params_2[':m_312_medico_auditor'] = $_POST['m_312_medico_auditor'];
+
+        $params_2[':m_312_pato_tbc_fecha'] = $_POST['m_312_pato_tbc_fecha'];
+        $timestamp0 = strtotime($_POST['m_312_pato_tbc_fecha']);
+        $m_312_pato_tbc_fecha = ((strlen($_POST['m_312_pato_tbc_fecha']) > 0) ? date('Y-m-d', $timestamp0) : null);
+        $params_2[':m_312_pato_tbc_fecha'] = $m_312_pato_tbc_fecha;
+
+        // $params_2[':m_312_fech_val'] = $_POST['m_312_fech_val'];
+        $timestamp2 = strtotime($_POST['m_312_fech_val']);
+        $m_312_fech_val = ((strlen($_POST['m_312_fech_val']) > 0) ? date('Y-m-d', $timestamp2) : null);
+        $params_2[':m_312_fech_val'] = $m_312_fech_val;
+
+
+        // $params_2[':m_312_fech_vence'] = $_POST['m_312_fech_vence'];        
+        $timestamp3 = strtotime($_POST['m_312_fech_vence']);
+        $m_312_fech_vence = ((strlen($_POST['m_312_fech_vence']) > 0) ? date('Y-m-d', $timestamp3) : null);
+        $params_2[':m_312_fech_vence'] = $m_312_fech_vence;
+
+        $q_2 = 'Update mod_medicina_312 set
+                    m_312_residencia=:m_312_residencia,
+                    m_312_tiempo=:m_312_tiempo,
+                    m_312_seguro=:m_312_seguro,
+                    m_312_nhijos=:m_312_nhijos,
+                    m_312_dependiente=:m_312_dependiente,
+                    m_312_pato_ima=:m_312_pato_ima,
+                    m_312_pato_hta=:m_312_pato_hta,
+                    m_312_pato_acv=:m_312_pato_acv,
+                    m_312_pato_tbc=:m_312_pato_tbc,
+                    m_312_pato_ets=:m_312_pato_ets,
+                    m_312_pato_vih=:m_312_pato_vih,
+                    m_312_pato_tec=:m_312_pato_tec,
+                    m_312_pato_alergias=:m_312_pato_alergias,
+                    m_312_pato_asma=:m_312_pato_asma,
+                    m_312_pato_bronquitis=:m_312_pato_bronquitis,
+                    m_312_pato_diabetes=:m_312_pato_diabetes,
+                    m_312_pato_hepatitis=:m_312_pato_hepatitis,
+                    m_312_pato_hernia=:m_312_pato_hernia,
+                    m_312_pato_lumbalgia=:m_312_pato_lumbalgia,
+                    m_312_pato_tifoidea=:m_312_pato_tifoidea,
+                    m_312_pato_neoplasias=:m_312_pato_neoplasias,
+                    m_312_pato_quemaduras=:m_312_pato_quemaduras,
+                    m_312_pato_discopatias=:m_312_pato_discopatias,
+                    m_312_pato_convulciones=:m_312_pato_convulciones,
+                    m_312_pato_gastritis=:m_312_pato_gastritis,
+                    m_312_pato_ulceras=:m_312_pato_ulceras,
+                    m_312_pato_enf_psiquia=:m_312_pato_enf_psiquia,
+                    m_312_pato_enf_cardio=:m_312_pato_enf_cardio,
+                    m_312_pato_enf_ocular=:m_312_pato_enf_ocular,
+                    m_312_pato_enf_reuma=:m_312_pato_enf_reuma,
+                    m_312_pato_enf_pulmon=:m_312_pato_enf_pulmon,
+                    m_312_pato_alt_piel=:m_312_pato_alt_piel,
+                    m_312_pato_tendinitis=:m_312_pato_tendinitis,
+                    m_312_pato_fractura=:m_312_pato_fractura,
+                    m_312_pato_anemia=:m_312_pato_anemia,
+                    m_312_pato_obesidad=:m_312_pato_obesidad,
+                    m_312_pato_dislipidem=:m_312_pato_dislipidem,
+                    m_312_pato_intoxica=:m_312_pato_intoxica,
+                    m_312_pato_cirugia=:m_312_pato_cirugia,
+                    m_312_pato_otros=:m_312_pato_otros,
+                    m_312_pato_cirugia_desc=:m_312_pato_cirugia_desc,
+                    m_312_pato_tbc_fecha=:m_312_pato_tbc_fecha,
+                    m_312_pato_tbc_tratamiento=:m_312_pato_tbc_tratamiento,
+                    m_312_pato_alergias_desc=:m_312_pato_alergias_desc,
+                    m_312_pato_observaciones=:m_312_pato_observaciones,
+                    m_312_alcohol_tipo=:m_312_alcohol_tipo,
+                    m_312_alcohol_cantidad=:m_312_alcohol_cantidad,
+                    m_312_alcohol_fre=:m_312_alcohol_fre,
+                    m_312_tabaco_tipo=:m_312_tabaco_tipo,
+                    m_312_tabaco_cantidad=:m_312_tabaco_cantidad,
+                    m_312_tabaco_fre=:m_312_tabaco_fre,
+                    m_312_drogas_tipo=:m_312_drogas_tipo,
+                    m_312_drogas_cantidad=:m_312_drogas_cantidad,
+                    m_312_drogas_fre=:m_312_drogas_fre,
+                    m_312_medicamentos=:m_312_medicamentos,
+                    m_312_padre=:m_312_padre,
+                    m_312_madre=:m_312_madre,
+                    m_312_conyuge=:m_312_conyuge,
+                    m_312_hijo_vivo=:m_312_hijo_vivo,
+                    m_312_hijo_fallecido=:m_312_hijo_fallecido,
+                    m_312_anamnesis=:m_312_anamnesis,
+                    m_312_ectoscopia=:m_312_ectoscopia,
+                    m_312_est_mental=:m_312_est_mental,
+                    m_312_piel=:m_312_piel,
+                    m_312_cabeza=:m_312_cabeza,
+                    m_312_oidos=:m_312_oidos,
+                    m_312_nariz=:m_312_nariz,
+                    m_312_boca=:m_312_boca,
+                    m_312_faringe=:m_312_faringe,
+                    m_312_cuello=:m_312_cuello,
+                    m_312_respiratorio=:m_312_respiratorio,
+                    m_312_cardiovascular=:m_312_cardiovascular,
+                    m_312_digestivo=:m_312_digestivo,
+                    m_312_genitou=:m_312_genitou,
+                    m_312_locomotor=:m_312_locomotor,
+                    m_312_marcha=:m_312_marcha,
+                    m_312_columna=:m_312_columna,
+                    m_312_mi_superi=:m_312_mi_superi,
+                    m_312_mi_inferi=:m_312_mi_inferi,
+                    m_312_linfatico=:m_312_linfatico,
+                    m_312_nervio=:m_312_nervio,
+                    m_312_osteomuscular=:m_312_osteomuscular,
+                    m_312_ef_observaciones=:m_312_ef_observaciones,
+                    m_312_conclu_psico=:m_312_conclu_psico,
+                    m_312_conclu_rx=:m_312_conclu_rx,
+                    m_312_conclu_lab=:m_312_conclu_lab,
+                    m_312_conclu_audio=:m_312_conclu_audio,
+                    m_312_conclu_espiro=:m_312_conclu_espiro,
+                    m_312_conclu_otros=:m_312_conclu_otros,
+                    m_312_diag_cie1=:m_312_diag_cie1,
+                    m_312_diag_st1=:m_312_diag_st1,
+                    m_312_diag_cie2=:m_312_diag_cie2,
+                    m_312_diag_st2=:m_312_diag_st2,
+                    m_312_diag_cie3=:m_312_diag_cie3,
+                    m_312_diag_st3=:m_312_diag_st3,
+                    m_312_diag_cie4=:m_312_diag_cie4,
+                    m_312_diag_st4=:m_312_diag_st4,
+                    m_312_diag_cie5=:m_312_diag_cie5,
+                    m_312_diag_st5=:m_312_diag_st5,
+                    m_312_diag_cie6=:m_312_diag_cie6,
+                    m_312_diag_st6=:m_312_diag_st6,
+                    m_312_diag_cie7=:m_312_diag_cie7,
+                    m_312_diag_st7=:m_312_diag_st7,
+                    m_312_diag_cie8=:m_312_diag_cie8,
+                    m_312_diag_st8=:m_312_diag_st8,
+                    m_312_fech_val=:m_312_fech_val,
+                    m_312_fech_vence=:m_312_fech_vence,
+                    m_312_time_aptitud=:m_312_time_aptitud,
+                    m_312_restricciones=:m_312_restricciones,
+                    m_312_observaciones=:m_312_observaciones,
+                    m_312_aptitud=:m_312_aptitud,
+                    m_312_medico_ocupa=:m_312_medico_ocupa,
+                    m_312_medico_auditor=:m_312_medico_auditor        
+                where
+                m_312_adm=:adm and m_312_exa=:ex_id;';
+
+        $sql_1 = $this->sql($q_1, $params_1);
+        if ($sql_1->success) {
+            $sql_2 = $this->sql($q_2, $params_2);
+            if ($sql_2->success) {
+                $params_3 = array();
+                $params_3[':adm'] = $_POST['adm'];
+                $params_3[':aptitud'] = $_POST['m_312_aptitud'];
+
+                $q_3 = "Update admision set adm_aptitud=:aptitud, adm_val=1 where adm_id=:adm;";
+
+                $sql_3 = $this->sql($q_3, $params_3);
+                if ($sql_3->success) {
+                    $this->commit();
+                    return $sql_3;
+                } else {
+                    $this->rollback();
+                    return array('success' => false, 'error' => 'Problemas con el registro.');
+                }
+            } else {
+                $this->rollback();
+                return array('success' => false, 'error' => 'Problemas con el registro.');
+            }
+        } else {
+            $this->rollback();
+            return array('success' => false, 'error' => 'Problemas con el registro.');
+        }
+    }
+
+    public function mod_medicina_312($adm)
+    {
+        $sql = $this->sql("SELECT * FROM mod_medicina_312
+            where
+            m_312_adm=$adm;
+                ");
+        return $sql;
+    }
 }
 
 //$sesion = new model();
@@ -4421,4 +5258,3 @@ class model extends core {
 //val_tiempo
 //echo json_encode($sesion->save());
 //http://localhost/ocupacional/system/loader.php?sys_acction=sys_loadmodel&sys_modname=mod_hruta
-?>

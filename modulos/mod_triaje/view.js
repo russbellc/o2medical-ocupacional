@@ -648,7 +648,7 @@ mod.triaje.triaje_triaje = {
             listeners: {
                 render: function (editorObject) {
                     editorObject.getEl().on({
-                        'keyup': function (event, target, scope) {
+                        'change': function (event, target, scope) {
                             var editorObject = scope;
                             var Peso = target.value;
                             var Talla = mod.triaje.triaje_triaje.m_tri_triaje_talla.getValue();

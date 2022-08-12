@@ -257,26 +257,26 @@ mod.medicina = {
 					align: "center",
 					width: 151,
 					renderer: function (val, meta, record) {
-                        if (val == 'APTO') {
-                            meta.css = 'stkGreen';
-                        } else if (val == 'APTO CON OBSERVACIONES') {
-                            meta.css = 'stkYellow';
-                        } else if (val == 'APTO CON RESTRICCIÓN') {
-                            meta.css = 'stkYellow';
-                            return val;
-                        } else if (val == 'NO APTO TEMPORAL') {
-                            meta.css = 'stkRed';
-                        } else if (val == 'NO APTO DEFINITIVO') {
-                            meta.css = 'stkRed';
-                        } else if (val == 'EN PROCESO DE VALIDACION') {
-                            meta.css = 'stkBlak';
-                        } else if (val == 'NO APTO TEMPORAL') {
-                            meta.css = 'stkblue';
-                        } else {
-                            return  '<b><center><h3>N/R</h3></center></b>';
-                        }
-                        return '<b><center><h3>' + val + '</h3></center></b>';
-                    }
+						if (val == "APTO") {
+							meta.css = "stkGreen";
+						} else if (val == "APTO CON OBSERVACIONES") {
+							meta.css = "stkYellow";
+						} else if (val == "APTO CON RESTRICCIÓN") {
+							meta.css = "stkYellow";
+							return val;
+						} else if (val == "NO APTO TEMPORAL") {
+							meta.css = "stkRed";
+						} else if (val == "NO APTO DEFINITIVO") {
+							meta.css = "stkRed";
+						} else if (val == "EN PROCESO DE VALIDACION") {
+							meta.css = "stkBlak";
+						} else if (val == "NO APTO TEMPORAL") {
+							meta.css = "stkblue";
+						} else {
+							return "<b><center><h3>N/R</h3></center></b>";
+						}
+						return "<b><center><h3>" + val + "</h3></center></b>";
+					},
 				},
 				{
 					header: "FECHA DE ADMISIÓN",
@@ -575,6 +575,7 @@ mod.medicina.formatos = {
 					} else if (record.get("ex_id") == 19) {
 						//EXAMEN DE MEDICINA ANEXO 312
 						mod.medicina.anexo312.init(record);
+						mod.medicina.anexo312.llena_conclusiones(record.get("adm"));
 					} else if (record.get("ex_id") == 39) {
 						//ANTECEDENTES OCUPACIONALES NUEVO ANEXO 16
 						mod.medicina.antecedentes16.init(record);
@@ -633,7 +634,42 @@ mod.medicina.formatos = {
 									},
 								],
 							}).showAt(event.xy);
-						} else if (record.get("ex_id") == 39) {
+						} else if (record.get("ex_id") == 19) {
+							new Ext.menu.Menu({
+								items: [
+									{
+										text:
+											"Anexo 312 Informe N°: <B>" +
+											record.get("adm") +
+											"<B>",
+										iconCls: "reporte",
+										handler: function () {
+											if (record.get("st") >= 1) {
+												new Ext.Window({
+													title:
+														"Anexo 312 Informe N° " + record.get("adm"),
+													width: 800,
+													height: 600,
+													maximizable: true,
+													modal: true,
+													closeAction: "close",
+													resizable: true,
+													html:
+														"<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_medicina&sys_report=formato312&adm=" +
+														record.get("adm") +
+														"'></iframe>",
+												}).show();
+											} else {
+												Ext.MessageBox.alert(
+													"Observaciones",
+													"El paciente no fue registrado correctamente"
+												);
+											}
+										},
+									},
+								],
+							}).showAt(event.xy);
+						}  else if (record.get("ex_id") == 39) {
 							new Ext.menu.Menu({
 								items: [
 									{
@@ -1139,8 +1175,8 @@ mod.medicina.nuevoAnexo16 = {
 	m_med_fech_val: null,
 	m_med_medico_ocupa: null,
 	m_med_medico_auditor: null,
-	val_fech_fin: null,
-	val_tiempo: null,
+	m_312_fech_vence: null,
+	m_312_time_aptitud: null,
 	init: function (r) {
 		this.record = r;
 		this.crea_stores();
@@ -6185,561 +6221,114 @@ mod.medicina.anexo312 = {
 	win: null,
 	frm: null,
 	record: null,
-	m_med_contac_nom: null,
-	m_med_contac_parent: null,
-	m_med_contac_telf: null,
-	m_med_puesto_postula: null,
-	m_med_area: null,
-	m_med_puesto_actual: null,
-	m_med_tiempo: null,
-	m_med_eq_opera: null,
-	m_med_fech_ingreso: null,
-	m_med_reubicacion: null,
-	m_med_tip_opera: null,
-	m_med_minerales: null,
-	m_med_altura_lab: null,
-	m_med_rl_bio1: null,
-	m_med_rl_psico: null,
-	m_med_rl_ergo1: null,
-	m_med_rl_ergo2: null,
-	m_med_rl_ergo3: null,
-	m_med_rl_ergo4: null,
-	m_med_rl_ergo5: null,
-	m_med_rl_fisico1: null,
-	m_med_rl_fisico2: null,
-	m_med_rl_fisico3: null,
-	m_med_rl_fisico4: null,
-	m_med_rl_fisico5: null,
-	m_med_rl_fisico6: null,
-	m_med_rl_fisico7: null,
-	m_med_rl_fisico8: null,
-	m_med_rl_fisico9: null,
-	m_med_rl_fisico10: null,
-	m_med_rl_psico1: null,
-	m_med_rl_psico2: null,
-	m_med_rl_psico3: null,
-	m_med_rl_psico4: null,
-	m_med_rl_quimi1: null,
-	m_med_rl_quimi2: null,
-	m_med_rl_quimi3: null,
-	m_med_rl_quimi4: null,
-	m_med_rl_quimi5: null,
-	m_med_rl_quimi6: null,
-	m_med_rl_quimi7: null,
-	m_med_muj_fur: null,
-	m_med_muj_rc: null,
-	m_med_muj_g: null,
-	m_med_muj_p: null,
-	m_med_muj_ult_pap: null,
-	m_med_muj_resul: null,
-	m_med_muj_mac: null,
-	m_med_muj_a: null,
-	m_med_muj_b: null,
-	m_med_muj_c: null,
-	m_med_muj_d: null,
-	m_med_muj_e: null,
-	m_med_cardio_op01: null,
-	m_med_cardio_op02: null,
-	m_med_cardio_desc02: null,
-	m_med_cardio_op03: null,
-	m_med_cardio_desc03: null,
-	m_med_cardio_op04: null,
-	m_med_cardio_desc04: null,
-	m_med_cardio_op05: null,
-	m_med_cardio_desc05: null,
-	m_med_cardio_op06: null,
-	m_med_cardio_desc06: null,
-	m_med_cardio_op07: null,
-	m_med_cardio_desc07: null,
-	m_med_cardio_op08: null,
-	m_med_cardio_desc08: null,
-	m_med_cardio_op09: null,
-	m_med_cardio_desc09: null,
-	m_med_cardio_op10: null,
-	m_med_cardio_desc10: null,
-	m_med_cardio_op11: null,
-	m_med_cardio_desc11: null,
-	m_med_cardio_op12: null,
-	m_med_cardio_desc12: null,
-	m_med_cardio_op13: null,
-	m_med_cardio_desc13: null,
-	m_med_cardio_op14: null,
-	m_med_cardio_desc14: null,
-	m_med_cardio_op15: null,
-	m_med_cardio_desc15: null,
-	m_med_cardio_op16: null,
-	m_med_cardio_desc16: null,
-	m_med_cardio_op17: null,
-	m_med_cardio_desc17: null,
-	m_med_cardio_op18: null,
-	m_med_cardio_desc18: null,
-	m_osteo_cuello_dura_3meses: null,
-	m_med_alcohol: null,
-	m_med_coca: null,
-	m_med_fam_papa: null,
-	m_med_fam_mama: null,
-	m_med_fam_herma: null,
-	m_med_fam_hijos: null,
-	m_med_fam_h_vivos: null,
-	m_med_fam_h_muertos: null,
-	m_med_fam_infarto55: null,
-	m_med_fam_infarto65: null,
-	m_med_piel_desc: null,
-	m_med_piel_dx: null,
-	m_med_cabeza_desc: null,
-	m_med_cabeza_dx: null,
-	m_med_cuello_desc: null,
-	m_med_cuello_dx: null,
-	m_med_nariz_desc: null,
-	m_med_nariz_dx: null,
-	m_med_boca_desc: null,
-	m_med_boca_dx: null,
-	m_med_oido_der01: null,
-	m_med_oido_der02: null,
-	m_med_oido_der03: null,
-	m_med_oido_der04: null,
-	m_med_oido_izq01: null,
-	m_med_oido_izq02: null,
-	m_med_oido_izq03: null,
-	m_med_oido_izq04: null,
-	m_med_torax_desc: null,
-	m_med_torax_dx: null,
-	m_med_corazon_desc: null,
-	m_med_corazon_dx: null,
-	m_med_mamas_derecho: null,
-	m_med_mamas_izquier: null,
-	m_med_pulmon_desc: null,
-	m_med_pulmon_dx: null,
-	m_med_osteo_aptitud: null,
-	m_med_osteo_desc: null,
-	m_med_abdomen: null,
-	m_med_abdomen_desc: null,
-	m_med_pru_sup_der: null,
-	m_med_pru_med_der: null,
-	m_med_pru_inf_der: null,
-	m_med_ppl_der: null,
-	m_med_pru_sup_izq: null,
-	m_med_pru_med_izq: null,
-	m_med_pru_inf_izq: null,
-	m_med_ppl_izq: null,
-	m_med_tacto: null,
-	m_med_tacto_desc: null,
-	m_med_anillos: null,
-	m_med_anillos_desc: null,
-	m_med_hernia: null,
-	m_med_hernia_desc: null,
-	m_med_varices: null,
-	m_med_varices_desc: null,
-	m_med_genitales_desc: null,
-	m_med_genitales_dx: null,
-	m_med_ganglios_desc: null,
-	m_med_ganglios_dx: null,
-	m_med_lenguaje_desc: null,
-	m_med_lenguaje_dx: null,
-	m_med_aptitud: null,
-	m_med_fech_val: null,
-	m_med_medico_ocupa: null,
-	m_med_medico_auditor: null,
-	val_fech_fin: null,
-	val_tiempo: null,
 	init: function (r) {
 		this.record = r;
 		this.crea_stores();
-		this.list_diag.load();
-		this.list_obs.load();
-		this.list_restric.load();
-		this.list_inter.load();
-		this.list_recom.load();
 		this.crea_controles();
+
+		this.load_medico.load();
+		this.load_medico_auditor.load();
+		this.list_recom.load();
 		if (this.record.get("st") >= 1) {
 			this.cargar_data();
 		}
 		this.win.show();
 	},
-	cargar_data: function () {
+	llena_conclusiones: function (adm) {
 		this.frm.getForm().load({
 			waitMsg: "Recuperando Informacion...",
 			waitTitle: "Espere",
 			params: {
-				acction: "load_anexo312",
+				acction: "load_conclusiones",
 				format: "json",
-				ficha7c_adm: mod.medicina.anexo312.record.get("adm"),
-				ficha7c_exa: mod.medicina.anexo312.record.get("ex_id"),
+				adm: adm,
+				st: this.record.get("st")
 			},
 			scope: this,
 			success: function (frm, action) {
 				r = action.result.data;
-				//                mod.medicina.anexo312.val_medico.setValue(r.val_medico);
-				//                mod.medicina.anexo312.val_medico.setRawValue(r.medico_nom);
 			},
 		});
 	},
+	cargar_data: function () {
+		Ext.Ajax.request({
+			waitMsg: "Recuperando Informacion...",
+			waitTitle: "Espere",
+			url: "<[controller]>",
+			params: {
+				acction: "load_anexo312",
+				format: "json",
+				adm: mod.medicina.anexo312.record.get("adm"),
+				exa: mod.medicina.anexo312.record.get("ex_id"),
+			},
+			success: function (response, opts) {
+				var dato = Ext.decode(response.responseText);
+				if (dato.success == true) {
+					mod.medicina.anexo312.frm.getForm().loadRecord(dato);
+
+					// mod.medicina.anexo312.m_312_medico_ocupa.setValue(
+					// 	dato.data.m_312_medico_ocupa
+					// );
+					// mod.medicina.anexo312.m_312_medico_ocupa.setRawValue(
+					// 	dato.data.m_312_medico_ocupa_nom
+					// );
+					// mod.medicina.anexo312.load_medico.load();
+
+					// mod.medicina.anexo312.adm_emp.setValue(dato.data.emp_id);
+					// mod.medicina.anexo312.adm_emp.setRawValue(dato.data.empresa);
+					// mod.medicina.anexo312.st_empre.load();
+
+					// mod.medicina.anexo312.adm_pac.setValue(dato.data.pac_id);
+					// mod.medicina.anexo312.adm_pac.setRawValue(dato.data.adm_pac);
+
+					// mod.medicina.anexo312.desc.setValue(dato.data.pk_desc);
+					// mod.medicina.anexo312.tficha.setValue(dato.data.tfi_desc);
+				}
+			},
+		});
+		// this.frm.getForm().load({
+		// 	waitMsg: "Recuperando Informacion...Carga data",
+		// 	waitTitle: "Espere",
+		// 	params: {
+		// 		acction: "load_anexo312",
+		// 		format: "json",
+		// 		adm: mod.medicina.anexo312.record.get("adm"),
+		// 		exa: mod.medicina.anexo312.record.get("ex_id"),
+		// 	},
+		// 	scope: this,
+		// 	success: function (frm, action) {
+		// 		r = action.result.data;
+		// 		this.m_312_medico_ocupa.setValue(r.m_312_medico_ocupa);
+		// 		this.m_312_medico_ocupa.setRawValue(r.m_312_medico_ocupa_nom);
+		// 		this.load_medico.load();
+		// 	},
+		// });
+	},
 	crea_stores: function () {
-		this.st_busca_puesto_postula = new Ext.data.JsonStore({
+		this.list_cie10 = new Ext.data.JsonStore({
 			url: "<[controller]>",
 			baseParams: {
-				acction: "st_busca_puesto_postula",
+				acction: "list_cie10",
 				format: "json",
 			},
-			fields: ["m_med_puesto_postula"],
+			fields: ["cie4_id", "cie4_cie3id", "cie4_desc"],
 			root: "data",
 		});
-		this.st_busca_area = new Ext.data.JsonStore({
+		this.load_medico = new Ext.data.JsonStore({
+			remoteSort: true,
 			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_area",
-				format: "json",
-			},
-			fields: ["m_med_area"],
-			root: "data",
-		});
-		this.st_busca_puesto_actual = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_puesto_actual",
-				format: "json",
-			},
-			fields: ["m_med_puesto_actual"],
-			root: "data",
-		});
-		this.st_busca_eq_opera = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_eq_opera",
-				format: "json",
-			},
-			fields: ["m_med_eq_opera"],
-			root: "data",
-		});
-		this.st_busca_piel_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_piel_desc",
-				format: "json",
-			},
-			fields: ["m_med_piel_desc"],
-			root: "data",
-		});
-		this.st_busca_piel_dx = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_piel_dx",
-				format: "json",
-			},
-			fields: ["m_med_piel_dx"],
-			root: "data",
-		});
-		this.st_busca_cabeza_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_cabeza_desc",
-				format: "json",
-			},
-			fields: ["m_med_cabeza_desc"],
-			root: "data",
-		});
-		this.st_busca_cabeza_dx = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_cabeza_dx",
-				format: "json",
-			},
-			fields: ["m_med_cabeza_dx"],
-			root: "data",
-		});
-		this.st_busca_cuello_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_cuello_desc",
-				format: "json",
-			},
-			fields: ["m_med_cuello_desc"],
-			root: "data",
-		});
-		this.st_busca_cuello_dx = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_cuello_dx",
-				format: "json",
-			},
-			fields: ["m_med_cuello_dx"],
-			root: "data",
-		});
-		this.st_busca_nariz_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_nariz_desc",
-				format: "json",
-			},
-			fields: ["m_med_nariz_desc"],
-			root: "data",
-		});
-		this.st_busca_nariz_dx = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_nariz_dx",
-				format: "json",
-			},
-			fields: ["m_med_nariz_dx"],
-			root: "data",
-		});
-		this.st_busca_boca_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_boca_desc",
-				format: "json",
-			},
-			fields: ["m_med_boca_desc"],
-			root: "data",
-		});
-		this.st_busca_boca_dx = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_boca_dx",
-				format: "json",
-			},
-			fields: ["m_med_boca_dx"],
-			root: "data",
-		});
-		this.st_busca_torax_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_torax_desc",
-				format: "json",
-			},
-			fields: ["m_med_torax_desc"],
-			root: "data",
-		});
-		this.st_busca_torax_dx = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_torax_dx",
-				format: "json",
-			},
-			fields: ["m_med_torax_dx"],
-			root: "data",
-		});
-		this.st_busca_corazon_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_corazon_desc",
-				format: "json",
-			},
-			fields: ["m_med_corazon_desc"],
-			root: "data",
-		});
-		this.st_busca_corazon_dx = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_corazon_dx",
-				format: "json",
-			},
-			fields: ["m_med_corazon_dx"],
-			root: "data",
-		});
-		this.st_busca_mamas_derecho = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_mamas_derecho",
-				format: "json",
-			},
-			fields: ["m_med_mamas_derecho"],
-			root: "data",
-		});
-		this.st_busca_mamas_izquier = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_mamas_izquier",
-				format: "json",
-			},
-			fields: ["m_med_mamas_izquier"],
-			root: "data",
-		});
-		this.st_busca_pulmon_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_pulmon_desc",
-				format: "json",
-			},
-			fields: ["m_med_pulmon_desc"],
-			root: "data",
-		});
-		this.st_busca_pulmon_dx = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_pulmon_dx",
-				format: "json",
-			},
-			fields: ["m_med_pulmon_dx"],
-			root: "data",
-		});
-		this.st_busca_abdomen = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_abdomen",
-				format: "json",
-			},
-			fields: ["m_med_abdomen"],
-			root: "data",
-		});
-		this.st_busca_abdomen_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_abdomen_desc",
-				format: "json",
-			},
-			fields: ["m_med_abdomen_desc"],
-			root: "data",
-		});
-		this.st_busca_tacto_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_tacto_desc",
-				format: "json",
-			},
-			fields: ["m_med_tacto_desc"],
-			root: "data",
-		});
-		this.st_busca_anillos_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_anillos_desc",
-				format: "json",
-			},
-			fields: ["m_med_anillos_desc"],
-			root: "data",
-		});
-		this.st_busca_hernia_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_hernia_desc",
-				format: "json",
-			},
-			fields: ["m_med_hernia_desc"],
-			root: "data",
-		});
-		this.st_busca_varices_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_varices_desc",
-				format: "json",
-			},
-			fields: ["m_med_hernia_desc"],
-			root: "data",
-		});
-		this.st_busca_genitales_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_genitales_desc",
-				format: "json",
-			},
-			fields: ["m_med_genitales_desc"],
-			root: "data",
-		});
-		this.st_busca_genitales_dx = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_genitales_dx",
-				format: "json",
-			},
-			fields: ["m_med_genitales_dx"],
-			root: "data",
-		});
-		this.st_busca_ganglios_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_ganglios_desc",
-				format: "json",
-			},
-			fields: ["m_med_ganglios_desc"],
-			root: "data",
-		});
-		this.st_busca_ganglios_dx = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_ganglios_dx",
-				format: "json",
-			},
-			fields: ["m_med_ganglios_dx"],
-			root: "data",
-		});
-		this.st_busca_lenguaje_desc = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_lenguaje_desc",
-				format: "json",
-			},
-			fields: ["m_med_lenguaje_desc"],
-			root: "data",
-		});
-		this.st_busca_lenguaje_dx = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "st_busca_lenguaje_dx",
-				format: "json",
-			},
-			fields: ["m_med_lenguaje_dx"],
-			root: "data",
-		});
-		this.list_diag = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "list_diag",
-				format: "json",
-			},
+			baseParams: { acction: "load_medico", format: "json" },
 			root: "data",
 			totalProperty: "total",
-			fields: ["diag_id", "diag_adm", "diag_desc"],
-			listeners: {
-				beforeload: function (store, options) {
-					this.baseParams.adm = mod.medicina.anexo312.record.get("adm");
-				},
-			},
+			fields: ["medico_id", "nombre"],
 		});
-		this.list_obs = new Ext.data.JsonStore({
+		this.load_medico_auditor = new Ext.data.JsonStore({
+			remoteSort: true,
 			url: "<[controller]>",
-			baseParams: {
-				acction: "list_obs",
-				format: "json",
-			},
+			baseParams: { acction: "load_medico_auditor", format: "json" },
 			root: "data",
 			totalProperty: "total",
-			fields: ["obs_id", "obs_adm", "obs_desc", "obs_plazo"],
-			listeners: {
-				beforeload: function (store, options) {
-					this.baseParams.adm = mod.medicina.anexo312.record.get("adm");
-				},
-			},
-		});
-		this.list_restric = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "list_restric",
-				format: "json",
-			},
-			root: "data",
-			totalProperty: "total",
-			fields: ["restric_id", "restric_adm", "restric_desc", "restric_plazo"],
-			listeners: {
-				beforeload: function (store, options) {
-					this.baseParams.adm = mod.medicina.anexo312.record.get("adm");
-				},
-			},
-		});
-		this.list_inter = new Ext.data.JsonStore({
-			url: "<[controller]>",
-			baseParams: {
-				acction: "list_inter",
-				format: "json",
-			},
-			root: "data",
-			totalProperty: "total",
-			fields: ["inter_id", "inter_adm", "inter_desc", "inter_plazo"],
-			listeners: {
-				beforeload: function (store, options) {
-					this.baseParams.adm = mod.medicina.anexo312.record.get("adm");
-				},
-			},
+			fields: ["medico_id", "nombre"],
 		});
 		this.list_recom = new Ext.data.JsonStore({
 			url: "<[controller]>",
@@ -6758,1108 +6347,373 @@ mod.medicina.anexo312 = {
 		});
 	},
 	crea_controles: function () {
-		//m_med_contac_nom
-		this.m_med_contac_nom = new Ext.form.TextField({
-			fieldLabel: "<b>NOMBRES Y APELLIDOS</b>",
-			name: "m_med_contac_nom",
-			anchor: "95%",
+		// m_312_residencia
+		this.m_312_residencia = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Residencia en lugar de trabajo</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_312_residencia",
+					inputValue: "Si",
+					handler: function (value, checkbox) {
+						if (checkbox == true) {
+							mod.medicina.anexo312.m_312_tiempo.enable();
+						} else if (checkbox == false) {
+							mod.medicina.anexo312.m_312_tiempo.disable();
+							mod.medicina.anexo312.m_312_tiempo.reset();
+						}
+					},
+				},
+				{
+					boxLabel: "No",
+					name: "m_312_residencia",
+					inputValue: "No",
+					checked: true,
+				},
+			],
 		});
-		//m_med_contac_parent
-		this.m_med_contac_parent = new Ext.form.TextField({
-			fieldLabel: "<b>PARENTESCO</b>",
-			name: "m_med_contac_parent",
-			anchor: "95%",
-		});
-		//m_med_contac_telf
-		this.m_med_contac_telf = new Ext.form.TextField({
-			fieldLabel: "<b>CELULAR</b>",
-			name: "m_med_contac_telf",
-			anchor: "90%",
-			maskRe: /[\d]/,
-			minLength: 9,
+		// m_312_tiempo
+		this.m_312_tiempo = new Ext.form.TextField({
+			fieldLabel: "Tiempo de residencia(años)",
+			name: "m_312_tiempo",
+			minLength: 1,
+			disabled: true,
+			allowBlank: false,
 			autoCreate: {
+				//restricts user to 20 chars max, cannot enter 21st char
 				tag: "input",
-				maxlength: 9,
-				minLength: 6,
+				maxlength: 2,
+				minLength: 1,
 				type: "text",
-				size: "9",
+				size: "2",
 				autocomplete: "off",
 			},
+			anchor: "95%",
 		});
-		//m_med_puesto_postula
 
-		this.Tpl_m_med_puesto_postula = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_puesto_postula}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_puesto_postula = new Ext.form.ComboBox({
-			store: this.st_busca_puesto_postula,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_puesto_postula,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_puesto_postula",
-			displayField: "m_med_puesto_postula",
-			valueField: "m_med_puesto_postula",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>PUESTO AL QUE POSTULA</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_area
-		this.Tpl_m_med_area = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_area}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_area = new Ext.form.ComboBox({
-			store: this.st_busca_area,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_area,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_area",
-			displayField: "m_med_area",
-			valueField: "m_med_area",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>AREA DE TRABAJO</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_puesto_actual
-		this.Tpl_m_med_puesto_actual = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_puesto_actual}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_puesto_actual = new Ext.form.ComboBox({
-			store: this.st_busca_puesto_actual,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_puesto_actual,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_puesto_actual",
-			displayField: "m_med_puesto_actual",
-			valueField: "m_med_puesto_actual",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>PUESTO ACTUAL</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_tiempo
-		this.m_med_tiempo = new Ext.form.TextField({
-			fieldLabel: "<b>TIEMPO EN SU PUESTO ACTUAL</b>",
-			name: "m_med_tiempo",
-			anchor: "95%",
-		});
-		//m_med_eq_opera
-		this.Tpl_m_med_eq_opera = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_eq_opera}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_eq_opera = new Ext.form.ComboBox({
-			store: this.st_busca_eq_opera,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_eq_opera,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_eq_opera",
-			displayField: "m_med_eq_opera",
-			valueField: "m_med_eq_opera",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>EQUIPO QUE OPERA</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_fech_ingreso
-		this.m_med_fech_ingreso = new Ext.form.DateField({
-			fieldLabel: "<b>FECHA DE INGRESO A EMPRESA</b>",
-			name: "m_med_fech_ingreso",
-			allowBlank: true,
-			anchor: "90%",
-			format: "d-m-Y",
-			emptyText: "Dia-Mes-Año",
-			listeners: {
-				render: function (datefield) {
-					datefield.setValue(new Date());
-				},
-			},
-		});
-		//m_med_reubicacion
-		this.m_med_reubicacion = new Ext.form.ComboBox({
-			store: new Ext.data.ArrayStore({
-				fields: ["campo", "descripcion"],
-				data: [
-					["SI", "SI"],
-					["NO", "NO"],
-				],
-			}),
-			displayField: "descripcion",
-			valueField: "campo",
-			hiddenName: "m_med_reubicacion",
-			fieldLabel: "<b>REUBICACIÓN</b>",
-			allowBlank: false,
-			typeAhead: true,
-			mode: "local",
-			forceSelection: true,
-			triggerAction: "all",
-			selectOnFocus: true,
-			anchor: "95%",
-			listeners: {
-				afterrender: function (descripcion) {
-					descripcion.setValue("NO");
-					descripcion.setRawValue("NO");
-				},
-			},
-		});
-		//m_med_tip_opera
-		this.m_med_tip_opera = new Ext.form.ComboBox({
-			store: new Ext.data.ArrayStore({
-				fields: ["campo", "descripcion"],
-				data: [
-					["SUPERFICIE", "SUPERFICIE"],
-					["CONCENTRADORA", "CONCENTRADORA"],
-					["SUBSUELO", "SUBSUELO"],
-					["-", "-"],
-				],
-			}),
-			displayField: "descripcion",
-			valueField: "campo",
-			hiddenName: "m_med_tip_opera",
-			fieldLabel: "<b>TIPO DE OPERACION</b>",
-			allowBlank: false,
-			typeAhead: true,
-			mode: "local",
-			forceSelection: true,
-			triggerAction: "all",
-			selectOnFocus: true,
-			anchor: "95%",
-			listeners: {
-				afterrender: function (descripcion) {
-					descripcion.setValue("SUPERFICIE");
-					descripcion.setRawValue("SUPERFICIE");
-				},
-			},
-		});
-		//m_med_minerales
-		this.m_med_minerales = new Ext.form.TextField({
-			fieldLabel: "<b>MINERALES EXPLOTADOS</b>",
-			name: "m_med_minerales",
-			anchor: "95%",
-		});
-		//m_med_altura_lab
-		this.m_med_altura_lab = new Ext.form.ComboBox({
-			store: new Ext.data.ArrayStore({
-				fields: ["campo", "descripcion"],
-				data: [
-					["HASTA 3000 m", "HASTA 3000 m"],
-					["3001 A 3500 m", "3001 A 3500 m"],
-					["3501 A 4000 m", "3501 A 4000 m"],
-					["4001 A 4500 m", "4001 A 4500 m"],
-					["MAS DE 4501 m", "MAS DE 4501 m"],
-				],
-			}),
-			displayField: "descripcion",
-			valueField: "campo",
-			hiddenName: "m_med_altura_lab",
-			fieldLabel: "<b>ALTURA DE LABOR</b>",
-			allowBlank: false,
-			typeAhead: true,
-			mode: "local",
-			forceSelection: true,
-			triggerAction: "all",
-			selectOnFocus: true,
-			anchor: "95%",
-			listeners: {
-				afterrender: function (descripcion) {
-					descripcion.setValue("4001 A 4500 m");
-					descripcion.setRawValue("4001 A 4500 m");
-				},
-			},
-		});
-		//m_med_rl_bio1
-		this.m_med_rl_bio1 = new Ext.form.RadioGroup({
-			fieldLabel: "<b>RIESGO BIOLOGICO</b>",
+		// m_312_seguro
+		this.m_312_seguro = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Seguro</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
 			items: [
-				{ boxLabel: "SI", name: "m_med_rl_bio1", inputValue: "SI" },
 				{
-					boxLabel: "NO",
-					name: "m_med_rl_bio1",
-					inputValue: "NO",
+					boxLabel: "ESSALUD",
+					name: "m_312_seguro",
+					inputValue: "ESSALUD",
+				},
+				{ boxLabel: "EPS", name: "m_312_seguro", inputValue: "EPS" },
+				{ boxLabel: "SCTR", name: "m_312_seguro", inputValue: "SCTR" },
+				{ boxLabel: "SIS", name: "m_312_seguro", inputValue: "SIS" },
+				{ boxLabel: "OTRO", name: "m_312_seguro", inputValue: "OTRO" },
+				{
+					boxLabel: "NIEGA",
+					name: "m_312_seguro",
+					inputValue: "NIEGA",
 					checked: true,
 				},
 			],
 		});
-		//m_med_rl_ergo1
-		this.m_med_rl_ergo = new Ext.form.CheckboxGroup({
-			fieldLabel: "<b>RIESGO ERGONOMICOS</b>",
-			itemCls: "x-check-group-alt",
-			columns: 5,
-			items: [
-				{ boxLabel: "TURNOS", name: "m_med_rl_ergo1", inputValue: "TURNOS" },
-				{ boxLabel: "CARGAS", name: "m_med_rl_ergo2", inputValue: "CARGAS" },
-				{
-					boxLabel: "MOVIMIENTOS REPETITIVOS",
-					name: "m_med_rl_ergo3",
-					inputValue: "MOVIMIENTOS REPETITIVOS",
-				},
-				{ boxLabel: "PVD", name: "m_med_rl_ergo4", inputValue: "PVD" },
-				{ boxLabel: "OTROS", name: "m_med_rl_ergo5", inputValue: "OTROS" },
-			],
+
+		// m_312_nhijos
+		this.m_312_nhijos = new Ext.form.TextField({
+			fieldLabel: "N° total de hijos vivos",
+			name: "m_312_nhijos",
+			minLength: 1,
+			autoCreate: {
+				//restricts user to 20 chars max, cannot enter 21st char
+				tag: "input",
+				maxlength: 2,
+				minLength: 1,
+				type: "text",
+				size: "2",
+				autocomplete: "off",
+			},
+			anchor: "95%",
 		});
-		//m_med_rl_fisico1
-		this.m_med_rl_fisico = new Ext.form.CheckboxGroup({
-			fieldLabel: "<b>RIESGO FISICO</b>",
-			itemCls: "x-check-group-alt",
-			columns: 5,
-			items: [
-				{ boxLabel: "RUIDO", name: "m_med_rl_fisico1", inputValue: "RUIDO" },
-				{
-					boxLabel: "PRECIONES",
-					name: "m_med_rl_fisico2",
-					inputValue: "PRECIONES",
-				},
-				{
-					boxLabel: "TEMPERATURA",
-					name: "m_med_rl_fisico3",
-					inputValue: "TEMPERATURA",
-				},
-				{
-					boxLabel: "ILUMINACION",
-					name: "m_med_rl_fisico4",
-					inputValue: "ILUMINACION",
-				},
-				{
-					boxLabel: "VIBRACION TOTAL",
-					name: "m_med_rl_fisico5",
-					inputValue: "VIBRACION TOTAL",
-				},
-				{
-					boxLabel: "VIBRACION SEGMENTARIA",
-					name: "m_med_rl_fisico6",
-					inputValue: "VIBRACION SEGMENTARIA",
-				},
-				{
-					boxLabel: "RADIACION IONIZANTE Y NO IONIZANTE",
-					name: "m_med_rl_fisico7",
-					inputValue: "RADIACION IONIZANTE Y NO IONIZANTE",
-				},
-				{
-					boxLabel: "TEMPERATURAS EXTREMAS",
-					name: "m_med_rl_fisico8",
-					inputValue: "TEMPERATURAS EXTREMAS",
-				},
-				{
-					boxLabel: "RADIACION INFRAROJA Y ULTRAVIOLETA",
-					name: "m_med_rl_fisico9",
-					inputValue: "RADIACION INFRAROJA Y ULTRAVIOLETA",
-				},
-				{ boxLabel: "OTROS", name: "m_med_rl_fisico10", inputValue: "OTROS" },
-			],
+		// m_312_dependiente
+		this.m_312_dependiente = new Ext.form.TextField({
+			fieldLabel: "N° Dependientes",
+			name: "m_312_dependiente",
+			minLength: 1,
+			autoCreate: {
+				//restricts user to 20 chars max, cannot enter 21st char
+				tag: "input",
+				maxlength: 2,
+				minLength: 1,
+				type: "text",
+				size: "2",
+				autocomplete: "off",
+			},
+			anchor: "95%",
 		});
-		//m_med_rl_psico1
-		this.m_med_rl_psico = new Ext.form.CheckboxGroup({
-			fieldLabel: "<b>RIESGO PSICOSOCIALES</b>",
-			itemCls: "x-check-group-alt",
-			columns: 4,
-			items: [
-				{ boxLabel: "STRESS", name: "m_med_rl_psico1", inputValue: "STRESS" },
-				{
-					boxLabel: "FATIGA LABORAL",
-					name: "m_med_rl_psico2",
-					inputValue: "FATIGA LABORAL",
-				},
-				{
-					boxLabel: "MONOTONIA",
-					name: "m_med_rl_psico3",
-					inputValue: "MONOTONIA",
-				},
-				{ boxLabel: "OTROS", name: "m_med_rl_psico4", inputValue: "OTROS" },
-			],
-		});
-		//m_med_rl_quimi1
-		this.m_med_rl_quimi = new Ext.form.CheckboxGroup({
-			fieldLabel: "<b>RIESGO QUIMICOS</b>",
+
+		this.m_312_pato = new Ext.form.CheckboxGroup({
+			// fieldLabel: "<b>PATOLOGIAS|ENFERMEDADES</b>",
 			itemCls: "x-check-group-alt",
 			columns: 7,
 			items: [
+				{ boxLabel: "<b>IMA</b>", name: "m_312_pato_ima", inputValue: "1" },
+				{ boxLabel: "<b>HTA</b>", name: "m_312_pato_hta", inputValue: "1" },
+				{ boxLabel: "<b>ACV</b>", name: "m_312_pato_acv", inputValue: "1" },
 				{
-					boxLabel: "GASES Y VAPORES",
-					name: "m_med_rl_quimi1",
-					inputValue: "GASES Y VAPORES",
+					boxLabel: "<b>TBC</b>",
+					name: "m_312_pato_tbc",
+					inputValue: "1",
+					handler: function (value, checkbox) {
+						if (checkbox == true) {
+							mod.medicina.anexo312.m_312_pato_tbc_fecha.enable();
+							mod.medicina.anexo312.m_312_pato_tbc_tratamiento.enable();
+						} else if (checkbox == false) {
+							mod.medicina.anexo312.m_312_pato_tbc_fecha.disable();
+							mod.medicina.anexo312.m_312_pato_tbc_fecha.reset();
+							mod.medicina.anexo312.m_312_pato_tbc_tratamiento.disable();
+							mod.medicina.anexo312.m_312_pato_tbc_tratamiento.reset();
+						}
+					},
 				},
-				{ boxLabel: "POLVOS", name: "m_med_rl_quimi2", inputValue: "POLVOS" },
+				{ boxLabel: "<b>ETS</b>", name: "m_312_pato_ets", inputValue: "1" },
+				{ boxLabel: "<b>VIH</b>", name: "m_312_pato_vih", inputValue: "1" },
+				{ boxLabel: "<b>TEC</b>", name: "m_312_pato_tec", inputValue: "1" },
+				{ boxLabel: "<b>ASMA</b>", name: "m_312_pato_asma", inputValue: "1" },
 				{
-					boxLabel: "LIQUIDOS",
-					name: "m_med_rl_quimi3",
-					inputValue: "LIQUIDOS",
+					boxLabel: "<b>BRONQUITIS</b>",
+					name: "m_312_pato_bronquitis",
+					inputValue: "1",
 				},
 				{
-					boxLabel: "DISOLVENTES",
-					name: "m_med_rl_quimi4",
-					inputValue: "DISOLVENTES",
+					boxLabel: "<b>DIABETES</b>",
+					name: "m_312_pato_diabetes",
+					inputValue: "1",
 				},
 				{
-					boxLabel: "SOLVENTES",
-					name: "m_med_rl_quimi5",
-					inputValue: "SOLVENTES",
+					boxLabel: "<b>HEPATITIS</b>",
+					name: "m_312_pato_hepatitis",
+					inputValue: "1",
 				},
 				{
-					boxLabel: "METALES PESADOS",
-					name: "m_med_rl_quimi6",
-					inputValue: "METALES PESADOS",
+					boxLabel: "<b>HERNIA</b>",
+					name: "m_312_pato_hernia",
+					inputValue: "1",
 				},
-				{ boxLabel: "OTROS", name: "m_med_rl_quimi7", inputValue: "OTROS" },
+				{
+					boxLabel: "<b>LUMBALGIA</b>",
+					name: "m_312_pato_lumbalgia",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>TIFOIDEA</b>",
+					name: "m_312_pato_tifoidea",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>NEOPLASIAS</b>",
+					name: "m_312_pato_neoplasias",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>QUEMADURAS</b>",
+					name: "m_312_pato_quemaduras",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>DISCOPATIAS</b>",
+					name: "m_312_pato_discopatias",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>CONVULCIONES</b>",
+					name: "m_312_pato_convulciones",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>GASTRITIS</b>",
+					name: "m_312_pato_gastritis",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>ULCERAS</b>",
+					name: "m_312_pato_ulceras",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>ENF PSIQUIAT.</b>",
+					name: "m_312_pato_enf_psiquia",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>ENF CARDIOV.</b>",
+					name: "m_312_pato_enf_cardio",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>ENF OCULAR</b>",
+					name: "m_312_pato_enf_ocular",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>ENF REUMAT</b>",
+					name: "m_312_pato_enf_reuma",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>ENF PULMONARES</b>",
+					name: "m_312_pato_enf_pulmon",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>ALT DE LA PIEL</b>",
+					name: "m_312_pato_alt_piel",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>TENDINITIS</b>",
+					name: "m_312_pato_tendinitis",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>FRACTURA</b>",
+					name: "m_312_pato_fractura",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>ANEMIA</b>",
+					name: "m_312_pato_anemia",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>OBESIDAD</b>",
+					name: "m_312_pato_obesidad",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>ALERGIAS</b>",
+					name: "m_312_pato_alergias",
+					inputValue: "1",
+					handler: function (value, checkbox) {
+						if (checkbox == true) {
+							mod.medicina.anexo312.m_312_pato_alergias_desc.enable();
+						} else if (checkbox == false) {
+							mod.medicina.anexo312.m_312_pato_alergias_desc.disable();
+							mod.medicina.anexo312.m_312_pato_alergias_desc.reset();
+						}
+					},
+				},
+				{
+					boxLabel: "<b>DISLIPIDEMIA</b>",
+					name: "m_312_pato_dislipidem",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>INTOXICACIONES</b>",
+					name: "m_312_pato_intoxica",
+					inputValue: "1",
+				},
+				{
+					boxLabel: "<b>CIRUGIAS</b>",
+					name: "m_312_pato_cirugia",
+					inputValue: "1",
+					handler: function (value, checkbox) {
+						if (checkbox == true) {
+							mod.medicina.anexo312.m_312_pato_cirugia_desc.enable();
+						} else if (checkbox == false) {
+							mod.medicina.anexo312.m_312_pato_cirugia_desc.disable();
+							mod.medicina.anexo312.m_312_pato_cirugia_desc.reset();
+						}
+					},
+				},
+				{ boxLabel: "<b>OTROS</b>", name: "m_312_pato_otros", inputValue: "1" },
 			],
 		});
-		//m_med_muj_fur
-		this.m_med_muj_fur = new Ext.form.DateField({
-			name: "m_med_muj_fur",
-			fieldLabel: "<b>F.U.R</b>",
-			disabled: this.record.get("pac_sexo") == "F" ? false : true,
+
+		// m_312_pato_cirugia_desc
+		this.m_312_pato_cirugia_desc = new Ext.form.TextArea({
+			name: "m_312_pato_cirugia_desc",
+			fieldLabel: "<b>CIRUGIAS REALIZADAS</b>",
+			anchor: "95%",
+			disabled: true,
+			value: "NIEGA",
+			height: 50,
+		});
+		// m_312_pato_tbc_fecha
+		this.m_312_pato_tbc_fecha = new Ext.form.DateField({
+			name: "m_312_pato_tbc_fecha",
+			fieldLabel: "<b>FECHA QUE TUVO TUBERCULOSIS</b>",
 			allowBlank: false,
+			disabled: true,
 			anchor: "90%",
 			format: "d-m-Y",
 			emptyText: "Dia-Mes-Año",
-			listeners: {
-				//                render: function (datefield) {
-				//                    datefield.setValue(new Date());
-				//                }
-			},
 		});
-		//m_med_muj_rc
-		this.m_med_muj_rc = new Ext.form.TextField({
-			fieldLabel: "<b>RC</b>",
-			name: "m_med_muj_rc",
-			disabled: this.record.get("pac_sexo") == "F" ? false : true,
+		// m_312_pato_tbc_tratamiento
+		this.m_312_pato_tbc_tratamiento = new Ext.form.TextField({
+			fieldLabel: "<b>¿COMPLETO SU TRATAMIENTO?</b>",
+			name: "m_312_pato_tbc_tratamiento",
+			disabled: true,
 			anchor: "95%",
 		});
-		//m_med_muj_g
-		this.m_med_muj_g = new Ext.form.TextField({
-			fieldLabel: "<b>G</b>",
-			name: "m_med_muj_g",
-			disabled: this.record.get("pac_sexo") == "F" ? false : true,
+		// m_312_pato_alergias_desc
+		this.m_312_pato_alergias_desc = new Ext.form.TextArea({
+			name: "m_312_pato_alergias_desc",
+			disabled: true,
+			fieldLabel: "<b>ESPECIFICAR ALERGIAS</b>",
+			value: "NIEGA",
 			anchor: "95%",
+			height: 50,
 		});
-		//m_med_muj_p
-		this.m_med_muj_p = new Ext.form.TextField({
-			fieldLabel: "<b>P</b>",
-			name: "m_med_muj_p",
-			disabled: this.record.get("pac_sexo") == "F" ? false : true,
-			anchor: "95%",
-		});
-		//m_med_muj_ult_pap
-		this.m_med_muj_ult_pap = new Ext.form.DateField({
-			fieldLabel: "<b>ULTIMO PAP</b>",
-			name: "m_med_muj_ult_pap",
-			disabled: this.record.get("pac_sexo") == "F" ? false : true,
-			//allowBlank: false,
-			anchor: "90%",
-			format: "d-m-Y",
-			emptyText: "Dia-Mes-Año",
-			listeners: {
-				//                render: function (datefield) {
-				//                    datefield.setValue(new Date());
-				//                }
-			},
-		});
-		//m_med_muj_resul
-		this.m_med_muj_resul = new Ext.form.ComboBox({
-			store: new Ext.data.ArrayStore({
-				fields: ["campo", "descripcion"],
-				data: [
-					["1", "NORMAL"],
-					["2", "ANORMAL"],
-					["3", "NUNCA SE HIZO"],
-				],
-			}),
-			displayField: "descripcion",
-			valueField: "campo",
-			hiddenName: "m_med_muj_resul",
-			fieldLabel: "<b>RESULTADOS</b>",
-			allowBlank: false,
-			disabled: this.record.get("pac_sexo") == "F" ? false : true,
-			typeAhead: true,
-			mode: "local",
-			forceSelection: true,
-			triggerAction: "all",
-			selectOnFocus: true,
-			anchor: "95%",
-			listeners: {
-				afterrender: function (descripcion) {
-					descripcion.setValue(3);
-					descripcion.setRawValue("NUNCA SE HIZO");
-				},
-			},
-		});
-		//m_med_muj_mac
-		this.m_med_muj_mac = new Ext.form.RadioGroup({
-			fieldLabel: "<b>MAC</b>",
-			disabled: this.record.get("pac_sexo") == "F" ? false : true,
-			items: [
-				{ boxLabel: "Si", name: "m_med_muj_mac", inputValue: "Si" },
-				{
-					boxLabel: "No",
-					name: "m_med_muj_mac",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_muj_obs
-		this.m_med_muj_obs = new Ext.form.TextField({
+		// m_312_pato_observaciones
+		this.m_312_pato_observaciones = new Ext.form.TextArea({
+			name: "m_312_pato_observaciones",
 			fieldLabel: "<b>OBSERVACIONES</b>",
-			name: "m_med_muj_obs",
-			disabled: this.record.get("pac_sexo") == "F" ? false : true,
+			anchor: "95%",
+			height: 50,
+		});
+
+		// m_312_alcohol_tipo
+		this.m_312_alcohol_tipo = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["-", "-"],
+					["CALIENTITO", "CALIENTITO"],
+					["CERVEZA", "CERVEZA"],
+					["PISCO", "PISCO"],
+					["RON", "RON"],
+					["YONKE", "YONKE"],
+					["OTRO", "OTRO"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			fieldLabel: "<b>ALCOHOL TIPO</b>",
+			hiddenName: "m_312_alcohol_tipo",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_312_alcohol_cantidad
+		this.m_312_alcohol_cantidad = new Ext.form.TextField({
+			fieldLabel: "<b>CANTIDAD</b>",
+			name: "m_312_alcohol_cantidad",
+			value: "-",
 			anchor: "95%",
 		});
-		//m_med_muj_a
-		this.m_med_muj_a = new Ext.form.TextField({
-			fieldLabel:
-				"<b>a</b> nº total embarzos, incluye abortos, molas hidatiformes y embarazos ectopicos",
-			name: "m_med_muj_a",
-			disabled: this.record.get("pac_sexo") == "F" ? false : true,
-			anchor: "95%",
-		});
-		//m_med_muj_b
-		this.m_med_muj_b = new Ext.form.TextField({
-			fieldLabel: "<b>b</b> nº total de recien nacidos a termino",
-			name: "m_med_muj_b",
-			disabled: this.record.get("pac_sexo") == "F" ? false : true,
-			anchor: "95%",
-		});
-		//m_med_muj_c
-		this.m_med_muj_c = new Ext.form.TextField({
-			fieldLabel: "<b>c</b> nº total de recien nacidos prematuros",
-			name: "m_med_muj_c",
-			disabled: this.record.get("pac_sexo") == "F" ? false : true,
-			anchor: "95%",
-		});
-		//m_med_muj_d
-		this.m_med_muj_d = new Ext.form.TextField({
-			fieldLabel: "<b>d</b> nº total de abortos",
-			name: "m_med_muj_d",
-			disabled: this.record.get("pac_sexo") == "F" ? false : true,
-			anchor: "95%",
-		});
-		//m_med_muj_e
-		this.m_med_muj_e = new Ext.form.TextField({
-			fieldLabel: "<b>e</b> nº total de hijos vivos actualmente",
-			name: "m_med_muj_e",
-			disabled: this.record.get("pac_sexo") == "F" ? false : true,
-			anchor: "95%",
-		});
-		//m_med_cardio_op01
-		this.m_med_cardio_op01 = new Ext.form.RadioGroup({
-			fieldLabel: "<b>ACTUALMENTE FUMA 01 CIGARRILLO A MAS AL DIA?</b>",
-			items: [
-				{ boxLabel: "Si", name: "m_med_cardio_op01", inputValue: "Si" },
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op01",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_op02
-		this.m_med_cardio_op02 = new Ext.form.RadioGroup({
-			fieldLabel:
-				"<b>¿HA TENIDO ALGUN TIPO DE ATAQUE, CONVULSION, PERDIDA DE CONOCIMIENTO O EPILEPSIA?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op02",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc02.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc02.disable();
-							mod.medicina.anexo312.m_med_cardio_desc02.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op02",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc02
-		this.m_med_cardio_desc02 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc02",
-			disabled: true, //pac_sexo
-			fieldLabel: "<b>¿CUANDO, TRATAMIENTO?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op03
-		this.m_med_cardio_op03 = new Ext.form.RadioGroup({
-			fieldLabel: "<b>¿UD. SUFRE O HA SUFRIDO DE PRESION ARTERIAL ALTA?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op03",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc03.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc03.disable();
-							mod.medicina.anexo312.m_med_cardio_desc03.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op03",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc03
-		this.m_med_cardio_desc03 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc03",
-			disabled: true,
-			fieldLabel: "<b>¿CUANDO, TRATAMIENTO?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op04
-		this.m_med_cardio_op04 = new Ext.form.RadioGroup({
-			fieldLabel:
-				"<b>¿HA SUFRIDO ALGUN TIPO DE TRASTORNO MENTAL / PSIQUIATRICO?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op04",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc04.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc04.disable();
-							mod.medicina.anexo312.m_med_cardio_desc04.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op04",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc04
-		this.m_med_cardio_desc04 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc04",
-			disabled: true,
-			fieldLabel: "<b>¿CUANDO, TRATAMIENTO / DOSIS?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op05
-		this.m_med_cardio_op05 = new Ext.form.RadioGroup({
-			fieldLabel:
-				"<b>¿HA SUFRIDO DE ALGUN TRASTORNO DE SUEÑO?. ¿HA REQUERIDO PASTILLAS PARA DORMIR?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op05",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc05.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc05.disable();
-							mod.medicina.anexo312.m_med_cardio_desc05.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op05",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc05
-		this.m_med_cardio_desc05 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc05",
-			disabled: true,
-			fieldLabel: "<b>¿CUANDO, TRATAMIENTO?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op06
-		this.m_med_cardio_op06 = new Ext.form.RadioGroup({
-			fieldLabel:
-				"<b>¿HA SUFRIDO DE BRONQUITIS, OTROS PROBLEMAS RESPITORIOS EN LOS ULTIMOS 06 MESES?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op06",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc06.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc06.disable();
-							mod.medicina.anexo312.m_med_cardio_desc06.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op06",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc06
-		this.m_med_cardio_desc06 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc06",
-			disabled: true,
-			fieldLabel: "<b>¿CUAL, CUANDO, POR CUANTO TIEMPO?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op07
-		this.m_med_cardio_op07 = new Ext.form.RadioGroup({
-			fieldLabel: "<b>¿ALGUNA HISTORIA DE DIABETES EN LA FAMILIA?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op07",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc07.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc07.disable();
-							mod.medicina.anexo312.m_med_cardio_desc07.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op07",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc07
-		this.m_med_cardio_desc07 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc07",
-			disabled: true,
-			fieldLabel: "<b>¿QUIEN?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op08
-		this.m_med_cardio_op08 = new Ext.form.RadioGroup({
-			fieldLabel: "<b>¿ALGUNA HISTORIA DE ENFERMEDAD RENAL?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op08",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc08.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc08.disable();
-							mod.medicina.anexo312.m_med_cardio_desc08.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op08",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc08
-		this.m_med_cardio_desc08 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc08",
-			disabled: true,
-			fieldLabel: "<b>¿CUANDO, TRATAMIENTO?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op09
-		this.m_med_cardio_op09 = new Ext.form.RadioGroup({
-			fieldLabel: "<b>¿HA ESTADO ANTES SOBRE LO 4000 m DE ALTURA?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op09",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc09.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc09.disable();
-							mod.medicina.anexo312.m_med_cardio_desc09.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op09",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc09
-		this.m_med_cardio_desc09 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc09",
-			disabled: true,
-			fieldLabel: "<b>¿DONDE, CUANDO, ALGUN PROBLEMA?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op10
-		this.m_med_cardio_op10 = new Ext.form.RadioGroup({
-			fieldLabel: "<b>¿HA SIDO OPERADO DE / POR ALGO?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op10",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc10.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc10.disable();
-							mod.medicina.anexo312.m_med_cardio_desc10.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op10",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc10
-		this.m_med_cardio_desc10 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc10",
-			disabled: true,
-			fieldLabel: "<b>¿CAUSA, CUANDO?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op11
-		this.m_med_cardio_op11 = new Ext.form.RadioGroup({
-			fieldLabel:
-				"<b>¿ALGUNA HISTORIA DE ANEMIA?, ¿SE ENCUENTRA EMBARAZADA?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op11",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc11.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc11.disable();
-							mod.medicina.anexo312.m_med_cardio_desc11.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op11",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc11
-		this.m_med_cardio_desc11 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc11",
-			disabled: true,
-			fieldLabel: "<b>¿CUAL, TRATAMIENTO?. ¿SI?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op12
-		this.m_med_cardio_op12 = new Ext.form.RadioGroup({
-			fieldLabel:
-				"<b>¿ALGUNA HISTORIA DE ENFERMEDAD DE COAGULACION O TROMBOSIS?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op12",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc12.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc12.disable();
-							mod.medicina.anexo312.m_med_cardio_desc12.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op12",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc12
-		this.m_med_cardio_desc12 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc12",
-			disabled: true,
-			fieldLabel: "<b>¿CUAL, TRATAMIENTO?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op13
-		this.m_med_cardio_op13 = new Ext.form.RadioGroup({
-			fieldLabel:
-				"<b>¿UD. SUFRE DE DOLOR DE PECHO O FALTA DE AIRE AL ESFUERZO?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op13",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc13.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc13.disable();
-							mod.medicina.anexo312.m_med_cardio_desc13.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op13",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc13
-		this.m_med_cardio_desc13 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc13",
-			disabled: true,
-			fieldLabel: "<b>¿CUANDO, TRATAMIENTO?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op14
-		this.m_med_cardio_op14 = new Ext.form.RadioGroup({
-			fieldLabel:
-				"<b>¿UD. SUFRE DE PROBLEMAS CARDIACOS, ANGINA, USA MARCAPASOS?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op14",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc14.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc14.disable();
-							mod.medicina.anexo312.m_med_cardio_desc14.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op14",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc14
-		this.m_med_cardio_desc14 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc05",
-			disabled: true,
-			fieldLabel: "<b>¿CUAL, TRATAMIENTO?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op15
-		this.m_med_cardio_op15 = new Ext.form.RadioGroup({
-			fieldLabel: "<b>¿HA SUFRIDO DE RETINOPATIA O GLAUCOMA?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op15",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc15.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc15.disable();
-							mod.medicina.anexo312.m_med_cardio_desc15.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op15",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc15
-		this.m_med_cardio_desc15 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc15",
-			disabled: true,
-			fieldLabel: "<b>¿CUANDO, TRATAMIENTO?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op16
-		this.m_med_cardio_op16 = new Ext.form.RadioGroup({
-			fieldLabel:
-				"<b>¿SE LE HA DIAGNOSTICADO OBESIDAD MORBIDA (IMC>35 Kg/m2)</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op16",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc16.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc16.disable();
-							mod.medicina.anexo312.m_med_cardio_desc16.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op16",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc16
-		this.m_med_cardio_desc16 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc16",
-			disabled: true,
-			fieldLabel: "<b>¿CUANDO, TRATAMIENTO?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op17
-		this.m_med_cardio_op17 = new Ext.form.RadioGroup({
-			fieldLabel: "<b>¿ESTA TOMANDO ALGUN MEDICAMENTO ACTUALMENTE?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op17",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc17.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc17.disable();
-							mod.medicina.anexo312.m_med_cardio_desc17.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op17",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc17
-		this.m_med_cardio_desc17 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc17",
-			disabled: true,
-			fieldLabel: "<b>¿CUAL(ES), EN QUE DOSIS?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_cardio_op18
-		this.m_med_cardio_op18 = new Ext.form.RadioGroup({
-			fieldLabel: "<b>¿HA TENIDO ALGUN OTRO PROBEMA DE SALUD?</b>",
-			items: [
-				{
-					boxLabel: "Si",
-					name: "m_med_cardio_op18",
-					inputValue: "Si",
-					handler: function (value, checkbox) {
-						if (checkbox == true) {
-							mod.medicina.anexo312.m_med_cardio_desc18.enable();
-						} else if (checkbox == false) {
-							mod.medicina.anexo312.m_med_cardio_desc18.disable();
-							mod.medicina.anexo312.m_med_cardio_desc18.reset();
-						}
-					},
-				},
-				{
-					boxLabel: "No",
-					name: "m_med_cardio_op18",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_cardio_desc18
-		this.m_med_cardio_desc18 = new Ext.form.TextArea({
-			name: "m_med_cardio_desc18",
-			disabled: true,
-			fieldLabel: "<b>¿CUAL, TRATAMIENTO?</b>",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_tabaco
-		this.m_med_tabaco = new Ext.form.ComboBox({
+		// m_312_alcohol_fre
+		this.m_312_alcohol_fre = new Ext.form.ComboBox({
 			store: new Ext.data.ArrayStore({
 				fields: ["campo", "descripcion"],
 				data: [
@@ -7869,10 +6723,10 @@ mod.medicina.anexo312 = {
 					["EXCESIVO", "EXCESIVO"],
 				],
 			}),
-			fieldLabel: "<b>TABACO</b>",
 			displayField: "descripcion",
 			valueField: "campo",
-			hiddenName: "m_med_tabaco",
+			fieldLabel: "<b>ALCOHOL FRECUENCIA</b>",
+			hiddenName: "m_312_alcohol_fre",
 			allowBlank: false,
 			typeAhead: true,
 			mode: "local",
@@ -7889,8 +6743,47 @@ mod.medicina.anexo312 = {
 				},
 			},
 		});
-		//m_med_alcohol
-		this.m_med_alcohol = new Ext.form.ComboBox({
+		// m_312_tabaco_tipo
+		this.m_312_tabaco_tipo = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["-", "-"],
+					["CIGARRO", "CIGARRO"],
+					["PURO", "PURO"],
+					["PIPA", "PIPA"],
+					["OTRO", "OTRO"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_312_tabaco_tipo",
+			fieldLabel: "<b>TABACO TIPO</b>",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_312_tabaco_cantidad
+		this.m_312_tabaco_cantidad = new Ext.form.TextField({
+			fieldLabel: "<b>CANTIDAD</b>",
+			name: "m_312_tabaco_cantidad",
+			value: "-",
+			anchor: "95%",
+		});
+		// m_312_tabaco_fre
+		this.m_312_tabaco_fre = new Ext.form.ComboBox({
 			store: new Ext.data.ArrayStore({
 				fields: ["campo", "descripcion"],
 				data: [
@@ -7900,10 +6793,10 @@ mod.medicina.anexo312 = {
 					["EXCESIVO", "EXCESIVO"],
 				],
 			}),
-			fieldLabel: "<b>ALCOHOL</b>",
 			displayField: "descripcion",
 			valueField: "campo",
-			hiddenName: "m_med_alcohol",
+			fieldLabel: "<b>TABACO FRECUENCIA</b>",
+			hiddenName: "m_312_tabaco_fre",
 			allowBlank: false,
 			typeAhead: true,
 			mode: "local",
@@ -7920,8 +6813,49 @@ mod.medicina.anexo312 = {
 				},
 			},
 		});
-		//m_med_coca
-		this.m_med_coca = new Ext.form.ComboBox({
+		// m_312_drogas_tipo
+		this.m_312_drogas_tipo = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["-", "-"],
+					["ANFETAMINA", "ANFETAMINA"],
+					["BZD", "BZD"],
+					["COCAINA", "COCAINA"],
+					["EXTASIS", "EXTASIS"],
+					["MARIHUANA", "MARIHUANA"],
+					["OTROS", "OTROS"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			fieldLabel: "<b>DROGAS TIPO</b>",
+			hiddenName: "m_312_drogas_tipo",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		// m_312_drogas_cantidad
+		this.m_312_drogas_cantidad = new Ext.form.TextField({
+			fieldLabel: "<b>CANTIDAD</b>",
+			name: "m_312_drogas_cantidad",
+			value: "-",
+			anchor: "95%",
+		});
+		// m_312_drogas_fre
+		this.m_312_drogas_fre = new Ext.form.ComboBox({
 			store: new Ext.data.ArrayStore({
 				fields: ["campo", "descripcion"],
 				data: [
@@ -7931,10 +6865,10 @@ mod.medicina.anexo312 = {
 					["EXCESIVO", "EXCESIVO"],
 				],
 			}),
-			fieldLabel: "<b>COCA</b>",
 			displayField: "descripcion",
 			valueField: "campo",
-			hiddenName: "m_med_coca",
+			fieldLabel: "<b>DROGAS FRECUENCIA</b>",
+			hiddenName: "m_312_drogas_fre",
 			allowBlank: false,
 			typeAhead: true,
 			mode: "local",
@@ -7951,1545 +6885,738 @@ mod.medicina.anexo312 = {
 				},
 			},
 		});
-		//m_med_fam_papa
-		this.m_med_fam_papa = new Ext.form.TextField({
-			fieldLabel: "<b>PAPÁ</b>",
-			name: "m_med_fam_papa",
-			value: "-",
+		// m_312_medicamentos
+		this.m_312_medicamentos = new Ext.form.TextArea({
+			name: "m_312_medicamentos",
+			fieldLabel: "<b>MEDICAMENTOS</b>",
+			value: "NIEGA",
+			anchor: "98%",
+			height: 115,
+		});
+		// m_312_padre
+		this.m_312_padre = new Ext.form.TextField({
+			fieldLabel: "<b>ESTADO DEL PADRE</b>",
+			name: "m_312_padre",
 			anchor: "95%",
 		});
-		//m_med_fam_mama
-		this.m_med_fam_mama = new Ext.form.TextField({
-			fieldLabel: "<b>MAMÁ</b>",
-			name: "m_med_fam_mama",
-			value: "-",
+		// m_312_madre
+		this.m_312_madre = new Ext.form.TextField({
+			fieldLabel: "<b>ESTADO DE LA MADRE</b>",
+			name: "m_312_madre",
 			anchor: "95%",
 		});
-		//m_med_fam_herma
-		this.m_med_fam_herma = new Ext.form.TextField({
-			fieldLabel: "<b>HERMANO</b>",
-			name: "m_med_fam_herma",
-			value: "-",
+		// m_312_conyuge
+		this.m_312_conyuge = new Ext.form.TextField({
+			fieldLabel: "<b>ESTADO DEL CONYUGE</b>",
+			name: "m_312_conyuge",
 			anchor: "95%",
 		});
-		//m_med_fam_hijos
-		this.m_med_fam_hijos = new Ext.form.RadioGroup({
-			fieldLabel: "<b>¿TIENE HIJOS?</b>",
-			items: [
-				{ boxLabel: "Si", name: "m_med_fam_hijos", inputValue: "Si" },
-				{
-					boxLabel: "No",
-					name: "m_med_fam_hijos",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_fam_h_vivos
-		this.m_med_fam_h_vivos = new Ext.form.TextField({
-			fieldLabel: "<b>N° DE HIJOS VIVOS</b>",
-			name: "m_med_fam_h_vivos",
-			value: "-",
-			anchor: "95%",
-		});
-		//m_med_fam_h_muertos
-		this.m_med_fam_h_muertos = new Ext.form.TextField({
-			fieldLabel: "<b>N° DE HIJOS MUERTOS</b>",
-			name: "m_med_fam_h_muertos",
-			value: "-",
-			anchor: "95%",
-		});
-		//m_med_fam_infarto55
-		this.m_med_fam_infarto55 = new Ext.form.RadioGroup({
-			fieldLabel:
-				"<b>SU PADRE O HERMANO HA TENIDO UN CUADRO DE INFARTO DE MIOCARDIO (ATAQUE AL CORAZON) ANTES DE LOS 55 AÑOS.</b>",
-			items: [
-				{ boxLabel: "Si", name: "m_med_fam_infarto55", inputValue: "Si" },
-				{
-					boxLabel: "No",
-					name: "m_med_fam_infarto55",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_fam_infarto65
-		this.m_med_fam_infarto65 = new Ext.form.RadioGroup({
-			fieldLabel:
-				"<b>SU MADRE O HERMANA HA TENIDO UN CUADRO DE INFARTO DE MIOCARDIO (ATAQUE AL CORAZON) ANTES DE LOS 65 AÑOS.</b>",
-			items: [
-				{ boxLabel: "Si", name: "m_med_fam_infarto65", inputValue: "Si" },
-				{
-					boxLabel: "No",
-					name: "m_med_fam_infarto65",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_piel_desc
-		this.Tpl_m_med_piel_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_piel_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_piel_desc = new Ext.form.ComboBox({
-			store: this.st_busca_piel_desc,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_piel_desc,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_piel_desc",
-			displayField: "m_med_piel_desc",
-			valueField: "m_med_piel_desc",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_piel_dx
-		this.Tpl_m_med_piel_dx = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_piel_dx}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_piel_dx = new Ext.form.ComboBox({
-			store: this.st_busca_piel_dx,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_piel_dx,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_piel_dx",
-			displayField: "m_med_piel_dx",
-			valueField: "m_med_piel_dx",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DX DIAGNOSTICO</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_cabeza_desc
-		this.Tpl_m_med_cabeza_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_cabeza_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_cabeza_desc = new Ext.form.ComboBox({
-			store: this.st_busca_cabeza_desc,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_cabeza_desc,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_cabeza_desc",
-			displayField: "m_med_cabeza_desc",
-			valueField: "m_med_cabeza_desc",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_cabeza_dx
-		this.Tpl_m_med_cabeza_dx = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_cabeza_dx}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_cabeza_dx = new Ext.form.ComboBox({
-			store: this.st_busca_cabeza_dx,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_cabeza_dx,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_cabeza_dx",
-			displayField: "m_med_cabeza_dx",
-			valueField: "m_med_cabeza_dx",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DX DIAGNOSTICO</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_cuello_desc
-		this.Tpl_m_med_cuello_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_cuello_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_cuello_desc = new Ext.form.ComboBox({
-			store: this.st_busca_cuello_desc,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_cuello_desc,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_cuello_desc",
-			displayField: "m_med_cuello_desc",
-			valueField: "m_med_cuello_desc",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_cuello_dx
-		this.Tpl_m_med_cuello_dx = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_cuello_dx}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_cuello_dx = new Ext.form.ComboBox({
-			store: this.st_busca_cuello_dx,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_cuello_dx,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_cuello_dx",
-			displayField: "m_med_cuello_dx",
-			valueField: "m_med_cuello_dx",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DX DIAGNOSTICO</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_nariz_desc
-		this.Tpl_m_med_nariz_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_nariz_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_nariz_desc = new Ext.form.ComboBox({
-			store: this.st_busca_nariz_desc,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_nariz_desc,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_nariz_desc",
-			displayField: "m_med_nariz_desc",
-			valueField: "m_med_nariz_desc",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_nariz_dx
-		this.Tpl_m_med_nariz_dx = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_nariz_dx}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_nariz_dx = new Ext.form.ComboBox({
-			store: this.st_busca_nariz_dx,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_nariz_dx,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_nariz_dx",
-			displayField: "m_med_nariz_dx",
-			valueField: "m_med_nariz_dx",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DX DIAGNOSTICO</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_boca_desc
-		this.Tpl_m_med_boca_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_boca_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_boca_desc = new Ext.form.ComboBox({
-			store: this.st_busca_boca_desc,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_boca_desc,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_boca_desc",
-			displayField: "m_med_boca_desc",
-			valueField: "m_med_boca_desc",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_boca_dx
-		this.m_med_boca_dx = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_boca_dx}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_boca_dx = new Ext.form.ComboBox({
-			store: this.st_busca_boca_dx,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_boca_dx,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_boca_dx",
-			displayField: "m_med_boca_dx",
-			valueField: "m_med_boca_dx",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DX DIAGNOSTICO</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_oido_der01
-		this.m_med_oido_der01 = new Ext.form.ComboBox({
-			store: new Ext.data.ArrayStore({
-				fields: ["campo", "descripcion"],
-				data: [
-					["CAE PERMEABLE", "CAE PERMEABLE"],
-					["CAE NO PERMEABLE", "CAE NO PERMEABLE"],
-				],
-			}),
-			displayField: "descripcion",
-			valueField: "campo",
-			hiddenName: "m_med_oido_der01",
-			fieldLabel: "PERMEABILIDAD",
-			allowBlank: false,
-			typeAhead: true,
-			mode: "local",
-			forceSelection: true,
-			triggerAction: "all",
-			selectOnFocus: true,
-			anchor: "95%",
-			listeners: {
-				afterrender: function (descripcion) {
-					descripcion.setValue("CAE PERMEABLE");
-					descripcion.setRawValue("CAE PERMEABLE");
-				},
+		// m_312_hijo_vivo
+		this.m_312_hijo_vivo = new Ext.form.TextField({
+			fieldLabel: "<b>N° HIJOS VIVOS</b>",
+			name: "m_312_hijo_vivo",
+			minLength: 1,
+			autoCreate: {
+				//restricts user to 20 chars max, cannot enter 21st char
+				tag: "input",
+				maxlength: 2,
+				minLength: 1,
+				type: "text",
+				size: "2",
+				autocomplete: "off",
 			},
-		});
-		//m_med_oido_der02
-		this.m_med_oido_der02 = new Ext.form.ComboBox({
-			store: new Ext.data.ArrayStore({
-				fields: ["campo", "descripcion"],
-				data: [
-					["NO RETRACCION", "NO RETRACCION"],
-					["CON RETRACCION", "CON RETRACCION"],
-				],
-			}),
-			displayField: "descripcion",
-			valueField: "campo",
-			hiddenName: "m_med_oido_der02",
-			fieldLabel: "RETRACCION",
-			allowBlank: false,
-			typeAhead: true,
-			mode: "local",
-			forceSelection: true,
-			triggerAction: "all",
-			selectOnFocus: true,
 			anchor: "95%",
-			listeners: {
-				afterrender: function (descripcion) {
-					descripcion.setValue("NO RETRACCION");
-					descripcion.setRawValue("NO RETRACCION");
-				},
+		});
+		// m_312_hijo_fallecido
+		this.m_312_hijo_fallecido = new Ext.form.TextField({
+			fieldLabel: "<b>N° HIJOS FALLECIDOS</b>",
+			name: "m_312_hijo_fallecido",
+			minLength: 1,
+			autoCreate: {
+				//restricts user to 20 chars max, cannot enter 21st char
+				tag: "input",
+				maxlength: 2,
+				minLength: 1,
+				type: "text",
+				size: "2",
+				autocomplete: "off",
 			},
-		});
-		//m_med_oido_der03
-		this.m_med_oido_der03 = new Ext.form.ComboBox({
-			store: new Ext.data.ArrayStore({
-				fields: ["campo", "descripcion"],
-				data: [
-					["NO PERFORACIONES", "NO PERFORACIONES"],
-					["CON PERFORACIONES", "CON PERFORACIONES"],
-				],
-			}),
-			displayField: "descripcion",
-			valueField: "campo",
-			hiddenName: "m_med_oido_der03",
-			fieldLabel: "PERFORACIONES",
-			allowBlank: false,
-			typeAhead: true,
-			mode: "local",
-			forceSelection: true,
-			triggerAction: "all",
-			selectOnFocus: true,
 			anchor: "95%",
-			listeners: {
-				afterrender: function (descripcion) {
-					descripcion.setValue("NO PERFORACIONES");
-					descripcion.setRawValue("NO PERFORACIONES");
-				},
+		});
+
+		// m_312_anamnesis
+		this.m_312_anamnesis = new Ext.form.TextArea({
+			name: "m_312_anamnesis",
+			fieldLabel: "<b>ANAMNESIS</b>",
+			value: "NO REFIERE SINTOMAS AL MOMENTO DEL EXAMEN",
+			anchor: "97%",
+			height: 50,
+		});
+		// m_312_ectoscopia
+		this.m_312_ectoscopia = new Ext.form.TextArea({
+			name: "m_312_ectoscopia",
+			fieldLabel: "<b>ECTOSCOPIA</b>",
+			value: "NORMAL",
+			anchor: "97%",
+			height: 50,
+		});
+		// m_312_est_mental
+		this.m_312_est_mental = new Ext.form.TextArea({
+			name: "m_312_est_mental",
+			fieldLabel: "<b>ESTADO MENTAL</b>",
+			value: "LOTEP",
+			anchor: "97%",
+			height: 50,
+		});
+
+		// m_312_piel
+		this.m_312_piel = new Ext.form.TextArea({
+			name: "m_312_piel",
+			fieldLabel: "<b>PIEL</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_cabeza
+		this.m_312_cabeza = new Ext.form.TextArea({
+			name: "m_312_cabeza",
+			fieldLabel: "<b>CABEZA</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_oidos
+		this.m_312_oidos = new Ext.form.TextArea({
+			name: "m_312_oidos",
+			fieldLabel: "<b>OIDOS</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_nariz
+		this.m_312_nariz = new Ext.form.TextArea({
+			name: "m_312_nariz",
+			fieldLabel: "<b>NARIZ</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_boca
+		this.m_312_boca = new Ext.form.TextArea({
+			name: "m_312_boca",
+			fieldLabel: "<b>BOCA</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_faringe
+		this.m_312_faringe = new Ext.form.TextArea({
+			name: "m_312_faringe",
+			fieldLabel: "<b>FARINGE</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_cuello
+		this.m_312_cuello = new Ext.form.TextArea({
+			name: "m_312_cuello",
+			fieldLabel: "<b>CUELLO</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_respiratorio
+		this.m_312_respiratorio = new Ext.form.TextArea({
+			name: "m_312_respiratorio",
+			fieldLabel: "<b>AP. RESPIRATORIO</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_cardiovascular
+		this.m_312_cardiovascular = new Ext.form.TextArea({
+			name: "m_312_cardiovascular",
+			fieldLabel: "<b>AP. CARDIOVASCULAR</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_digestivo
+		this.m_312_digestivo = new Ext.form.TextArea({
+			name: "m_312_digestivo",
+			fieldLabel: "<b>AP. DIGESTIVO</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_genitou
+		this.m_312_genitou = new Ext.form.TextArea({
+			name: "m_312_genitou",
+			fieldLabel: "<b>AP. GENITOURINARIO</b>",
+			value: "DIFERIDO",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_locomotor
+		this.m_312_locomotor = new Ext.form.TextArea({
+			name: "m_312_locomotor",
+			fieldLabel: "<b>LOCOMOTOR</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_marcha
+		this.m_312_marcha = new Ext.form.TextArea({
+			name: "m_312_marcha",
+			fieldLabel: "<b>MARCHA</b>",
+			value: "CONSERVADO",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_columna
+		this.m_312_columna = new Ext.form.TextArea({
+			name: "m_312_columna",
+			fieldLabel: "<b>COLUMNA</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_mi_superi
+		this.m_312_mi_superi = new Ext.form.TextArea({
+			name: "m_312_mi_superi",
+			fieldLabel: "<b>MIEMBRO SUPERIOR</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_mi_inferi
+		this.m_312_mi_inferi = new Ext.form.TextArea({
+			name: "m_312_mi_inferi",
+			fieldLabel: "<b>MIEMBRO INFERIOR</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_linfatico
+		this.m_312_linfatico = new Ext.form.TextArea({
+			name: "m_312_linfatico",
+			fieldLabel: "<b>SIS. LINFATICO</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_nervio
+		this.m_312_nervio = new Ext.form.TextArea({
+			name: "m_312_nervio",
+			fieldLabel: "<b>SIS. NERVIOSO</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_osteomuscular
+		this.m_312_osteomuscular = new Ext.form.TextArea({
+			name: "m_312_osteomuscular",
+			fieldLabel: "<b>OSTEOMUSCULAR</b>",
+			value: "NORMAL",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_ef_observaciones
+		this.m_312_ef_observaciones = new Ext.form.TextArea({
+			name: "m_312_ef_observaciones",
+			fieldLabel: "<b>OBSERVACIONES</b>",
+			anchor: "95%",
+			height: 50,
+		});
+
+		// m_312_conclu_psico
+		this.m_312_conclu_psico = new Ext.form.TextArea({
+			name: "m_312_conclu_psico",
+			fieldLabel: "<b>CONCLUSION PSICOLOGIA</b>",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_conclu_rx
+		this.m_312_conclu_rx = new Ext.form.TextArea({
+			name: "m_312_conclu_rx",
+			fieldLabel: "<b>CONCLUSION RAYOS X</b>",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_conclu_lab
+		this.m_312_conclu_lab = new Ext.form.TextArea({
+			name: "m_312_conclu_lab",
+			fieldLabel: "<b>CONCLUSION LABORATORIO</b>",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_conclu_audio
+		this.m_312_conclu_audio = new Ext.form.TextArea({
+			name: "m_312_conclu_audio",
+			fieldLabel: "<b>CONCLUSION AUDIOMETRIA</b>",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_conclu_espiro
+		this.m_312_conclu_espiro = new Ext.form.TextArea({
+			name: "m_312_conclu_espiro",
+			fieldLabel: "<b>CONCLUSION ESPIROMETRIA</b>",
+			anchor: "95%",
+			height: 50,
+		});
+		// m_312_conclu_otros
+		this.m_312_conclu_otros = new Ext.form.TextArea({
+			name: "m_312_conclu_otros",
+			fieldLabel: "<b>OTRAS CONCLUSIONES</b>",
+			anchor: "95%",
+			height: 50,
+		});
+
+		this.cie10Tpl = new Ext.XTemplate(
+			'<tpl for="."><div class="search-item">',
+			'<div class="div-table-col">',
+			"{cie4_id}",
+			"<h3><span><p>{cie4_desc}</p></span></h3>",
+			"</div>",
+			"</div></tpl>"
+		);
+
+		// m_312_diag_cie1
+		this.m_312_diag_cie1 = new Ext.form.ComboBox({
+			store: this.list_cie10,
+			loadingText: "Searching...",
+			pageSize: 10,
+			tpl: this.cie10Tpl,
+			//            disabled: true,
+			hideTrigger: true,
+			itemSelector: "div.search-item",
+			selectOnFocus: true,
+			minChars: 1,
+			hiddenName: "m_312_diag_cie1",
+			displayField: "cie4_desc",
+			valueField: "cie4_desc",
+			typeAhead: false,
+			triggerAction: "all",
+			fieldLabel: "<b>Cie 10</b>",
+			mode: "remote",
+			style: {
+				textTransform: "uppercase",
 			},
+			anchor: "100%",
 		});
-		//m_med_oido_der04
-		this.m_med_oido_der04 = new Ext.form.ComboBox({
-			store: new Ext.data.ArrayStore({
-				fields: ["campo", "descripcion"],
-				data: [
-					["TRIANGULO DE LUZ PRESENTE", "TRIANGULO DE LUZ PRESENTE"],
-					["TRIANGULO DE LUZ NO PRESENTE", "TRIANGULO DE LUZ NO PRESENTE"],
-				],
-			}),
-			displayField: "descripcion",
-			valueField: "campo",
-			hiddenName: "m_med_oido_der04",
-			fieldLabel: "TRIANGULO DE LUZ",
-			allowBlank: false,
-			typeAhead: true,
-			mode: "local",
-			forceSelection: true,
-			triggerAction: "all",
+		// m_312_diag_st1
+		this.m_312_diag_st1 = new Ext.form.RadioGroup({
+			fieldLabel: "<b> </b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{ boxLabel: "P", name: "m_312_diag_st1", inputValue: "P" },
+				{ boxLabel: "D", name: "m_312_diag_st1", inputValue: "D" },
+				{ boxLabel: "R", name: "m_312_diag_st1", inputValue: "R" },
+			],
+		});
+		// m_312_diag_cie2
+		this.m_312_diag_cie2 = new Ext.form.ComboBox({
+			store: this.list_cie10,
+			loadingText: "Searching...",
+			pageSize: 10,
+			tpl: this.cie10Tpl,
+			//            disabled: true,
+			hideTrigger: true,
+			itemSelector: "div.search-item",
 			selectOnFocus: true,
-			anchor: "95%",
-			listeners: {
-				afterrender: function (descripcion) {
-					descripcion.setValue("TRIANGULO DE LUZ PRESENTE");
-					descripcion.setRawValue("TRIANGULO DE LUZ PRESENTE");
-				},
+			minChars: 1,
+			hiddenName: "m_312_diag_cie2",
+			displayField: "cie4_desc",
+			valueField: "cie4_desc",
+			typeAhead: false,
+			triggerAction: "all",
+			fieldLabel: "<b>Cie 10</b>",
+			mode: "remote",
+			style: {
+				textTransform: "uppercase",
 			},
+			anchor: "100%",
 		});
-		//m_med_oido_izq01
-		this.m_med_oido_izq01 = new Ext.form.ComboBox({
-			store: new Ext.data.ArrayStore({
-				fields: ["campo", "descripcion"],
-				data: [
-					["CAE PERMEABLE", "CAE PERMEABLE"],
-					["CAE NO PERMEABLE", "CAE NO PERMEABLE"],
-				],
-			}),
-			displayField: "descripcion",
-			valueField: "campo",
-			hiddenName: "m_med_oido_izq01",
-			fieldLabel: "PERMEABILIDAD",
-			allowBlank: false,
-			typeAhead: true,
-			mode: "local",
-			forceSelection: true,
-			triggerAction: "all",
+		// m_312_diag_st2
+		this.m_312_diag_st2 = new Ext.form.RadioGroup({
+			fieldLabel: "<b> </b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{ boxLabel: "P", name: "m_312_diag_st2", inputValue: "P" },
+				{ boxLabel: "D", name: "m_312_diag_st2", inputValue: "D" },
+				{ boxLabel: "R", name: "m_312_diag_st2", inputValue: "R" },
+			],
+		});
+		// m_312_diag_cie3
+		this.m_312_diag_cie3 = new Ext.form.ComboBox({
+			store: this.list_cie10,
+			loadingText: "Searching...",
+			pageSize: 10,
+			tpl: this.cie10Tpl,
+			//            disabled: true,
+			hideTrigger: true,
+			itemSelector: "div.search-item",
 			selectOnFocus: true,
-			anchor: "95%",
-			listeners: {
-				afterrender: function (descripcion) {
-					descripcion.setValue("CAE PERMEABLE");
-					descripcion.setRawValue("CAE PERMEABLE");
-				},
+			minChars: 1,
+			hiddenName: "m_312_diag_cie3",
+			displayField: "cie4_desc",
+			valueField: "cie4_desc",
+			typeAhead: false,
+			triggerAction: "all",
+			fieldLabel: "<b>Cie 10</b>",
+			mode: "remote",
+			style: {
+				textTransform: "uppercase",
 			},
+			anchor: "100%",
 		});
-		//m_med_oido_izq02
-		this.m_med_oido_izq02 = new Ext.form.ComboBox({
-			store: new Ext.data.ArrayStore({
-				fields: ["campo", "descripcion"],
-				data: [
-					["NO RETRACCION", "NO RETRACCION"],
-					["CON RETRACCION", "CON RETRACCION"],
-				],
-			}),
-			displayField: "descripcion",
-			valueField: "campo",
-			hiddenName: "m_med_oido_izq02",
-			fieldLabel: "RETRACCION",
-			allowBlank: false,
-			typeAhead: true,
-			mode: "local",
-			forceSelection: true,
-			triggerAction: "all",
+		// m_312_diag_st3
+		this.m_312_diag_st3 = new Ext.form.RadioGroup({
+			fieldLabel: "<b> </b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{ boxLabel: "P", name: "m_312_diag_st3", inputValue: "P" },
+				{ boxLabel: "D", name: "m_312_diag_st3", inputValue: "D" },
+				{ boxLabel: "R", name: "m_312_diag_st3", inputValue: "R" },
+			],
+		});
+		// m_312_diag_cie4
+		this.m_312_diag_cie4 = new Ext.form.ComboBox({
+			store: this.list_cie10,
+			loadingText: "Searching...",
+			pageSize: 10,
+			tpl: this.cie10Tpl,
+			//            disabled: true,
+			hideTrigger: true,
+			itemSelector: "div.search-item",
 			selectOnFocus: true,
-			anchor: "95%",
-			listeners: {
-				afterrender: function (descripcion) {
-					descripcion.setValue("NO RETRACCION");
-					descripcion.setRawValue("NO RETRACCION");
-				},
+			minChars: 1,
+			hiddenName: "m_312_diag_cie4",
+			displayField: "cie4_desc",
+			valueField: "cie4_desc",
+			typeAhead: false,
+			triggerAction: "all",
+			fieldLabel: "<b>Cie 10</b>",
+			mode: "remote",
+			style: {
+				textTransform: "uppercase",
 			},
+			anchor: "100%",
 		});
-		//m_med_oido_izq03
-		this.m_med_oido_izq03 = new Ext.form.ComboBox({
-			store: new Ext.data.ArrayStore({
-				fields: ["campo", "descripcion"],
-				data: [
-					["NO PERFORACIONES", "NO PERFORACIONES"],
-					["CON PERFORACIONES", "CON PERFORACIONES"],
-				],
-			}),
-			displayField: "descripcion",
-			valueField: "campo",
-			hiddenName: "m_med_oido_izq03",
-			fieldLabel: "PERFORACIONES",
-			allowBlank: false,
-			typeAhead: true,
-			mode: "local",
-			forceSelection: true,
-			triggerAction: "all",
+		// m_312_diag_st4
+		this.m_312_diag_st4 = new Ext.form.RadioGroup({
+			fieldLabel: "<b> </b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{ boxLabel: "P", name: "m_312_diag_st4", inputValue: "P" },
+				{ boxLabel: "D", name: "m_312_diag_st4", inputValue: "D" },
+				{ boxLabel: "R", name: "m_312_diag_st4", inputValue: "R" },
+			],
+		});
+		// m_312_diag_cie5
+		this.m_312_diag_cie5 = new Ext.form.ComboBox({
+			store: this.list_cie10,
+			loadingText: "Searching...",
+			pageSize: 10,
+			tpl: this.cie10Tpl,
+			//            disabled: true,
+			hideTrigger: true,
+			itemSelector: "div.search-item",
 			selectOnFocus: true,
-			anchor: "95%",
-			listeners: {
-				afterrender: function (descripcion) {
-					descripcion.setValue("NO PERFORACIONES");
-					descripcion.setRawValue("NO PERFORACIONES");
-				},
+			minChars: 1,
+			hiddenName: "m_312_diag_cie5",
+			displayField: "cie4_desc",
+			valueField: "cie4_desc",
+			typeAhead: false,
+			triggerAction: "all",
+			fieldLabel: "<b>Cie 10</b>",
+			mode: "remote",
+			style: {
+				textTransform: "uppercase",
 			},
+			anchor: "100%",
 		});
-		//m_med_oido_izq04
-		this.m_med_oido_izq04 = new Ext.form.ComboBox({
-			store: new Ext.data.ArrayStore({
-				fields: ["campo", "descripcion"],
-				data: [
-					["TRIANGULO DE LUZ PRESENTE", "TRIANGULO DE LUZ PRESENTE"],
-					["TRIANGULO DE LUZ NO PRESENTE", "TRIANGULO DE LUZ NO PRESENTE"],
-				],
-			}),
-			displayField: "descripcion",
-			valueField: "campo",
-			hiddenName: "m_med_oido_izq04",
-			fieldLabel: "TRIANGULO DE LUZ",
-			allowBlank: false,
-			typeAhead: true,
-			mode: "local",
-			forceSelection: true,
-			triggerAction: "all",
+		// m_312_diag_st5
+		this.m_312_diag_st5 = new Ext.form.RadioGroup({
+			fieldLabel: "<b> </b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{ boxLabel: "P", name: "m_312_diag_st5", inputValue: "P" },
+				{ boxLabel: "D", name: "m_312_diag_st5", inputValue: "D" },
+				{ boxLabel: "R", name: "m_312_diag_st5", inputValue: "R" },
+			],
+		});
+		// m_312_diag_cie6
+		this.m_312_diag_cie6 = new Ext.form.ComboBox({
+			store: this.list_cie10,
+			loadingText: "Searching...",
+			pageSize: 10,
+			tpl: this.cie10Tpl,
+			//            disabled: true,
+			hideTrigger: true,
+			itemSelector: "div.search-item",
 			selectOnFocus: true,
-			anchor: "95%",
-			listeners: {
-				afterrender: function (descripcion) {
-					descripcion.setValue("TRIANGULO DE LUZ PRESENTE");
-					descripcion.setRawValue("TRIANGULO DE LUZ PRESENTE");
-				},
+			minChars: 1,
+			hiddenName: "m_312_diag_cie6",
+			displayField: "cie4_desc",
+			valueField: "cie4_desc",
+			typeAhead: false,
+			triggerAction: "all",
+			fieldLabel: "<b>Cie 10</b>",
+			mode: "remote",
+			style: {
+				textTransform: "uppercase",
 			},
+			anchor: "100%",
 		});
-		//m_med_torax_desc
-		this.Tpl_m_med_torax_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_torax_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_torax_desc = new Ext.form.ComboBox({
-			store: this.st_busca_torax_desc,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_torax_desc,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_torax_desc",
-			displayField: "m_med_torax_desc",
-			valueField: "m_med_torax_desc",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_torax_dx
-		this.Tpl_m_med_torax_dx = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_torax_dx}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_torax_dx = new Ext.form.ComboBox({
-			store: this.st_busca_torax_dx,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_torax_dx,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_torax_dx",
-			displayField: "m_med_torax_dx",
-			valueField: "m_med_torax_dx",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DX DIAGNOSTICO</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_corazon_desc
-		this.Tpl_m_med_corazon_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_corazon_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_corazon_desc = new Ext.form.ComboBox({
-			store: this.st_busca_corazon_desc,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_corazon_desc,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_corazon_desc",
-			displayField: "m_med_corazon_desc",
-			valueField: "m_med_corazon_desc",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_corazon_dx
-		this.Tpl_m_med_corazon_dx = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_corazon_dx}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_corazon_dx = new Ext.form.ComboBox({
-			store: this.st_busca_corazon_dx,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_corazon_dx,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_corazon_dx",
-			displayField: "m_med_corazon_dx",
-			valueField: "m_med_corazon_dx",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DX DIAGNOSTICO</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_mamas_derecho
-		this.Tpl_m_med_mamas_derecho = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_mamas_derecho}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_mamas_derecho = new Ext.form.ComboBox({
-			store: this.st_busca_mamas_derecho,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_mamas_derecho,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_mamas_derecho",
-			displayField: "m_med_mamas_derecho",
-			valueField: "m_med_mamas_derecho",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>MAMA DERECHA</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_mamas_izquier
-		this.Tpl_m_med_mamas_izquier = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_mamas_izquier}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_mamas_izquier = new Ext.form.ComboBox({
-			store: this.st_busca_mamas_izquier,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_mamas_izquier,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_mamas_izquier",
-			displayField: "m_med_mamas_izquier",
-			valueField: "m_med_mamas_izquier",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>MAMA IZQUIERDA</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_pulmon_desc
-		this.Tpl_m_med_pulmon_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_pulmon_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_pulmon_desc = new Ext.form.ComboBox({
-			store: this.st_busca_pulmon_desc,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_pulmon_desc,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_pulmon_desc",
-			displayField: "m_med_pulmon_desc",
-			valueField: "m_med_pulmon_desc",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_pulmon_dx
-		this.Tpl_m_med_pulmon_dx = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_pulmon_dx}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_pulmon_dx = new Ext.form.ComboBox({
-			store: this.st_busca_pulmon_dx,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_pulmon_dx,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_pulmon_dx",
-			displayField: "m_med_pulmon_dx",
-			valueField: "m_med_pulmon_dx",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DX DIAGNOSTICO</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_osteo_aptitud
-		this.m_med_osteo_aptitud = new Ext.form.TextField({
-			fieldLabel: "<b>APTITUD</b>",
-			disabled: true,
-			name: "m_med_osteo_aptitud",
-			anchor: "95%",
-		});
-		//m_med_osteo_desc
-		this.m_med_osteo_desc = new Ext.form.TextArea({
-			name: "m_med_osteo_desc",
-			fieldLabel: "<b>DESCRIPCIÓN</b>",
-			value: "-",
-			anchor: "99%",
-			height: 40,
-		});
-		//m_med_abdomen
-		this.Tpl_m_med_abdomen = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_abdomen}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_abdomen = new Ext.form.ComboBox({
-			store: this.st_busca_abdomen,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_abdomen,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_abdomen",
-			displayField: "m_med_abdomen",
-			valueField: "m_med_abdomen",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>ABDOMEN</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_abdomen_desc
-		this.Tpl_m_med_abdomen_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_abdomen_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_abdomen_desc = new Ext.form.ComboBox({
-			store: this.st_busca_abdomen_desc,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_abdomen_desc,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_abdomen_desc",
-			displayField: "m_med_abdomen_desc",
-			valueField: "m_med_abdomen_desc",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_pru_sup_der
-		this.m_med_pru_sup_der = new Ext.form.RadioGroup({
-			fieldLabel: "<b>PRU SUP DER</b>",
+		// m_312_diag_st6
+		this.m_312_diag_st6 = new Ext.form.RadioGroup({
+			fieldLabel: "<b> </b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
 			items: [
-				{ boxLabel: "Si", name: "m_med_pru_sup_der", inputValue: "Si" },
-				{
-					boxLabel: "No",
-					name: "m_med_pru_sup_der",
-					inputValue: "No",
-					checked: true,
-				},
+				{ boxLabel: "P", name: "m_312_diag_st6", inputValue: "P" },
+				{ boxLabel: "D", name: "m_312_diag_st6", inputValue: "D" },
+				{ boxLabel: "R", name: "m_312_diag_st6", inputValue: "R" },
 			],
 		});
-		//m_med_pru_med_der
-		this.m_med_pru_med_der = new Ext.form.RadioGroup({
-			fieldLabel: "<b>PRU MED DER</b>",
-			items: [
-				{ boxLabel: "Si", name: "m_med_pru_med_der", inputValue: "Si" },
-				{
-					boxLabel: "No",
-					name: "m_med_pru_med_der",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_pru_inf_der
-		this.m_med_pru_inf_der = new Ext.form.RadioGroup({
-			fieldLabel: "<b>PRU INF DER</b>",
-			items: [
-				{ boxLabel: "Si", name: "m_med_pru_inf_der", inputValue: "Si" },
-				{
-					boxLabel: "No",
-					name: "m_med_pru_inf_der",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_ppl_der
-		this.m_med_ppl_der = new Ext.form.RadioGroup({
-			fieldLabel: "<b>PPL DER</b>",
-			items: [
-				{ boxLabel: "Si", name: "m_med_ppl_der", inputValue: "Si" },
-				{
-					boxLabel: "No",
-					name: "m_med_ppl_der",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_pru_sup_izq
-		this.m_med_pru_sup_izq = new Ext.form.RadioGroup({
-			fieldLabel: "<b>PRU SUP IZQ</b>",
-			items: [
-				{ boxLabel: "Si", name: "m_med_pru_sup_izq", inputValue: "Si" },
-				{
-					boxLabel: "No",
-					name: "m_med_pru_sup_izq",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_pru_med_izq
-		this.m_med_pru_med_izq = new Ext.form.RadioGroup({
-			fieldLabel: "<b>PRU MED IZQ</b>",
-			items: [
-				{ boxLabel: "Si", name: "m_med_pru_med_izq", inputValue: "Si" },
-				{
-					boxLabel: "No",
-					name: "m_med_pru_med_izq",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_pru_inf_izq
-		this.m_med_pru_inf_izq = new Ext.form.RadioGroup({
-			fieldLabel: "<b>PRU INF IZQ</b>",
-			items: [
-				{ boxLabel: "Si", name: "m_med_pru_inf_izq", inputValue: "Si" },
-				{
-					boxLabel: "No",
-					name: "m_med_pru_inf_izq",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_ppl_izq
-		this.m_med_ppl_izq = new Ext.form.RadioGroup({
-			fieldLabel: "<b>PPL IZQ</b>",
-			items: [
-				{ boxLabel: "Si", name: "m_med_ppl_izq", inputValue: "Si" },
-				{
-					boxLabel: "No",
-					name: "m_med_ppl_izq",
-					inputValue: "No",
-					checked: true,
-				},
-			],
-		});
-		//m_med_tacto
-		this.m_med_tacto = new Ext.form.RadioGroup({
-			fieldLabel: "<b>TACTO RECTAL</b>",
-			items: [
-				{
-					boxLabel: "NO SE HIZO",
-					name: "m_med_tacto",
-					inputValue: "NO SE HIZO",
-					checked: true,
-				},
-				{ boxLabel: "SE HIZO", name: "m_med_tacto", inputValue: "SE HIZO" },
-			],
-		});
-		//m_med_tacto_desc
-		this.Tpl_m_med_tacto_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_tacto_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_tacto_desc = new Ext.form.ComboBox({
-			store: this.st_busca_tacto_desc,
+		// m_312_diag_cie7
+		this.m_312_diag_cie7 = new Ext.form.ComboBox({
+			store: this.list_cie10,
 			loadingText: "Searching...",
 			pageSize: 10,
-			tpl: this.Tpl_m_med_tacto_desc,
+			tpl: this.cie10Tpl,
+			//            disabled: true,
 			hideTrigger: true,
 			itemSelector: "div.search-item",
 			selectOnFocus: true,
 			minChars: 1,
-			hiddenName: "m_med_tacto_desc",
-			displayField: "m_med_tacto_desc",
-			valueField: "m_med_tacto_desc",
+			hiddenName: "m_312_diag_cie7",
+			displayField: "cie4_desc",
+			valueField: "cie4_desc",
 			typeAhead: false,
 			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
+			fieldLabel: "<b>Cie 10</b>",
 			mode: "remote",
-			anchor: "95%",
+			style: {
+				textTransform: "uppercase",
+			},
+			anchor: "100%",
 		});
-		//m_med_anillos
-		this.m_med_anillos = new Ext.form.RadioGroup({
-			fieldLabel: "<b>ANILLOS INGUINALES</b>",
+		// m_312_diag_st7
+		this.m_312_diag_st7 = new Ext.form.RadioGroup({
+			fieldLabel: "<b> </b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
 			items: [
-				{ boxLabel: "SI", name: "m_med_anillos", inputValue: "SI" },
-				{
-					boxLabel: "NO",
-					name: "m_med_anillos",
-					inputValue: "NO",
-					checked: true,
-				},
+				{ boxLabel: "P", name: "m_312_diag_st7", inputValue: "P" },
+				{ boxLabel: "D", name: "m_312_diag_st7", inputValue: "D" },
+				{ boxLabel: "R", name: "m_312_diag_st7", inputValue: "R" },
 			],
 		});
-		//m_med_anillos_desc
-		this.Tpl_m_med_anillos_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_anillos_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_anillos_desc = new Ext.form.ComboBox({
-			store: this.st_busca_anillos_desc,
+		// m_312_diag_cie8
+		this.m_312_diag_cie8 = new Ext.form.ComboBox({
+			store: this.list_cie10,
 			loadingText: "Searching...",
 			pageSize: 10,
-			tpl: this.Tpl_m_med_anillos_desc,
+			tpl: this.cie10Tpl,
+			//            disabled: true,
 			hideTrigger: true,
 			itemSelector: "div.search-item",
 			selectOnFocus: true,
 			minChars: 1,
-			hiddenName: "m_med_anillos_desc",
-			displayField: "m_med_anillos_desc",
-			valueField: "m_med_anillos_desc",
+			hiddenName: "m_312_diag_cie8",
+			displayField: "cie4_desc",
+			valueField: "cie4_desc",
 			typeAhead: false,
 			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
+			fieldLabel: "<b>Cie 10</b>",
 			mode: "remote",
-			anchor: "95%",
+			style: {
+				textTransform: "uppercase",
+			},
+			anchor: "100%",
 		});
-		//m_med_hernia
-		this.m_med_hernia = new Ext.form.RadioGroup({
-			fieldLabel: "<b>HERNIAS</b>",
+		// m_312_diag_st8
+		this.m_312_diag_st8 = new Ext.form.RadioGroup({
+			fieldLabel: "<b> </b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
 			items: [
-				{ boxLabel: "SI", name: "m_med_hernia", inputValue: "SI" },
-				{
-					boxLabel: "NO",
-					name: "m_med_hernia",
-					inputValue: "NO",
-					checked: true,
-				},
+				{ boxLabel: "P", name: "m_312_diag_st8", inputValue: "P" },
+				{ boxLabel: "D", name: "m_312_diag_st8", inputValue: "D" },
+				{ boxLabel: "R", name: "m_312_diag_st8", inputValue: "R" },
 			],
 		});
-		//m_med_hernia_desc
-		this.Tpl_m_med_hernia_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_hernia_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_hernia_desc = new Ext.form.ComboBox({
-			store: this.st_busca_hernia_desc,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_hernia_desc,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_hernia_desc",
-			displayField: "m_med_hernia_desc",
-			valueField: "m_med_hernia_desc",
-			typeAhead: false,
+
+		// m_312_medico_ocupa
+		this.m_312_medico_ocupa = new Ext.form.ComboBox({
+			typeAhead: true,
 			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
-			mode: "remote",
-			anchor: "95%",
+			lazyRender: true,
+			allowBlank: false,
+			mode: "local",
+			store: this.load_medico,
+			forceSelection: true,
+			hiddenName: "m_312_medico_ocupa",
+			fieldLabel: "<b>MÉDICO EVALUADOR</b>",
+			name: "m_312_medico_ocupa",
+			valueField: "medico_id",
+			displayField: "nombre",
+			anchor: "90%",
 		});
-		//m_med_varices
-		this.m_med_varices = new Ext.form.RadioGroup({
-			fieldLabel: "<b>VARICES</b>",
-			items: [
-				{ boxLabel: "SI", name: "m_med_varices", inputValue: "SI" },
-				{
-					boxLabel: "NO",
-					name: "m_med_varices",
-					inputValue: "NO",
-					checked: true,
-				},
-			],
-		});
-		//m_med_varices_desc
-		this.Tpl_m_med_varices_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_varices_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_varices_desc = new Ext.form.ComboBox({
-			store: this.st_busca_varices_desc,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_varices_desc,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_varices_desc",
-			displayField: "m_med_varices_desc",
-			valueField: "m_med_varices_desc",
-			typeAhead: false,
+		// m_312_medico_auditor
+		this.m_312_medico_auditor = new Ext.form.ComboBox({
+			typeAhead: true,
 			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
-			mode: "remote",
-			anchor: "95%",
+			lazyRender: true,
+			allowBlank: false,
+			mode: "local",
+			store: this.load_medico_auditor,
+			forceSelection: true,
+			hiddenName: "m_312_medico_auditor",
+			fieldLabel: "<b>MÉDICO AUDITOR</b>",
+			name: "m_312_medico_auditor",
+			valueField: "medico_id",
+			displayField: "nombre",
+			anchor: "90%",
 		});
-		//m_med_genitales_desc
-		this.Tpl_m_med_genitales_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_genitales_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_genitales_desc = new Ext.form.ComboBox({
-			store: this.st_busca_genitales_desc,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_genitales_desc,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_genitales_desc",
-			displayField: "m_med_genitales_desc",
-			valueField: "m_med_genitales_desc",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
-			mode: "remote",
+
+		this.m_312_restricciones = new Ext.form.TextArea({
+			name: "m_312_restricciones",
+			fieldLabel: "<b>RESTRICCIONES</b>",
 			anchor: "95%",
+			height: 120,
 		});
-		//m_med_genitales_dx
-		this.Tpl_m_med_genitales_dx = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_genitales_dx}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_genitales_dx = new Ext.form.ComboBox({
-			store: this.st_busca_genitales_dx,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_genitales_dx,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_genitales_dx",
-			displayField: "m_med_genitales_dx",
-			valueField: "m_med_genitales_dx",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DX DIAGNOSTICO</b>",
-			mode: "remote",
+		this.m_312_observaciones = new Ext.form.TextArea({
+			name: "m_312_observaciones",
+			fieldLabel: "<b>OBSERVACIONES</b>",
 			anchor: "95%",
+			height: 120,
 		});
-		//m_med_ganglios_desc
-		this.Tpl_m_med_ganglios_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_ganglios_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_ganglios_desc = new Ext.form.ComboBox({
-			store: this.st_busca_ganglios_desc,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_ganglios_desc,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_ganglios_desc",
-			displayField: "m_med_ganglios_desc",
-			valueField: "m_med_ganglios_desc",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_ganglios_dx
-		this.Tpl_m_med_ganglios_dx = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_ganglios_dx}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_ganglios_dx = new Ext.form.ComboBox({
-			store: this.st_busca_ganglios_dx,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_ganglios_dx,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_ganglios_dx",
-			displayField: "m_med_ganglios_dx",
-			valueField: "m_med_ganglios_dx",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DX DIAGNOSTICO</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_lenguaje_desc
-		this.Tpl_m_med_lenguaje_desc = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_lenguaje_desc}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_lenguaje_desc = new Ext.form.ComboBox({
-			store: this.st_busca_lenguaje_desc,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_lenguaje_desc,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_lenguaje_desc",
-			displayField: "m_med_lenguaje_desc",
-			valueField: "m_med_lenguaje_desc",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DESCRIPCION</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_lenguaje_dx
-		this.Tpl_m_med_lenguaje_dx = new Ext.XTemplate(
-			'<tpl for="."><div class="search-item">',
-			'<div class="div-table-col">',
-			"<h3><b>{m_med_lenguaje_dx}</b></h3>",
-			"</div>",
-			"</div></tpl>"
-		);
-		this.m_med_lenguaje_dx = new Ext.form.ComboBox({
-			store: this.st_busca_lenguaje_dx,
-			loadingText: "Searching...",
-			pageSize: 10,
-			tpl: this.Tpl_m_med_lenguaje_dx,
-			hideTrigger: true,
-			itemSelector: "div.search-item",
-			selectOnFocus: true,
-			minChars: 1,
-			hiddenName: "m_med_lenguaje_dx",
-			displayField: "m_med_lenguaje_dx",
-			valueField: "m_med_lenguaje_dx",
-			typeAhead: false,
-			triggerAction: "all",
-			fieldLabel: "<b>DX DIAGNOSTICO</b>",
-			mode: "remote",
-			anchor: "95%",
-		});
-		//m_med_aptitud
-		this.m_med_aptitud = new Ext.form.RadioGroup({
+
+		this.m_312_aptitud = new Ext.form.RadioGroup({
 			fieldLabel: "<b>APTITUD</b>",
 			itemCls: "x-check-group-alt",
-			columns: 7,
+			columns: 8,
 			items: [
-				{ boxLabel: "APTO", name: "m_med_aptitud", inputValue: "APTO" },
+				{ boxLabel: "APTO", name: "m_312_aptitud", inputValue: "APTO" },
+				{
+					boxLabel: "APTO CON RESTRICCIONES",
+					name: "m_312_aptitud",
+					inputValue: "APTO CON RESTRICCIONES",
+				},
 				{
 					boxLabel: "APTO CON OBSERVACIONES",
-					name: "m_med_aptitud",
+					name: "m_312_aptitud",
 					inputValue: "APTO CON OBSERVACIONES",
 				},
-				{
-					boxLabel: "APTO CON RESTRICCIÓN",
-					name: "m_med_aptitud",
-					inputValue: "APTO CON RESTRICCIÓN",
-				},
+				{ boxLabel: "NO APTO", name: "m_312_aptitud", inputValue: "NO APTO" },
 				{
 					boxLabel: "NO APTO TEMPORAL",
-					name: "m_med_aptitud",
+					name: "m_312_aptitud",
 					inputValue: "NO APTO TEMPORAL",
 				},
+				{ boxLabel: "RETIRO", name: "m_312_aptitud", inputValue: "RETIRO" },
 				{
-					boxLabel: "NO APTO DEFINITIVO",
-					name: "m_med_aptitud",
-					inputValue: "NO APTO DEFINITIVO",
+					boxLabel: "OBSERVADO",
+					name: "m_312_aptitud",
+					inputValue: "OBSERVADO",
 				},
-				//{boxLabel: 'RETIRO', name: 'm_med_aptitud', inputValue: 'RETIRO'},
-				//{boxLabel: 'OBSERVADO', name: 'm_med_aptitud', inputValue: 'OBSERVADO'},
 				{
 					boxLabel: "EN PROCESO DE VALIDACION",
-					name: "m_med_aptitud",
+					name: "m_312_aptitud",
 					inputValue: "EN PROCESO DE VALIDACION",
 					checked: true,
 				},
 			],
 		});
-		//m_med_fech_val
-		this.m_med_fech_val = new Ext.form.DateField({
-			fieldLabel: "<b>FECHA DE VALIDACION</b>",
-			name: "m_med_fech_val",
-			allowBlank: false,
+
+		this.m_312_fech_val = new Ext.form.DateField({
+			fieldLabel: "<b>FECHA INICIO</b>",
+			name: "m_312_fech_val",
+			id: "startdt2",
+			vtype: "daterange",
+			endDateField: "enddt2",
+			format: "Y-m-d",
 			anchor: "90%",
-			format: "d-m-Y",
-			emptyText: "Dia-Mes-Año",
+			listeners: {
+				render: function (datefield) {
+					datefield.setValue(new Date());
+					mod.medicina.anexo312.m_312_time_aptitud.setValue("0");
+				},
+			},
+		});
+		this.m_312_fech_vence = new Ext.form.DateField({
+			fieldLabel: "<b>FECHA TERMINO</b>",
+			name: "m_312_fech_vence",
+			readOnly: true,
+			id: "enddt2",
+			vtype: "daterange",
+			startDateField: "startdt2",
+			format: "Y-m-d",
+			anchor: "90%",
 			listeners: {
 				render: function (datefield) {
 					datefield.setValue(new Date());
 				},
 			},
 		});
-		//m_med_medico_ocupa(REGISTROS MEDIANTE LOGICA EN PHP)
-		//m_med_medico_auditor(REGISTROS MEDIANTE LOGICA EN PHP)
+		this.m_312_time_aptitud = new Ext.form.NumberField({
+			fieldLabel: "<b>TIEMPO DE APTITUD LABORAL</b>",
+			name: "m_312_time_aptitud",
+			id: "m_312_time_aptitud",
+			allowBlank: false,
+			minLength: 1,
+			autoCreate: {
+				tag: "input",
+				maxlength: 4,
+				minLength: 1,
+				type: "text",
+				size: "4",
+				autocomplete: "off",
+			},
+			anchor: "90%",
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						keyup: function (event, target, scope) {
+							var editorObject = scope;
+							var da = parseInt(target.value);
+							var t = Ext.getCmp("startdt2").getValue();
+							t.setDate(t.getDate() + da);
+							da >= 0
+								? Ext.getCmp("enddt2").setValue(t)
+								: Ext.getCmp("enddt2").setValue(
+										Ext.getCmp("startdt2").getValue()
+								  );
+						},
+						scope: editorObject,
+					});
+				},
+			},
+		});
+		this.val_medico = new Ext.form.ComboBox({
+			typeAhead: true,
+			triggerAction: "all",
+			lazyRender: true,
+			allowBlank: false,
+			mode: "local",
+			store: this.load_medico,
+			forceSelection: true,
+			hiddenName: "val_medico",
+			fieldLabel: "MÉDICO EVALUADOR",
+			name: "val_medico",
+			valueField: "medico_id",
+			displayField: "nombre",
+			anchor: "95%",
+		});
 
-		//DIAGNOSTICOS
-		this.val_audio_od = new Ext.form.TextField({
-			fieldLabel: "<b>AUDIOMETRIA OD</b>",
-			disabled: true,
-			name: "val_audio_od",
-			anchor: "95%",
-		});
-		this.val_audio_oi = new Ext.form.TextField({
-			fieldLabel: "<b>AUDIOMETRIA OI</b>",
-			disabled: true,
-			name: "val_audio_oi",
-			anchor: "95%",
-		});
-		this.val_audio_clas = new Ext.form.TextField({
-			fieldLabel: "<b>AUDIOMETRIA CLASIFICACIÓN</b>",
-			disabled: true,
-			name: "val_audio_clas",
-			anchor: "98%",
-		});
-		this.val_oftalmo = new Ext.form.TextField({
-			fieldLabel: "<b>OFTALMOLOGIA</b>",
-			disabled: true,
-			name: "val_oftalmo",
-			anchor: "95%",
-		});
-		this.val_espiro = new Ext.form.TextField({
-			fieldLabel: "<b>ESPIROMETRIA</b>",
-			disabled: true,
-			name: "val_espiro",
-			anchor: "95%",
-		});
-		this.val_cardio = new Ext.form.TextField({
-			fieldLabel: "<b>CARDIOVASCULAR</b>",
-			disabled: true,
-			name: "val_cardio",
-			anchor: "95%",
-		});
-		this.val_respira = new Ext.form.TextField({
-			fieldLabel: "<b>RESPIRATORIO</b>",
-			disabled: true,
-			name: "val_respira",
-			anchor: "95%",
-		});
-		this.val_osteo = new Ext.form.TextField({
-			fieldLabel: "<b>OSTEO MUSCULAR</b>",
-			disabled: true,
-			name: "val_osteo",
-			anchor: "95%",
-		});
-		this.val_nutri = new Ext.form.TextField({
-			fieldLabel: "<b>NUTRICIONAL</b>",
-			disabled: true,
-			name: "val_nutri",
-			anchor: "95%",
-		});
-		//OTROS DIAGNOSTICOS
-		this.tbar1 = new Ext.Toolbar({
-			items: [
-				'<b style="color:#000000;">OTROS DIAGNOSTICOS</b>',
-				"-",
-				"->",
-				{
-					text: "Nuevo",
-					iconCls: "nuevo",
-					handler: function () {
-						mod.medicina.diagnostico.init(null);
-					},
-				},
-			],
-		});
-		this.dt_grid1 = new Ext.grid.GridPanel({
-			store: this.list_diag,
-			region: "west",
-			border: true,
-			tbar: this.tbar1,
-			loadMask: true,
-			iconCls: "icon-grid",
-			plugins: new Ext.ux.PanelResizer({
-				minHeight: 100,
-			}),
-			height: 260,
-			listeners: {
-				rowdblclick: function (grid, rowIndex, e) {
-					e.stopEvent();
-					var rec = grid.getStore().getAt(rowIndex);
-					mod.medicina.diagnostico.init(rec);
-				},
-			},
-			autoExpandColumn: "diag_desc",
-			columns: [
-				new Ext.grid.RowNumberer(),
-				{
-					id: "diag_desc",
-					header: "DIAGNOSTICOS",
-					dataIndex: "diag_desc",
-				},
-			],
-		});
-		//OBSERVACIONES
-		this.tbar2 = new Ext.Toolbar({
-			items: [
-				'<b style="color:#000000;">OBSERVACIONES</b>',
-				"-",
-				"->",
-				{
-					text: "Nuevo",
-					iconCls: "nuevo",
-					handler: function () {
-						mod.medicina.observacion.init(null);
-					},
-				},
-			],
-		});
-		this.dt_grid2 = new Ext.grid.GridPanel({
-			store: this.list_obs,
-			region: "west",
-			border: true,
-			tbar: this.tbar2,
-			loadMask: true,
-			iconCls: "icon-grid",
-			plugins: new Ext.ux.PanelResizer({
-				minHeight: 100,
-			}),
-			height: 260,
-			listeners: {
-				rowdblclick: function (grid, rowIndex, e) {
-					e.stopEvent();
-					var rec = grid.getStore().getAt(rowIndex);
-					mod.medicina.observacion.init(rec);
-				},
-			},
-			autoExpandColumn: "diag",
-			columns: [
-				new Ext.grid.RowNumberer(),
-				{
-					header: "OBSERVACIONES",
-					width: 430,
-					dataIndex: "obs_desc",
-				},
-				{
-					id: "diag",
-					header: "PLAZO",
-					dataIndex: "obs_plazo",
-				},
-			],
-		});
-		//RESTRICCIONES
-		this.tbar3 = new Ext.Toolbar({
-			items: [
-				'<b style="color:#000000;">RESTRICCIONES</b>',
-				"-",
-				"->",
-				{
-					text: "Nuevo",
-					iconCls: "nuevo",
-					handler: function () {
-						mod.medicina.restricciones.init(null);
-					},
-				},
-			],
-		});
-		this.dt_grid3 = new Ext.grid.GridPanel({
-			store: this.list_restric,
-			region: "west",
-			border: true,
-			tbar: this.tbar3,
-			loadMask: true,
-			iconCls: "icon-grid",
-			plugins: new Ext.ux.PanelResizer({
-				minHeight: 100,
-			}),
-			height: 260,
-			listeners: {
-				rowdblclick: function (grid, rowIndex, e) {
-					e.stopEvent();
-					var rec = grid.getStore().getAt(rowIndex);
-					mod.medicina.restricciones.init(rec);
-				},
-			},
-			autoExpandColumn: "diag",
-			columns: [
-				new Ext.grid.RowNumberer(),
-				{
-					header: "RESTRICCIONES",
-					width: 430,
-					dataIndex: "restric_desc",
-				},
-				{
-					id: "diag",
-					header: "PLAZO",
-					dataIndex: "restric_plazo",
-				},
-			],
-		});
-		//INTERCONSULTAS
-		this.tbar4 = new Ext.Toolbar({
-			items: [
-				'<b style="color:#000000;">INTERCONSULTAS</b>',
-				"-",
-				"->",
-				{
-					text: "Nuevo",
-					iconCls: "nuevo",
-					handler: function () {
-						mod.medicina.interconsultas.init(null);
-					},
-				},
-			],
-		});
-		this.dt_grid4 = new Ext.grid.GridPanel({
-			store: this.list_inter,
-			region: "west",
-			border: true,
-			tbar: this.tbar4,
-			loadMask: true,
-			iconCls: "icon-grid",
-			plugins: new Ext.ux.PanelResizer({
-				minHeight: 100,
-			}),
-			height: 260,
-			listeners: {
-				rowdblclick: function (grid, rowIndex, e) {
-					e.stopEvent();
-					var rec = grid.getStore().getAt(rowIndex);
-					mod.medicina.interconsultas.init(rec);
-				},
-			},
-			autoExpandColumn: "diag",
-			columns: [
-				new Ext.grid.RowNumberer(),
-				{
-					header: "INTERCONSULTAS",
-					width: 430,
-					dataIndex: "inter_desc",
-				},
-				{
-					id: "diag",
-					header: "PLAZO",
-					dataIndex: "inter_plazo",
-				},
-			],
-		});
 		//RECOMENDACIONES E INDICACIONES
 		this.tbar5 = new Ext.Toolbar({
 			items: [
@@ -9500,7 +7627,7 @@ mod.medicina.anexo312 = {
 					text: "Nuevo",
 					iconCls: "nuevo",
 					handler: function () {
-						mod.medicina.recomendaciones.init(null);
+						mod.medicina.recomen_312.init(null);
 					},
 				},
 			],
@@ -9520,7 +7647,7 @@ mod.medicina.anexo312 = {
 				rowdblclick: function (grid, rowIndex, e) {
 					e.stopEvent();
 					var rec = grid.getStore().getAt(rowIndex);
-					mod.medicina.recomendaciones.init(rec);
+					mod.medicina.recomen_312.init(rec);
 				},
 			},
 			autoExpandColumn: "diag",
@@ -9538,6 +7665,53 @@ mod.medicina.anexo312 = {
 				},
 			],
 		});
+
+		/////////////////////////////////////////////////////////////////////////
+		//CONCLUSIONES
+
+		this.psicologia = new Ext.form.TextArea({
+			name: "psicologia",
+			fieldLabel: "<b>PSICOLOGIA *(solo es para informacion no se imprimira en el formato 312)</b>",
+			readOnly: true,
+			anchor: "95%",
+			height: 50,
+		});
+		this.rx = new Ext.form.TextArea({
+			name: "rx",
+			fieldLabel: "<b>RAYOS X *(solo es para informacion no se imprimira en el formato 312)</b>",
+			readOnly: true,
+			anchor: "95%",
+			height: 50,
+		});
+		this.laboratorio = new Ext.form.TextArea({
+			name: "laboratorio",
+			fieldLabel: "<b>LABORATORIO *(solo es para informacion no se imprimira en el formato 312)</b>",
+			readOnly: true,
+			anchor: "95%",
+			height: 50,
+		});
+		this.audiometria = new Ext.form.TextArea({
+			name: "audiometria",
+			fieldLabel: "<b>AUDIOMETRIA *(solo es para informacion no se imprimira en el formato 312)</b>",
+			readOnly: true,
+			anchor: "95%",
+			height: 50,
+		});
+		this.espirometia = new Ext.form.TextArea({
+			name: "espirometia",
+			fieldLabel: "<b>ESPIROMETRIA *(solo es para informacion no se imprimira en el formato 312)</b>",
+			readOnly: true,
+			anchor: "95%",
+			height: 50,
+		});
+		this.otros = new Ext.form.TextArea({
+			name: "otros",
+			fieldLabel: "<b>OTROS *(solo es para informacion no se imprimira en el formato 312)</b>",
+			readOnly: true,
+			anchor: "95%",
+			height: 50,
+		});
+
 		//FRM ANEXO 16
 		this.frm = new Ext.FormPanel({
 			region: "center",
@@ -9553,170 +7727,59 @@ mod.medicina.anexo312 = {
 			items: [
 				{
 					title:
-						"<b>--->  ESTADO OCUPACIONAL - RIESGOS OCUPACIONALES - EXAMEN MUJERES - ANTECEDENTES LABORALES - HABITOS - ANTECEDENTES FAMILIARES</b>",
+						"<b>--->  ANTECEDENTES PERSONALES || PATOLOGIAS || ENFERMEDADES || HABITOS NOCIBOS || FAMILIARES</b>",
 					iconCls: "demo2",
 					layout: "column",
-					autoScroll: true,
 					border: false,
-					bodyStyle: "padding:10px 10px 20px 10px;",
+					autoScroll: true,
+					bodyStyle: "padding:10px 10px 20px 10px;", //m_med_aptitud
 					labelWidth: 60,
 					items: [
 						{
 							xtype: "panel",
 							border: false,
-							columnWidth: 0.35,
+							columnWidth: 0.999,
 							bodyStyle: "padding:2px 22px 0px 5px;",
 							items: [
 								{
 									xtype: "fieldset",
 									layout: "column",
-									title: "PERSONA DE CONTACTO EN CASOS DE ACCIDENTES:",
-									items: [
-										{
-											columnWidth: 0.999,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_contac_nom],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_contac_parent],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_contac_telf],
-										},
-									],
-								},
-							],
-						},
-						{
-							columnWidth: 0.33,
-							border: false,
-							labelAlign: "top",
-							layout: "form",
-							items: [this.m_med_puesto_postula],
-						},
-						{
-							columnWidth: 0.32,
-							border: false,
-							labelAlign: "top",
-							layout: "form",
-							items: [this.m_med_area],
-						},
-						{
-							columnWidth: 0.33,
-							border: false,
-							labelAlign: "top",
-							layout: "form",
-							items: [this.m_med_puesto_actual],
-						},
-						{
-							columnWidth: 0.32,
-							border: false,
-							labelAlign: "top",
-							layout: "form",
-							items: [this.m_med_eq_opera],
-						},
-						{
-							columnWidth: 0.33,
-							border: false,
-							labelAlign: "top",
-							layout: "form",
-							items: [this.m_med_tiempo],
-						},
-						{
-							columnWidth: 0.2,
-							border: false,
-							labelAlign: "top",
-							layout: "form",
-							items: [this.m_med_fech_ingreso],
-						},
-						{
-							columnWidth: 0.12,
-							border: false,
-							labelAlign: "top",
-							layout: "form",
-							items: [this.m_med_reubicacion],
-						},
-						{
-							columnWidth: 0.2,
-							border: false,
-							labelAlign: "top",
-							layout: "form",
-							items: [this.m_med_tip_opera],
-						},
-						{
-							columnWidth: 0.5,
-							border: false,
-							labelAlign: "top",
-							layout: "form",
-							items: [this.m_med_minerales],
-						},
-						{
-							columnWidth: 0.3,
-							border: false,
-							labelAlign: "top",
-							layout: "form",
-							items: [this.m_med_altura_lab],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "RIESGOS OCUPACIONALES",
+									// title: "PERSONA DE CONTACTO EN CASOS DE ACCIDENTES:",
 									items: [
 										{
 											columnWidth: 0.2,
 											border: false,
-											bodyStyle: "padding:10px 0px 0px 0px;",
-											labelAlign: "top",
 											layout: "form",
-											items: [this.m_med_rl_bio1],
+											labelAlign: "top",
+											items: [this.m_312_residencia],
 										},
 										{
-											columnWidth: 0.8,
+											columnWidth: 0.15,
 											border: false,
-											bodyStyle: "padding:10px 0px 0px 0px;",
-											labelAlign: "top",
 											layout: "form",
-											items: [this.m_med_rl_psico],
+											labelAlign: "top",
+											items: [this.m_312_tiempo],
 										},
 										{
-											columnWidth: 0.999,
+											columnWidth: 0.4,
 											border: false,
-											bodyStyle: "padding:0px 0px 0px 0px;",
-											labelAlign: "top",
 											layout: "form",
-											items: [this.m_med_rl_ergo],
+											labelAlign: "top",
+											items: [this.m_312_seguro],
 										},
 										{
-											columnWidth: 0.999,
+											columnWidth: 0.15,
 											border: false,
-											bodyStyle: "padding:0px 0px 0px 0px;",
-											labelAlign: "top",
 											layout: "form",
-											items: [this.m_med_rl_fisico],
+											labelAlign: "top",
+											items: [this.m_312_nhijos],
 										},
 										{
-											columnWidth: 0.999,
+											columnWidth: 0.1,
 											border: false,
-											bodyStyle: "padding:0px 0px 0px 0px;",
-											labelAlign: "top",
 											layout: "form",
-											items: [this.m_med_rl_quimi],
+											labelAlign: "top",
+											items: [this.m_312_dependiente],
 										},
 									],
 								},
@@ -9725,121 +7788,86 @@ mod.medicina.anexo312 = {
 						{
 							xtype: "panel",
 							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:0px 2px 0px 10px;",
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
 							items: [
 								{
 									xtype: "fieldset",
 									layout: "column",
-									title: "EXAMENES DE MUJER:",
+									title: "PATOLOGIAS | ENFERMEDADES:",
 									items: [
 										{
-											columnWidth: 0.15,
+											columnWidth: 1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_muj_fur],
+											items: [this.m_312_pato],
 										},
+
 										{
-											columnWidth: 0.11,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_muj_rc],
-										},
-										{
-											columnWidth: 0.11,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_muj_g],
-										},
-										{
-											columnWidth: 0.11,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_muj_p],
-										},
-										{
-											columnWidth: 0.15,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_muj_ult_pap],
-										},
-										{
-											columnWidth: 0.15,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_muj_resul],
-										},
-										{
-											columnWidth: 0.14,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_muj_mac],
-										},
-										{
-											columnWidth: 0.999,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_muj_obs],
-										},
-										{
-											//
 											xtype: "panel",
 											border: false,
-											columnWidth: 0.999,
-											bodyStyle: "padding:0px 5px 0px 5px;",
+											columnWidth: 0.25,
+											bodyStyle: "padding:2px 22x 0px 5px;",
 											items: [
 												{
 													xtype: "fieldset",
 													layout: "column",
-													title: "FORMULA OBSTETRICA:",
+													title: "SOLO SI TUVO TUBERCULOSIS:",
 													items: [
 														{
-															columnWidth: 0.5,
+															columnWidth: 1,
 															border: false,
 															layout: "form",
 															labelAlign: "top",
-															items: [this.m_med_muj_a],
+															items: [this.m_312_pato_tbc_fecha],
 														},
 														{
-															columnWidth: 0.5,
+															columnWidth: 1,
 															border: false,
 															layout: "form",
 															labelAlign: "top",
-															items: [this.m_med_muj_b],
-														},
-														{
-															columnWidth: 0.33,
-															border: false,
-															layout: "form",
-															labelAlign: "top",
-															items: [this.m_med_muj_c],
-														},
-														{
-															columnWidth: 0.33,
-															border: false,
-															layout: "form",
-															labelAlign: "top",
-															items: [this.m_med_muj_d],
-														},
-														{
-															columnWidth: 0.34,
-															border: false,
-															layout: "form",
-															labelAlign: "top",
-															items: [this.m_med_muj_e],
+															items: [this.m_312_pato_tbc_tratamiento],
 														},
 													],
 												},
 											],
 										},
+										{
+											columnWidth: 0.04,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: "-",
+										},
+										{
+											columnWidth: 0.35,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_pato_alergias_desc],
+										},
+										{
+											columnWidth: 0.36,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_pato_cirugia_desc],
+										},
+										{
+											columnWidth: 0.04,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: "-",
+										},
+										{
+											columnWidth: 0.71,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_pato_observaciones],
+										},
 									],
 								},
 							],
@@ -9847,34 +7875,34 @@ mod.medicina.anexo312 = {
 						{
 							xtype: "panel",
 							border: false,
-							columnWidth: 0.2,
-							bodyStyle: "padding:2px 5px 0px 5px;",
+							columnWidth: 0.25,
+							bodyStyle: "padding:2px 22px 0px 5px;",
 							items: [
 								{
 									xtype: "fieldset",
 									layout: "column",
-									title: "HABITOS",
+									title: "ALCOHOL:",
 									items: [
 										{
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_tabaco],
+											items: [this.m_312_alcohol_tipo],
 										},
 										{
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_alcohol],
+											items: [this.m_312_alcohol_cantidad],
 										},
 										{
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_coca],
+											items: [this.m_312_alcohol_fre],
 										},
 									],
 								},
@@ -9883,117 +7911,34 @@ mod.medicina.anexo312 = {
 						{
 							xtype: "panel",
 							border: false,
-							columnWidth: 0.8,
-							bodyStyle: "padding:2px 20px 0px 5px;",
+							columnWidth: 0.25,
+							bodyStyle: "padding:2px 22px 0px 5px;",
 							items: [
 								{
 									xtype: "fieldset",
 									layout: "column",
-									title: "ANTECEDENTES FAMILIARES",
+									title: "TABACO:",
 									items: [
 										{
-											columnWidth: 0.7,
+											columnWidth: 0.999,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_fam_papa],
-										},
-										{
-											columnWidth: 0.3,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_fam_hijos],
-										},
-										{
-											columnWidth: 0.7,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_fam_mama],
-										},
-										{
-											columnWidth: 0.3,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_fam_h_vivos],
-										},
-										{
-											columnWidth: 0.7,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_fam_herma],
-										},
-										{
-											columnWidth: 0.3,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_fam_h_muertos],
+											items: [this.m_312_tabaco_tipo],
 										},
 										{
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_fam_infarto55],
+											items: [this.m_312_tabaco_cantidad],
 										},
 										{
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_fam_infarto65],
-										},
-									],
-								},
-							],
-						},
-					],
-				},
-				{
-					title: "<b>--->  ANTECEDENTES CARDIOVASCULARES</b>",
-					iconCls: "demo2",
-					layout: "column",
-					autoScroll: true,
-					border: false,
-					bodyStyle: "padding:10px 10px 20px 10px;",
-					labelWidth: 60,
-					items: [
-						{
-							columnWidth: 0.4,
-							border: false,
-							layout: "form",
-							labelAlign: "top",
-							bodyStyle: "padding:10px 10px 10px 25px;",
-							items: [this.m_med_cardio_op01],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									//                                    title: '',
-									items: [
-										{
-											columnWidth: 0.55,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_op02],
-										},
-										{
-											columnWidth: 0.45,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_desc02],
+											items: [this.m_312_tabaco_fre],
 										},
 									],
 								},
@@ -10002,27 +7947,34 @@ mod.medicina.anexo312 = {
 						{
 							xtype: "panel",
 							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
+							columnWidth: 0.25,
+							bodyStyle: "padding:2px 22px 0px 5px;",
 							items: [
 								{
 									xtype: "fieldset",
 									layout: "column",
-									//                                    title: '',
+									title: "DROGAS:",
 									items: [
 										{
-											columnWidth: 0.55,
+											columnWidth: 0.999,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_cardio_op03],
+											items: [this.m_312_drogas_tipo],
 										},
 										{
-											columnWidth: 0.45,
+											columnWidth: 0.999,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_cardio_desc03],
+											items: [this.m_312_drogas_cantidad],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_drogas_fre],
 										},
 									],
 								},
@@ -10031,27 +7983,20 @@ mod.medicina.anexo312 = {
 						{
 							xtype: "panel",
 							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
+							columnWidth: 0.25,
+							bodyStyle: "padding:2px 22px 0px 5px;",
 							items: [
 								{
 									xtype: "fieldset",
 									layout: "column",
-									//                                    title: '',
+									title: "MEDICAMENTOS:",
 									items: [
 										{
-											columnWidth: 0.55,
+											columnWidth: 0.999,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_cardio_op04],
-										},
-										{
-											columnWidth: 0.45,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_desc04],
+											items: [this.m_312_medicamentos],
 										},
 									],
 								},
@@ -10060,404 +8005,48 @@ mod.medicina.anexo312 = {
 						{
 							xtype: "panel",
 							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
 							items: [
 								{
 									xtype: "fieldset",
 									layout: "column",
-									//                                    title: '',
+									title: "ANTECEDENTES FAMILIARES:",
 									items: [
 										{
-											columnWidth: 0.55,
+											columnWidth: 0.5,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_cardio_op05],
+											items: [this.m_312_padre],
 										},
 										{
-											columnWidth: 0.45,
+											columnWidth: 0.5,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_cardio_desc05],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									//                                    title: '',
-									items: [
-										{
-											columnWidth: 0.55,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_op06],
+											items: [this.m_312_madre],
 										},
 										{
-											columnWidth: 0.45,
+											columnWidth: 0.5,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_cardio_desc06],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									//                                    title: '',
-									items: [
-										{
-											columnWidth: 0.55,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_op07],
+											items: [this.m_312_conyuge],
 										},
 										{
-											columnWidth: 0.45,
+											columnWidth: 0.25,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_cardio_desc07],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									//                                    title: '',
-									items: [
-										{
-											columnWidth: 0.55,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_op08],
+											items: [this.m_312_hijo_vivo],
 										},
 										{
-											columnWidth: 0.45,
+											columnWidth: 0.25,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_cardio_desc08],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									//                                    title: '',
-									items: [
-										{
-											columnWidth: 0.55,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_op09],
-										},
-										{
-											columnWidth: 0.45,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_desc09],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									//                                    title: '',
-									items: [
-										{
-											columnWidth: 0.55,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_op10],
-										},
-										{
-											columnWidth: 0.45,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_desc10],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									//                                    title: '',
-									items: [
-										{
-											columnWidth: 0.55,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_op11],
-										},
-										{
-											columnWidth: 0.45,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_desc11],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									//                                    title: '',
-									items: [
-										{
-											columnWidth: 0.55,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_op12],
-										},
-										{
-											columnWidth: 0.45,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_desc12],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									//                                    title: '',
-									items: [
-										{
-											columnWidth: 0.55,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_op13],
-										},
-										{
-											columnWidth: 0.45,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_desc13],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									//                                    title: '',
-									items: [
-										{
-											columnWidth: 0.55,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_op14],
-										},
-										{
-											columnWidth: 0.45,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_desc14],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									//                                    title: '',
-									items: [
-										{
-											columnWidth: 0.55,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_op15],
-										},
-										{
-											columnWidth: 0.45,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_desc15],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									//                                    title: '',
-									items: [
-										{
-											columnWidth: 0.55,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_op16],
-										},
-										{
-											columnWidth: 0.45,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_desc16],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									//                                    title: '',
-									items: [
-										{
-											columnWidth: 0.55,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_op17],
-										},
-										{
-											columnWidth: 0.45,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_desc17],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									//                                    title: '',
-									items: [
-										{
-											columnWidth: 0.55,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_op18],
-										},
-										{
-											columnWidth: 0.45,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_cardio_desc18],
+											items: [this.m_312_hijo_fallecido],
 										},
 									],
 								},
@@ -10471,698 +8060,180 @@ mod.medicina.anexo312 = {
 					layout: "column",
 					border: false,
 					autoScroll: true,
-					bodyStyle: "padding:10px 10px 20px 10px;",
+					bodyStyle: "padding:10px 10px 20px 10px;", //m_med_aptitud
 					labelWidth: 60,
 					items: [
 						{
 							xtype: "panel",
 							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 25px 0px 5px;",
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
 							items: [
 								{
 									xtype: "fieldset",
 									layout: "column",
-									title: "PIEL",
+									title: "EXAMEN FISICO:",
 									items: [
 										{
-											columnWidth: 0.999,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_piel_desc],
+											items: [this.m_312_anamnesis],
 										},
 										{
-											columnWidth: 0.999,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_piel_dx],
+											items: [this.m_312_ectoscopia],
 										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "CABEZA",
-									items: [
 										{
-											columnWidth: 0.999,
+											columnWidth: 0.34,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_cabeza_desc],
+											items: [this.m_312_est_mental],
 										},
 										{
-											columnWidth: 0.999,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_cabeza_dx],
+											items: [this.m_312_piel],
 										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "CUELLO",
-									items: [
 										{
-											columnWidth: 0.999,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_cuello_desc],
+											items: [this.m_312_cabeza],
 										},
 										{
-											columnWidth: 0.999,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_cuello_dx],
+											items: [this.m_312_oidos],
 										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "NARIZ",
-									items: [
 										{
-											columnWidth: 0.999,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_nariz_desc],
+											items: [this.m_312_nariz],
 										},
 										{
-											columnWidth: 0.999,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_nariz_dx],
+											items: [this.m_312_boca],
 										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "BOCA, AMIGDALAS, FARINGE, LARINGE",
-									items: [
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_boca_desc],
+											items: [this.m_312_faringe],
 										},
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_boca_dx],
+											items: [this.m_312_cuello],
 										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "OIDOS Y TIMPANOS OIDO DERECHO",
-									items: [
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_oido_der01],
+											items: [this.m_312_respiratorio],
 										},
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_oido_der02],
+											items: [this.m_312_cardiovascular],
 										},
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_oido_der03],
+											items: [this.m_312_digestivo],
 										},
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_oido_der04],
+											items: [this.m_312_genitou],
 										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "OIDOS Y TIMPANOS OIDO IZQUIERDO",
-									items: [
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_oido_izq01],
+											items: [this.m_312_locomotor],
 										},
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_oido_izq02],
+											items: [this.m_312_marcha],
 										},
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_oido_izq03],
+											items: [this.m_312_columna],
 										},
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_oido_izq04],
+											items: [this.m_312_mi_superi],
 										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "TORAX",
-									items: [
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_torax_desc],
+											items: [this.m_312_mi_inferi],
 										},
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_torax_dx],
+											items: [this.m_312_linfatico],
 										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "CORAZON",
-									items: [
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_corazon_desc],
+											items: [this.m_312_nervio],
 										},
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.33,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_corazon_dx],
+											items: [this.m_312_osteomuscular],
 										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "MAMAS",
-									items: [
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.65,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_mamas_derecho],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_mamas_izquier],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "PULMONES",
-									items: [
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_pulmon_desc],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_pulmon_dx],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "OSTEO - MUSCULAR",
-									items: [
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_osteo_aptitud],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_osteo_desc],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "ABDOMEN",
-									items: [
-										{
-											columnWidth: 0.4,
-											border: false,
-											layout: "form",
-											labelAlign: "top", //m_med_abdomen m_med_abdomen_desc
-											items: [this.m_med_abdomen],
-										},
-										{
-											columnWidth: 0.6,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_abdomen_desc],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "ABDOMEN DERECHO",
-									items: [
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_pru_sup_der],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_pru_med_der],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_pru_inf_der],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_ppl_der],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "ABDOMEN IZQUIERDO",
-									items: [
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_pru_sup_izq],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_pru_med_izq],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_pru_inf_izq],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_ppl_izq],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "EXAMEN DE TACTO RECTAL",
-									items: [
-										{
-											columnWidth: 0.4,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_tacto],
-										},
-										{
-											columnWidth: 0.6,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_tacto_desc],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "EXAMEN ANILLOS INGUINALES / CRURALES",
-									items: [
-										{
-											columnWidth: 0.4,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_anillos],
-										},
-										{
-											columnWidth: 0.6,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_anillos_desc],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "HERNIAS",
-									items: [
-										{
-											columnWidth: 0.4,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_hernia],
-										},
-										{
-											columnWidth: 0.6,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_hernia_desc],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "VARICES",
-									items: [
-										{
-											columnWidth: 0.4,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_varices],
-										},
-										{
-											columnWidth: 0.6,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_varices_desc],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "GENITALES (TESTICULOS)",
-									items: [
-										{
-											columnWidth: 0.999,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_genitales_desc],
-										},
-										{
-											columnWidth: 0.999,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_genitales_dx],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.5,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "GANGLIOS",
-									items: [
-										{
-											columnWidth: 0.999,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_ganglios_desc],
-										},
-										{
-											columnWidth: 0.999,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_ganglios_dx],
-										},
-									],
-								},
-							],
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 20px 0px 5px;",
-							items: [
-								{
-									xtype: "fieldset",
-									layout: "column",
-									title: "LENGUAJE, ATENCION, ORIENTACION",
-									items: [
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_lenguaje_desc],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.m_med_lenguaje_dx],
+											items: [this.m_312_ef_observaciones],
 										},
 									],
 								},
@@ -11171,7 +8242,7 @@ mod.medicina.anexo312 = {
 					],
 				},
 				{
-					title: "<b>--->  VALIDACIÓN</b>",
+					title: "<b>--->  VALIDACIÓN - CONCLUSIONES - DIAGNOSTICOS</b>",
 					iconCls: "demo2",
 					layout: "column",
 					border: false,
@@ -11180,131 +8251,414 @@ mod.medicina.anexo312 = {
 					labelWidth: 60,
 					items: [
 						{
-							columnWidth: 0.999,
-							border: false,
-							layout: "form",
-							labelAlign: "top",
-							items: [this.m_med_aptitud],
-						},
-						{
 							xtype: "panel",
 							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 25px 0px 5px;",
+							columnWidth: 0.5,
+							bodyStyle: "padding:2px 22px 0px 5px;",
 							items: [
 								{
 									xtype: "fieldset",
 									layout: "column",
-									title: "DIAGNOSTICOS",
+									title: "CONCLUSIONES PSICOLOGICAS:",
 									items: [
 										{
-											columnWidth: 0.17,
+											columnWidth: 1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.m_med_fech_val],
+											items: [this.psicologia],
 										},
 										{
-											columnWidth: 0.83,
+											columnWidth: 1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											items: [this.val_audio_clas],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.val_audio_od],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.val_audio_oi],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.val_oftalmo],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.val_espiro],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.val_cardio],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.val_respira],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.val_osteo],
-										},
-										{
-											columnWidth: 0.5,
-											border: false,
-											layout: "form",
-											labelAlign: "top",
-											items: [this.val_nutri],
+											items: [this.m_312_conclu_psico],
 										},
 									],
 								},
 							],
 						},
 						{
+							xtype: "panel",
+							border: false,
 							columnWidth: 0.5,
-							border: true,
-							layout: "form",
-							labelAlign: "top",
-							items: [this.dt_grid1],
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "CONCLUSIONES RAYOS X:",
+									items: [
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.rx],
+										},
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_conclu_rx],
+										},
+									],
+								},
+							],
 						},
 						{
+							xtype: "panel",
+							border: false,
 							columnWidth: 0.5,
-							border: true,
-							layout: "form",
-							labelAlign: "top",
-							items: [this.dt_grid2],
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "CONCLUSIONES LABORATORIO:",
+									items: [
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.laboratorio],
+										},
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_conclu_lab],
+										},
+									],
+								},
+							],
 						},
 						{
+							xtype: "panel",
+							border: false,
 							columnWidth: 0.5,
-							border: true,
-							layout: "form",
-							labelAlign: "top",
-							items: [this.dt_grid3],
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "CONCLUSIONES AUDIOMETRIA:",
+									items: [
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.audiometria],
+										},
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_conclu_audio],
+										},
+									],
+								},
+							],
 						},
 						{
+							xtype: "panel",
+							border: false,
 							columnWidth: 0.5,
-							border: true,
-							layout: "form",
-							labelAlign: "top",
-							items: [this.dt_grid4],
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "CONCLUSIONES ESPIROMETRIA:",
+									items: [
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.espirometia],
+										},
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_conclu_espiro],
+										},
+									],
+								},
+							],
 						},
 						{
-							columnWidth: 0.999,
-							border: true,
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.5,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "OTRAS CONCLUSIONES:",
+									items: [
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.otros],
+										},
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_conclu_otros],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.6,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "DIAGNOSTICO MÉDICO OCUPACIONAL:",
+									items: [
+										{
+											columnWidth: 0.8,
+											border: false,
+											layout: "form",
+											items: [this.m_312_diag_cie1],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelWidth: 10,
+											items: [this.m_312_diag_st1],
+										},
+										{
+											columnWidth: 0.8,
+											border: false,
+											layout: "form",
+											items: [this.m_312_diag_cie2],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelWidth: 10,
+											items: [this.m_312_diag_st2],
+										},
+										{
+											columnWidth: 0.8,
+											border: false,
+											layout: "form",
+											items: [this.m_312_diag_cie3],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelWidth: 10,
+											items: [this.m_312_diag_st3],
+										},
+										{
+											columnWidth: 0.8,
+											border: false,
+											layout: "form",
+											items: [this.m_312_diag_cie4],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelWidth: 10,
+											items: [this.m_312_diag_st4],
+										},
+									],
+								},
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "OTROS DIAGNOSTICOS:",
+									items: [
+										{
+											columnWidth: 0.8,
+											border: false,
+											layout: "form",
+											items: [this.m_312_diag_cie5],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelWidth: 10,
+											items: [this.m_312_diag_st5],
+										},
+										{
+											columnWidth: 0.8,
+											border: false,
+											layout: "form",
+											items: [this.m_312_diag_cie6],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelWidth: 10,
+											items: [this.m_312_diag_st6],
+										},
+										{
+											columnWidth: 0.8,
+											border: false,
+											layout: "form",
+											items: [this.m_312_diag_cie7],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelWidth: 10,
+											items: [this.m_312_diag_st7],
+										},
+										{
+											columnWidth: 0.8,
+											border: false,
+											layout: "form",
+											items: [this.m_312_diag_cie8],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelWidth: 10,
+											items: [this.m_312_diag_st8],
+										},
+									],
+								},
+							],
+						},
+
+						{
+							columnWidth: 0.4,
+							border: false,
 							layout: "form",
 							labelAlign: "top",
-							items: [this.dt_grid5],
+							items: [this.m_312_restricciones],
+						},
+
+						{
+							columnWidth: 0.4,
+							border: false,
+							layout: "form",
+							labelAlign: "top",
+							items: [this.m_312_observaciones],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "",
+									items: [
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_aptitud],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "",
+									items: [
+										{
+											columnWidth: 0.1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_fech_val],
+										},
+										{
+											columnWidth: 0.1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_fech_vence],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_time_aptitud],
+										},
+										{
+											columnWidth: 0.3,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_medico_ocupa],
+										},
+										{
+											columnWidth: 0.3,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_312_medico_auditor],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "",
+									items: [
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.dt_grid5],
+										},
+									],
+								},
+							],
 						},
 					],
 				},
@@ -11316,10 +8670,7 @@ mod.medicina.anexo312 = {
 					formBind: true,
 					scope: this,
 					handler: function () {
-						mod.medicina.anexo312.win.el.mask(
-							"Guardando…",
-							"x-mask-loading"
-						);
+						mod.medicina.anexo312.win.el.mask("Guardando…", "x-mask-loading");
 						this.frm.getForm().submit({
 							params: {
 								acction:
@@ -12354,6 +9705,193 @@ mod.medicina.recomendaciones = {
 								}
 								mod.medicina.nuevoAnexo16.list_recom.reload();
 								mod.medicina.recomendaciones.win.close();
+							},
+						});
+					},
+				},
+			],
+		});
+
+		this.win = new Ext.Window({
+			width: 1000,
+			height: 180,
+			modal: true,
+			title: "REGISTRO DE RECOMENDACIONES",
+			border: false,
+			maximizable: true,
+			resizable: false,
+			draggable: true,
+			closable: true,
+			layout: "border",
+			items: [this.frm],
+		});
+	},
+};
+mod.medicina.recomen_312 = {
+	rec: null,
+	win: null,
+	frm: null,
+	recom_desc: null,
+	recom_plazo: null,
+	init: function (r) {
+		this.rec = r;
+		this.crea_stores();
+		this.st_busca_recom.load();
+		this.crea_controles();
+		if (this.rec !== null) {
+			this.cargar_data();
+		}
+		this.win.show();
+	},
+	cargar_data: function () {
+		this.frm.getForm().load({
+			waitMsg: "Recuperando Informacion...",
+			waitTitle: "Espere",
+			params: {
+				acction: "load_recom",
+				format: "json",
+				recom_id: this.rec.get("recom_id"),
+				recom_adm: this.rec.get("recom_adm"),
+			},
+			scope: this,
+			success: function (frm, action) {
+				r = action.result.data;
+			},
+		});
+	},
+	crea_stores: function () {
+		this.st_busca_recom = new Ext.data.JsonStore({
+			url: "<[controller]>",
+			baseParams: {
+				acction: "st_busca_recom",
+				format: "json",
+			},
+			fields: ["recom_desc"],
+			root: "data",
+		});
+	},
+	crea_controles: function () {
+		this.cie10Tpl = new Ext.XTemplate(
+			'<tpl for="."><div class="search-item">',
+			'<div class="div-table-col">',
+			"<h3><b>{cie4_desc}</b></h3>",
+			"</div>",
+			"</div></tpl>"
+		);
+		this.recom_plazo = new Ext.form.RadioGroup({
+			fieldLabel: "<b>PLAZO</b>",
+			itemCls: "x-check-group-alt",
+			columns: 4,
+			items: [
+				{
+					boxLabel: "NINGUNO(-)",
+					name: "recom_plazo",
+					inputValue: "-",
+					checked: true,
+				},
+				{ boxLabel: "INMEDIATO", name: "recom_plazo", inputValue: "INMEDIATO" },
+				{ boxLabel: "03 MESES", name: "recom_plazo", inputValue: "03 MESES" },
+				{ boxLabel: "06 MESES", name: "recom_plazo", inputValue: "06 MESES" },
+			],
+		});
+		this.recom_desc = new Ext.form.ComboBox({
+			store: this.st_busca_recom,
+			hiddenName: "recom_desc",
+			displayField: "recom_desc",
+			//            disabled: true,
+			valueField: "recom_desc",
+			minChars: 1,
+			validateOnBlur: true,
+			forceSelection: false,
+			autoSelect: false,
+			allowBlank: false,
+			enableKeyEvents: true,
+			selectOnFocus: false,
+			fieldLabel: "<b>RECOMENDACIONES</b>",
+			typeAhead: false,
+			hideTrigger: true,
+			triggerAction: "all",
+			mode: "local",
+			anchor: "95%",
+		});
+		this.frm = new Ext.FormPanel({
+			region: "center",
+			url: "<[controller]>",
+			monitorValid: true,
+			frame: true,
+			layout: "column",
+			bodyStyle: "padding:10px;",
+			labelWidth: 99,
+			items: [
+				{
+					columnWidth: 0.999,
+					border: false,
+					labelAlign: "top",
+					layout: "form",
+					items: [this.recom_desc],
+				},
+				{
+					columnWidth: 0.999,
+					border: false,
+					labelAlign: "top",
+					layout: "form",
+					items: [this.recom_plazo],
+				},
+			],
+			buttons: [
+				{
+					text: "Guardar",
+					iconCls: "guardar",
+					formBind: true,
+					scope: this,
+					handler: function () {
+						mod.medicina.recomen_312.win.el.mask(
+							"Guardando…",
+							"x-mask-loading"
+						);
+						var metodo;
+						var recom_id;
+						if (this.rec !== null) {
+							metodo = "update";
+							recom_id = mod.medicina.recomen_312.rec.get("recom_id");
+						} else {
+							metodo = "save";
+							recom_id = "1";
+						}
+
+						this.frm.getForm().submit({
+							params: {
+								acction: metodo + "_recom",
+								recom_adm: mod.medicina.anexo312.record.get("adm"),
+								recom_id: recom_id,
+							},
+							success: function (form, action) {
+								obj = Ext.util.JSON.decode(action.response.responseText);
+								//                                Ext.MessageBox.alert('En hora buena', 'El paciente se registro correctamente');
+								mod.medicina.recomen_312.win.el.unmask();
+								mod.medicina.anexo312.list_recom.reload();
+								mod.medicina.recomen_312.win.close();
+							},
+							failure: function (form, action) {
+								mod.medicina.recomen_312.win.el.unmask();
+								switch (action.failureType) {
+									case Ext.form.Action.CLIENT_INVALID:
+										Ext.Msg.alert("Failure", "Existen valores Invalidos");
+										break;
+									case Ext.form.Action.CONNECT_FAILURE:
+										Ext.Msg.alert(
+											"Failure",
+											"Error de comunicacion con servidor"
+										);
+										break;
+									case Ext.form.Action.SERVER_INVALID:
+										Ext.Msg.alert("Failure mik", action.result.error);
+										break;
+									default:
+										Ext.Msg.alert("Failure", action.result.error);
+								}
+								mod.medicina.anexo312.list_recom.reload();
+								mod.medicina.recomen_312.win.close();
 							},
 						});
 					},
