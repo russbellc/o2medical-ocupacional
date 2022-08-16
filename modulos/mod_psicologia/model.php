@@ -539,6 +539,65 @@ class model extends core
         $params_2[':m_psico_exam_ptje_test_13'] = $_POST['m_psico_exam_ptje_test_13'];
         $params_2[':m_psico_exam_ptje_test_14'] = $_POST['m_psico_exam_ptje_test_14'];
 
+        $params_2[':m_psico_exam_motivo_eva'] = $_POST['m_psico_exam_motivo_eva'];
+        $params_2[':m_psico_exam_operacion'] = $_POST['m_psico_exam_operacion'];
+        // $params_2[':m_psico_exam_ante01_fech_ini'] = $_POST['m_psico_exam_ante01_fech_ini'];
+
+        
+        $timestamp1 = strtotime($_POST['m_psico_exam_ante01_fech_ini']);
+        $m_psico_exam_ante01_fech_ini = ((strlen($_POST['m_psico_exam_ante01_empresa']) > 0) ? date('Y-m-d', $timestamp1) : null);
+        $params_2[':m_psico_exam_ante01_fech_ini'] = $m_psico_exam_ante01_fech_ini;
+
+
+        $params_2[':m_psico_exam_ante01_empresa'] = $_POST['m_psico_exam_ante01_empresa'];
+        $params_2[':m_psico_exam_ante01_act_emp'] = $_POST['m_psico_exam_ante01_act_emp'];
+        $params_2[':m_psico_exam_ante01_puesto'] = $_POST['m_psico_exam_ante01_puesto'];
+        $params_2[':m_psico_exam_ante01_opera'] = $_POST['m_psico_exam_ante01_opera'];
+        $params_2[':m_psico_exam_ante01_causa'] = $_POST['m_psico_exam_ante01_causa'];
+        // $params_2[':m_psico_exam_ante02_fech_ini'] = $_POST['m_psico_exam_ante02_fech_ini'];
+
+        
+        $timestamp2 = strtotime($_POST['m_psico_exam_ante02_fech_ini']);
+        $m_psico_exam_ante02_fech_ini = ((strlen($_POST['m_psico_exam_ante02_empresa']) > 0) ? date('Y-m-d', $timestamp2) : null);
+        $params_2[':m_psico_exam_ante02_fech_ini'] = $m_psico_exam_ante02_fech_ini;
+
+
+        $params_2[':m_psico_exam_ante02_empresa'] = $_POST['m_psico_exam_ante02_empresa'];
+        $params_2[':m_psico_exam_ante02_act_emp'] = $_POST['m_psico_exam_ante02_act_emp'];
+        $params_2[':m_psico_exam_ante02_puesto'] = $_POST['m_psico_exam_ante02_puesto'];
+        $params_2[':m_psico_exam_ante02_opera'] = $_POST['m_psico_exam_ante02_opera'];
+        $params_2[':m_psico_exam_ante02_causa'] = $_POST['m_psico_exam_ante02_causa'];
+        // $params_2[':m_psico_exam_ante03_fech_ini'] = $_POST['m_psico_exam_ante03_fech_ini'];
+
+        
+        $timestamp3 = strtotime($_POST['m_psico_exam_ante03_fech_ini']);
+        $m_psico_exam_ante03_fech_ini = ((strlen($_POST['m_psico_exam_ante03_empresa']) > 0) ? date('Y-m-d', $timestamp3) : null);
+        $params_2[':m_psico_exam_ante03_fech_ini'] = $m_psico_exam_ante03_fech_ini;
+
+
+        $params_2[':m_psico_exam_ante03_empresa'] = $_POST['m_psico_exam_ante03_empresa'];
+        $params_2[':m_psico_exam_ante03_act_emp'] = $_POST['m_psico_exam_ante03_act_emp'];
+        $params_2[':m_psico_exam_ante03_puesto'] = $_POST['m_psico_exam_ante03_puesto'];
+        $params_2[':m_psico_exam_ante03_opera'] = $_POST['m_psico_exam_ante03_opera'];
+        $params_2[':m_psico_exam_ante03_causa'] = $_POST['m_psico_exam_ante03_causa'];
+        $params_2[':m_psico_exam_niv_intelectual'] = $_POST['m_psico_exam_niv_intelectual'];
+        $params_2[':m_psico_exam_co_visomotriz'] = $_POST['m_psico_exam_co_visomotriz'];
+        $params_2[':m_psico_exam_niv_memoria'] = $_POST['m_psico_exam_niv_memoria'];
+        $params_2[':m_psico_exam_persona_desc'] = $_POST['m_psico_exam_persona_desc'];
+        $params_2[':m_psico_exam_afectivi_desc'] = $_POST['m_psico_exam_afectivi_desc'];
+        $params_2[':m_psico_exam_test_maslash'] = $_POST['m_psico_exam_test_maslash'];
+        $params_2[':m_psico_exam_test_intelig'] = $_POST['m_psico_exam_test_intelig'];
+        $params_2[':m_psico_exam_test_fatiga'] = $_POST['m_psico_exam_test_fatiga'];
+        $params_2[':m_psico_exam_test_somnolencia'] = $_POST['m_psico_exam_test_somnolencia'];
+        $params_2[':m_psico_exam_test_ansiedad'] = $_POST['m_psico_exam_test_ansiedad'];
+        $params_2[':m_psico_exam_test_depresion'] = $_POST['m_psico_exam_test_depresion'];
+        $params_2[':m_psico_exam_test_acrofobia'] = $_POST['m_psico_exam_test_acrofobia'];
+        $params_2[':m_psico_exam_test_estres'] = $_POST['m_psico_exam_test_estres'];
+        $params_2[':m_psico_exam_aptitud'] = $_POST['m_psico_exam_aptitud'];
+        $params_2[':m_psico_exam_aptitud_desc'] = $_POST['m_psico_exam_aptitud_desc'];
+        $params_2[':m_psico_exam_medico'] = $_POST['m_psico_exam_medico'];
+
+
         $q_2 = "INSERT INTO mod_psicologia_examen VALUES 
                 (null,
                 :adm,
@@ -585,7 +644,43 @@ class model extends core
                 :m_psico_exam_ptje_test_11,
                 :m_psico_exam_ptje_test_12,
                 :m_psico_exam_ptje_test_13,
-                :m_psico_exam_ptje_test_14);";
+                :m_psico_exam_ptje_test_14,
+                :m_psico_exam_motivo_eva,
+                :m_psico_exam_operacion,
+                :m_psico_exam_ante01_fech_ini,
+                :m_psico_exam_ante01_empresa,
+                :m_psico_exam_ante01_act_emp,
+                :m_psico_exam_ante01_puesto,
+                :m_psico_exam_ante01_opera,
+                :m_psico_exam_ante01_causa,
+                :m_psico_exam_ante02_fech_ini,
+                :m_psico_exam_ante02_empresa,
+                :m_psico_exam_ante02_act_emp,
+                :m_psico_exam_ante02_puesto,
+                :m_psico_exam_ante02_opera,
+                :m_psico_exam_ante02_causa,
+                :m_psico_exam_ante03_fech_ini,
+                :m_psico_exam_ante03_empresa,
+                :m_psico_exam_ante03_act_emp,
+                :m_psico_exam_ante03_puesto,
+                :m_psico_exam_ante03_opera,
+                :m_psico_exam_ante03_causa,
+                :m_psico_exam_niv_intelectual,
+                :m_psico_exam_co_visomotriz,
+                :m_psico_exam_niv_memoria,
+                :m_psico_exam_persona_desc,
+                :m_psico_exam_afectivi_desc,
+                :m_psico_exam_test_maslash,
+                :m_psico_exam_test_intelig,
+                :m_psico_exam_test_fatiga,
+                :m_psico_exam_test_somnolencia,
+                :m_psico_exam_test_ansiedad,
+                :m_psico_exam_test_depresion,
+                :m_psico_exam_test_acrofobia,
+                :m_psico_exam_test_estres,
+                :m_psico_exam_aptitud,
+                :m_psico_exam_aptitud_desc,
+                :m_psico_exam_medico);";
 
         $verifica = $this->sql("SELECT 
 		m_psicologia_adm, concat(usu_nombres,' ',usu_appat,' ',usu_apmat) usuario 
@@ -679,6 +774,64 @@ class model extends core
         $params_2[':m_psico_exam_ptje_test_13'] = $_POST['m_psico_exam_ptje_test_13'];
         $params_2[':m_psico_exam_ptje_test_14'] = $_POST['m_psico_exam_ptje_test_14'];
 
+        $params_2[':m_psico_exam_motivo_eva'] = $_POST['m_psico_exam_motivo_eva'];
+        $params_2[':m_psico_exam_operacion'] = $_POST['m_psico_exam_operacion'];
+        // $params_2[':m_psico_exam_ante01_fech_ini'] = $_POST['m_psico_exam_ante01_fech_ini'];
+
+        
+        $timestamp1 = strtotime($_POST['m_psico_exam_ante01_fech_ini']);
+        $m_psico_exam_ante01_fech_ini = ((strlen($_POST['m_psico_exam_ante01_empresa']) > 0) ? date('Y-m-d', $timestamp1) : null);
+        $params_2[':m_psico_exam_ante01_fech_ini'] = $m_psico_exam_ante01_fech_ini;
+
+
+        $params_2[':m_psico_exam_ante01_empresa'] = $_POST['m_psico_exam_ante01_empresa'];
+        $params_2[':m_psico_exam_ante01_act_emp'] = $_POST['m_psico_exam_ante01_act_emp'];
+        $params_2[':m_psico_exam_ante01_puesto'] = $_POST['m_psico_exam_ante01_puesto'];
+        $params_2[':m_psico_exam_ante01_opera'] = $_POST['m_psico_exam_ante01_opera'];
+        $params_2[':m_psico_exam_ante01_causa'] = $_POST['m_psico_exam_ante01_causa'];
+        // $params_2[':m_psico_exam_ante02_fech_ini'] = $_POST['m_psico_exam_ante02_fech_ini'];
+
+        
+        $timestamp2 = strtotime($_POST['m_psico_exam_ante02_fech_ini']);
+        $m_psico_exam_ante02_fech_ini = ((strlen($_POST['m_psico_exam_ante02_empresa']) > 0) ? date('Y-m-d', $timestamp2) : null);
+        $params_2[':m_psico_exam_ante02_fech_ini'] = $m_psico_exam_ante02_fech_ini;
+
+
+        $params_2[':m_psico_exam_ante02_empresa'] = $_POST['m_psico_exam_ante02_empresa'];
+        $params_2[':m_psico_exam_ante02_act_emp'] = $_POST['m_psico_exam_ante02_act_emp'];
+        $params_2[':m_psico_exam_ante02_puesto'] = $_POST['m_psico_exam_ante02_puesto'];
+        $params_2[':m_psico_exam_ante02_opera'] = $_POST['m_psico_exam_ante02_opera'];
+        $params_2[':m_psico_exam_ante02_causa'] = $_POST['m_psico_exam_ante02_causa'];
+        // $params_2[':m_psico_exam_ante03_fech_ini'] = $_POST['m_psico_exam_ante03_fech_ini'];
+
+        
+        $timestamp3 = strtotime($_POST['m_psico_exam_ante03_fech_ini']);
+        $m_psico_exam_ante03_fech_ini = ((strlen($_POST['m_psico_exam_ante03_empresa']) > 0) ? date('Y-m-d', $timestamp3) : null);
+        $params_2[':m_psico_exam_ante03_fech_ini'] = $m_psico_exam_ante03_fech_ini;
+
+
+        $params_2[':m_psico_exam_ante03_empresa'] = $_POST['m_psico_exam_ante03_empresa'];
+        $params_2[':m_psico_exam_ante03_act_emp'] = $_POST['m_psico_exam_ante03_act_emp'];
+        $params_2[':m_psico_exam_ante03_puesto'] = $_POST['m_psico_exam_ante03_puesto'];
+        $params_2[':m_psico_exam_ante03_opera'] = $_POST['m_psico_exam_ante03_opera'];
+        $params_2[':m_psico_exam_ante03_causa'] = $_POST['m_psico_exam_ante03_causa'];
+        $params_2[':m_psico_exam_niv_intelectual'] = $_POST['m_psico_exam_niv_intelectual'];
+        $params_2[':m_psico_exam_co_visomotriz'] = $_POST['m_psico_exam_co_visomotriz'];
+        $params_2[':m_psico_exam_niv_memoria'] = $_POST['m_psico_exam_niv_memoria'];
+        $params_2[':m_psico_exam_persona_desc'] = $_POST['m_psico_exam_persona_desc'];
+        $params_2[':m_psico_exam_afectivi_desc'] = $_POST['m_psico_exam_afectivi_desc'];
+        $params_2[':m_psico_exam_test_maslash'] = $_POST['m_psico_exam_test_maslash'];
+        $params_2[':m_psico_exam_test_intelig'] = $_POST['m_psico_exam_test_intelig'];
+        $params_2[':m_psico_exam_test_fatiga'] = $_POST['m_psico_exam_test_fatiga'];
+        $params_2[':m_psico_exam_test_somnolencia'] = $_POST['m_psico_exam_test_somnolencia'];
+        $params_2[':m_psico_exam_test_ansiedad'] = $_POST['m_psico_exam_test_ansiedad'];
+        $params_2[':m_psico_exam_test_depresion'] = $_POST['m_psico_exam_test_depresion'];
+        $params_2[':m_psico_exam_test_acrofobia'] = $_POST['m_psico_exam_test_acrofobia'];
+        $params_2[':m_psico_exam_test_estres'] = $_POST['m_psico_exam_test_estres'];
+        $params_2[':m_psico_exam_aptitud'] = $_POST['m_psico_exam_aptitud'];
+        $params_2[':m_psico_exam_aptitud_desc'] = $_POST['m_psico_exam_aptitud_desc'];
+        $params_2[':m_psico_exam_medico'] = $_POST['m_psico_exam_medico'];
+
         $q_2 = 'Update mod_psicologia_examen set
                     m_psico_exam_activ_empresa=:m_psico_exam_activ_empresa,
                     m_psico_exam_area_trabajo=:m_psico_exam_area_trabajo,
@@ -723,7 +876,43 @@ class model extends core
                     m_psico_exam_ptje_test_11=:m_psico_exam_ptje_test_11,
                     m_psico_exam_ptje_test_12=:m_psico_exam_ptje_test_12,
                     m_psico_exam_ptje_test_13=:m_psico_exam_ptje_test_13,
-                    m_psico_exam_ptje_test_14=:m_psico_exam_ptje_test_14
+                    m_psico_exam_ptje_test_14=:m_psico_exam_ptje_test_14,
+                    m_psico_exam_motivo_eva=:m_psico_exam_motivo_eva,
+                    m_psico_exam_operacion=:m_psico_exam_operacion,
+                    m_psico_exam_ante01_fech_ini=:m_psico_exam_ante01_fech_ini,
+                    m_psico_exam_ante01_empresa=:m_psico_exam_ante01_empresa,
+                    m_psico_exam_ante01_act_emp=:m_psico_exam_ante01_act_emp,
+                    m_psico_exam_ante01_puesto=:m_psico_exam_ante01_puesto,
+                    m_psico_exam_ante01_opera=:m_psico_exam_ante01_opera,
+                    m_psico_exam_ante01_causa=:m_psico_exam_ante01_causa,
+                    m_psico_exam_ante02_fech_ini=:m_psico_exam_ante02_fech_ini,
+                    m_psico_exam_ante02_empresa=:m_psico_exam_ante02_empresa,
+                    m_psico_exam_ante02_act_emp=:m_psico_exam_ante02_act_emp,
+                    m_psico_exam_ante02_puesto=:m_psico_exam_ante02_puesto,
+                    m_psico_exam_ante02_opera=:m_psico_exam_ante02_opera,
+                    m_psico_exam_ante02_causa=:m_psico_exam_ante02_causa,
+                    m_psico_exam_ante03_fech_ini=:m_psico_exam_ante03_fech_ini,
+                    m_psico_exam_ante03_empresa=:m_psico_exam_ante03_empresa,
+                    m_psico_exam_ante03_act_emp=:m_psico_exam_ante03_act_emp,
+                    m_psico_exam_ante03_puesto=:m_psico_exam_ante03_puesto,
+                    m_psico_exam_ante03_opera=:m_psico_exam_ante03_opera,
+                    m_psico_exam_ante03_causa=:m_psico_exam_ante03_causa,
+                    m_psico_exam_niv_intelectual=:m_psico_exam_niv_intelectual,
+                    m_psico_exam_co_visomotriz=:m_psico_exam_co_visomotriz,
+                    m_psico_exam_niv_memoria=:m_psico_exam_niv_memoria,
+                    m_psico_exam_persona_desc=:m_psico_exam_persona_desc,
+                    m_psico_exam_afectivi_desc=:m_psico_exam_afectivi_desc,
+                    m_psico_exam_test_maslash=:m_psico_exam_test_maslash,
+                    m_psico_exam_test_intelig=:m_psico_exam_test_intelig,
+                    m_psico_exam_test_fatiga=:m_psico_exam_test_fatiga,
+                    m_psico_exam_test_somnolencia=:m_psico_exam_test_somnolencia,
+                    m_psico_exam_test_ansiedad=:m_psico_exam_test_ansiedad,
+                    m_psico_exam_test_depresion=:m_psico_exam_test_depresion,
+                    m_psico_exam_test_acrofobia=:m_psico_exam_test_acrofobia,
+                    m_psico_exam_test_estres=:m_psico_exam_test_estres,
+                    m_psico_exam_aptitud=:m_psico_exam_aptitud,
+                    m_psico_exam_aptitud_desc=:m_psico_exam_aptitud_desc,
+                    m_psico_exam_medico=:m_psico_exam_medico
                 where
                 m_psico_exam_adm=:adm;';
 
@@ -1523,9 +1712,19 @@ class model extends core
 
     public function carga_psico_examen_pdf($adm)
     {
-        $query = "SELECT * FROM mod_psicologia_examen
+        $query = "SELECT *
+            ,Date_format(m_psico_exam_ante01_fech_ini,'%m-%Y') m_psico_exam_ante01_fech_ini
+            ,Date_format(m_psico_exam_ante02_fech_ini,'%m-%Y') m_psico_exam_ante02_fech_ini
+            ,Date_format(m_psico_exam_ante03_fech_ini,'%m-%Y') m_psico_exam_ante03_fech_ini
+            FROM mod_psicologia_examen
             where m_psico_exam_adm='$adm';";
         return $this->sql($query);
+    }
+
+    public function recomendaciones($adm)
+    {
+        $q = "SELECT upper(m_psico_recom_desc) m_psico_recom_desc, m_psico_recom_plazo FROM mod_psicologia_recomenda where m_psico_recom_adm=$adm";
+        return $this->sql($q);
     }
 
     public function carga_psicologia_altura_pdf($adm)
@@ -1562,6 +1761,112 @@ class model extends core
                 m_med_manejo_test_reactimetro as reactimetro
                 FROM mod_medicina_manejo where m_med_manejo_adm =$adm";
         return $this->sql($q);
+    }
+
+    public function load_medico()
+    {
+        $sede = $this->user->con_sedid;
+        return $this->sql("SELECT medico_id, concat(medico_apepat,' ',medico_apemat,', ',medico_nombre)as nombre
+        FROM medico
+        where medico_sede=$sede and medico_st=1 and medico_auditor='NO' AND medico_tipo = 'PSICOLOGIA';");
+    }
+
+    public function llena_psicologia()
+    {
+        $adm = $_POST['adm'];
+        $st = $_POST['st'];
+        $usuario = $this->user->us_id;
+        $medico = "";
+        if ($st < '1') {
+            $medico = ",(SELECT medico_id FROM medico where medico_usu='$usuario' AND medico_tipo = 'PSICOLOGIA') m_psico_exam_medico";
+        }
+        $query = "SELECT
+            adm_id
+            $medico
+            FROM admision
+            where adm_id=$adm
+            group by adm_id order by adm_id;";
+        $q = $this->sql($query);
+        return array('success' => true, 'data' => $q->data[0]);
+    }
+
+    //mod_psicologia_recomenda
+    public function list_recom()
+    {
+        $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
+        $start = isset($_POST['start']) ? $_POST['start'] : 0;
+        $adm = $_POST['adm'];
+        $q = "SELECT m_psico_recom_id, m_psico_recom_adm, m_psico_recom_desc, m_psico_recom_plazo
+                FROM mod_psicologia_recomenda
+                where m_psico_recom_adm=$adm;";
+        $sql = $this->sql($q);
+        $sql->data = array_slice($sql->data, $start, $limit);
+        return $sql;
+    }
+
+    public function st_busca_recom()
+    {
+        $query = isset($_POST['query']) ? $_POST['query'] : NULL;
+        $sql = $this->sql("SELECT m_psico_recom_desc FROM mod_psicologia_recomenda
+                            where
+                            m_psico_recom_desc like '%$query%'
+                            group by m_psico_recom_desc");
+        return $sql;
+    }
+
+    public function save_recom()
+    {
+        $params = array();
+        $params[':m_psico_recom_adm'] = $_POST['m_psico_recom_adm'];
+        $params[':m_psico_recom_desc'] = $_POST['m_psico_recom_desc'];
+        $params[':m_psico_recom_plazo'] = $_POST['m_psico_recom_plazo'];
+
+        $q = 'INSERT INTO mod_psicologia_recomenda VALUES 
+                (NULL,
+                :m_psico_recom_adm,
+                UPPER(:m_psico_recom_desc),
+                :m_psico_recom_plazo)';
+        return $this->sql($q, $params);
+    }
+
+    public function update_recom()
+    {
+        $params = array();
+        $params[':m_psico_recom_id'] = $_POST['m_psico_recom_id'];
+        $params[':m_psico_recom_adm'] = $_POST['m_psico_recom_adm'];
+        $params[':m_psico_recom_desc'] = $_POST['m_psico_recom_desc'];
+        $params[':m_psico_recom_plazo'] = $_POST['m_psico_recom_plazo'];
+
+        $this->begin();
+        $q = 'Update mod_psicologia_recomenda set
+                m_psico_recom_desc=UPPER(:m_psico_recom_desc),
+				m_psico_recom_plazo=:m_psico_recom_plazo
+                where
+                m_psico_recom_id=:m_psico_recom_id and m_psico_recom_adm=:m_psico_recom_adm;';
+        $sql1 = $this->sql($q, $params);
+
+        if ($sql1->success) {
+            $m_psico_recom_id = $_POST['m_psico_recom_id'];
+            $this->commit();
+            return array('success' => true, 'data' => $m_psico_recom_id);
+        } else {
+            $this->rollback();
+            return array('success' => false);
+        }
+    }
+
+    public function load_recom()
+    {
+        $m_psico_recom_adm = $_POST['m_psico_recom_adm'];
+        $m_psico_recom_id = $_POST['m_psico_recom_id'];
+        $query = "SELECT
+            m_psico_recom_id, m_psico_recom_adm, m_psico_recom_desc, m_psico_recom_plazo
+            FROM mod_psicologia_recomenda
+            where
+            m_psico_recom_id=$m_psico_recom_id and
+            m_psico_recom_adm=$m_psico_recom_adm;";
+        $q = $this->sql($query);
+        return array('success' => true, 'data' => $q->data[0]);
     }
 }
 

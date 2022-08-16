@@ -324,6 +324,7 @@ mod.psicologia.formatos = {
 					} else if (record.get("ex_id") == 7) {
 						//examen psicologia
 						mod.psicologia.examen_psicologia.init(record);
+						mod.psicologia.examen_psicologia.llena_psicologia(record.get("adm"));
 					} else if (record.get("ex_id") == 59) {
 						//examen ALTURA
 						mod.psicologia.psicologia_altura.init(record);
@@ -1825,10 +1826,28 @@ mod.psicologia.examen_psicologia = {
 		this.record = r;
 		this.crea_stores();
 		this.crea_controles();
+		this.load_medico.load();
+		this.list_recom.load();
 		if (this.record.get("st") >= 1) {
 			this.cargar_data();
 		}
 		this.win.show();
+	},
+	llena_psicologia: function (adm) {
+		this.frm.getForm().load({
+			waitMsg: "Recuperando Informacion...",
+			waitTitle: "Espere",
+			params: {
+				acction: "llena_psicologia",
+				format: "json",
+				adm: adm,
+				st: this.record.get("st"),
+			},
+			scope: this,
+			success: function (frm, action) {
+				r = action.result.data;
+			},
+		});
 	},
 	cargar_data: function () {
 		this.frm.getForm().load({
@@ -1848,7 +1867,32 @@ mod.psicologia.examen_psicologia = {
 			},
 		});
 	},
-	crea_stores: function () {},
+	crea_stores: function () {
+		this.load_medico = new Ext.data.JsonStore({
+			remoteSort: true,
+			url: "<[controller]>",
+			baseParams: { acction: "load_medico", format: "json" },
+			root: "data",
+			totalProperty: "total",
+			fields: ["medico_id", "nombre"],
+		});
+		
+		this.list_recom = new Ext.data.JsonStore({
+			url: "<[controller]>",
+			baseParams: {
+				acction: "list_recom",
+				format: "json",
+			},
+			root: "data",
+			totalProperty: "total",
+			fields: ["m_psico_recom_id", "m_psico_recom_adm", "m_psico_recom_desc", "m_psico_recom_plazo"],
+			listeners: {
+				beforeload: function (store, options) {
+					this.baseParams.adm = mod.psicologia.examen_psicologia.record.get("adm");
+				},
+			},
+		});
+	},
 	crea_controles: function () {
 		this.empresa = new Ext.form.TextField({
 			fieldLabel: "<b>EMPRESA</b>",
@@ -1884,7 +1928,7 @@ mod.psicologia.examen_psicologia = {
 		this.m_psico_exam_princ_riesgos = new Ext.form.TextField({
 			fieldLabel: "<b>PRINCIPALES RIESGOS</b>",
 			name: "m_psico_exam_princ_riesgos",
-			value: "Accidentes en zonas de trabajo",
+			value: "Accidentes e incidentes en el ambito laboral",
 			anchor: "95%",
 		});
 		//        this.m_psico_exam_princ_riesgos = new Ext.form.TextArea({
@@ -1898,13 +1942,14 @@ mod.psicologia.examen_psicologia = {
 		this.m_psico_exam_medi_seguridad = new Ext.form.TextField({
 			fieldLabel: "<b>MEDIDAS DE SEGURIDAD</b>",
 			name: "m_psico_exam_medi_seguridad",
-			value: "Reglamento, charlas y equipos de seguridad.",
+			value: "Reglamento interno, charlas y equipos de seguridad.",
 			anchor: "95%",
 		});
 		//m_psico_exam_histo_familiar
 		this.m_psico_exam_histo_familiar = new Ext.form.TextArea({
 			name: "m_psico_exam_histo_familiar",
 			fieldLabel: "<b>HISTORIA FAMILIAR</b>",
+			value: "No refiere antecedentes familiares significativos.",
 			anchor: "99%",
 			height: 70,
 		});
@@ -1914,7 +1959,7 @@ mod.psicologia.examen_psicologia = {
 			fieldLabel:
 				"<b>ACIDENTES Y ENFERMEDADES(DURANTE EL TIEMPO DEL TRABAJO)</b>",
 			anchor: "99%",
-			value: "NINGUNA",
+			value: "Paciente niega haber tenido enfermedades o accidentes durante el tiempo de trabajo.",
 			height: 70,
 		});
 		//m_psico_exam_habitos
@@ -2300,7 +2345,7 @@ mod.psicologia.examen_psicologia = {
 			name: "m_psico_exam_area_cognitiva",
 			fieldLabel: "<b>ÁREA COGNITIVA</b>",
 			anchor: "99%",
-			value: "Buena",
+			value: "Sus funciónes cognitivas se encuentran conservadas y sin alteraciones, muestra actitudes organizativas, no presenta transtornos perceptivos de juicio, pensamientos, memoria ni atencion.",
 			height: 70,
 		});
 		//m_psico_exam_area_emocional
@@ -2308,7 +2353,7 @@ mod.psicologia.examen_psicologia = {
 			name: "m_psico_exam_area_emocional",
 			fieldLabel: "<b>ÁREA EMOCIONAL</b>",
 			anchor: "99%",
-			value: "Estable",
+			value: "No presenta trastornos emocionales criticos, muestra equilibrio emocional.",
 			height: 70,
 		});
 		//m_psico_exam_ptje_test_01
@@ -2395,6 +2440,580 @@ mod.psicologia.examen_psicologia = {
 			fieldLabel: "<b>ESCALA DE MEMORIA DE WECHSLER</b>",
 			anchor: "95%",
 		});
+
+		//m_psico_exam_motivo_eva
+		this.m_psico_exam_motivo_eva = new Ext.form.TextArea({
+			name: "m_psico_exam_motivo_eva",
+			fieldLabel: "<b>MOTIVO DE EVALUACION</b>",
+			anchor: "99%",
+			value: "EVALUACIÓN PSICOLÓGICA PRE-OCUPACIONAL",
+			height: 70,
+		});
+		//m_psico_exam_operacion
+		this.m_psico_exam_operacion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["SUPERFICIE", "SUPERFICIE"],
+					["CONCENTRADORA", "CONCENTRADORA"],
+					["SUBSUELO", "SUBSUELO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_exam_operacion",
+			fieldLabel: "<b>TIPO DE OPERACION</b>",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			selectOnFocus: true,
+			anchor: "95%",
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("SUPERFICIE");
+					descripcion.setRawValue("SUPERFICIE");
+				},
+			},
+		});
+		//m_psico_exam_ante01_fech_ini
+		this.m_psico_exam_ante01_fech_ini = new Ext.form.DateField({
+			name: "m_psico_exam_ante01_fech_ini",
+			fieldLabel: "<b>FECHA INICIO</b>",
+			// allowBlank: false,
+			// disabled: true,
+			anchor: "90%",
+			format: "d-m-Y",
+			emptyText: "Dia-Mes-Año",
+		});
+		//m_psico_exam_ante01_empresa
+		this.m_psico_exam_ante01_empresa = new Ext.form.TextField({
+			name: "m_psico_exam_ante01_empresa",
+			fieldLabel: "<b>NOMBRE DE LA EMPRESA</b>",
+			anchor: "95%",
+		});
+		//m_psico_exam_ante01_act_emp
+		this.m_psico_exam_ante01_act_emp = new Ext.form.TextField({
+			name: "m_psico_exam_ante01_act_emp",
+			fieldLabel: "<b>ACT. DE LA EMPRESA</b>",
+			anchor: "95%",
+		});
+		//m_psico_exam_ante01_puesto
+		this.m_psico_exam_ante01_puesto = new Ext.form.TextField({
+			name: "m_psico_exam_ante01_puesto",
+			fieldLabel: "<b>PUESTO</b>",
+			anchor: "95%",
+		});
+		//m_psico_exam_ante01_opera
+		this.m_psico_exam_ante01_opera = new Ext.form.RadioGroup({
+			fieldLabel: "<b>TIPO DE OPERACION</b>",
+			itemCls: "x-check-group-alt",
+			columns: 2,
+			items: [
+				{
+					boxLabel: "SUPERFICIE",
+					name: "m_psico_exam_ante01_opera",
+					inputValue: "SUPERFICIE",
+					// checked: true,
+				},
+				{
+					boxLabel: "SUBSUELO",
+					name: "m_psico_exam_ante01_opera",
+					inputValue: "SUBSUELO",
+				},
+			],
+		});
+		//m_psico_exam_ante01_causa
+		this.m_psico_exam_ante01_causa = new Ext.form.TextField({
+			name: "m_psico_exam_ante01_causa",
+			fieldLabel: "<b>CAUSA DE RETIRO</b>",
+			anchor: "95%",
+		});
+		//m_psico_exam_ante02_fech_ini
+		this.m_psico_exam_ante02_fech_ini = new Ext.form.DateField({
+			name: "m_psico_exam_ante02_fech_ini",
+			fieldLabel: "<b>FECHA INICIO</b>",
+			// allowBlank: false,
+			// disabled: true,
+			anchor: "90%",
+			format: "d-m-Y",
+			emptyText: "Dia-Mes-Año",
+		});
+		//m_psico_exam_ante02_empresa
+		this.m_psico_exam_ante02_empresa = new Ext.form.TextField({
+			name: "m_psico_exam_ante02_empresa",
+			fieldLabel: "<b>NOMBRE DE LA EMPRESA</b>",
+			anchor: "95%",
+		});
+		//m_psico_exam_ante02_act_emp
+		this.m_psico_exam_ante02_act_emp = new Ext.form.TextField({
+			name: "m_psico_exam_ante02_act_emp",
+			fieldLabel: "<b>ACT. DE LA EMPRESA</b>",
+			anchor: "95%",
+		});
+		//m_psico_exam_ante02_puesto
+		this.m_psico_exam_ante02_puesto = new Ext.form.TextField({
+			name: "m_psico_exam_ante02_puesto",
+			fieldLabel: "<b>PUESTO</b>",
+			anchor: "95%",
+		});
+		//m_psico_exam_ante02_opera
+		this.m_psico_exam_ante02_opera = new Ext.form.RadioGroup({
+			fieldLabel: "<b>TIPO DE OPERACION</b>",
+			itemCls: "x-check-group-alt",
+			columns: 2,
+			items: [
+				{
+					boxLabel: "SUPERFICIE",
+					name: "m_psico_exam_ante02_opera",
+					inputValue: "SUPERFICIE",
+					// checked: true,
+				},
+				{
+					boxLabel: "SUBSUELO",
+					name: "m_psico_exam_ante02_opera",
+					inputValue: "SUBSUELO",
+				},
+			],
+		});
+		//m_psico_exam_ante02_causa
+		this.m_psico_exam_ante02_causa = new Ext.form.TextField({
+			name: "m_psico_exam_ante02_causa",
+			fieldLabel: "<b>CAUSA DE RETIRO</b>",
+			anchor: "95%",
+		});
+		//m_psico_exam_ante03_fech_ini
+		this.m_psico_exam_ante03_fech_ini = new Ext.form.DateField({
+			name: "m_psico_exam_ante03_fech_ini",
+			fieldLabel: "<b>FECHA INICIO</b>",
+			// allowBlank: false,
+			// disabled: true,
+			anchor: "90%",
+			format: "d-m-Y",
+			emptyText: "Dia-Mes-Año",
+		});
+		//m_psico_exam_ante03_empresa
+		this.m_psico_exam_ante03_empresa = new Ext.form.TextField({
+			name: "m_psico_exam_ante03_empresa",
+			fieldLabel: "<b>NOMBRE DE LA EMPRESA</b>",
+			anchor: "95%",
+		});
+		//m_psico_exam_ante03_act_emp
+		this.m_psico_exam_ante03_act_emp = new Ext.form.TextField({
+			name: "m_psico_exam_ante03_act_emp",
+			fieldLabel: "<b>ACT. DE LA EMPRESA</b>",
+			anchor: "95%",
+		});
+		//m_psico_exam_ante03_puesto
+		this.m_psico_exam_ante03_puesto = new Ext.form.TextField({
+			name: "m_psico_exam_ante03_puesto",
+			fieldLabel: "<b>PUESTO</b>",
+			anchor: "95%",
+		});
+		//m_psico_exam_ante03_opera
+		this.m_psico_exam_ante03_opera = new Ext.form.RadioGroup({
+			fieldLabel: "<b>TIPO DE OPERACION</b>",
+			itemCls: "x-check-group-alt",
+			columns: 2,
+			items: [
+				{
+					boxLabel: "SUPERFICIE",
+					name: "m_psico_exam_ante03_opera",
+					inputValue: "SUPERFICIE",
+					// checked: true,
+				},
+				{
+					boxLabel: "SUBSUELO",
+					name: "m_psico_exam_ante03_opera",
+					inputValue: "SUBSUELO",
+				},
+			],
+		});
+		//m_psico_exam_ante03_causa
+		this.m_psico_exam_ante03_causa = new Ext.form.TextField({
+			name: "m_psico_exam_ante03_causa",
+			fieldLabel: "<b>CAUSA DE RETIRO</b>",
+			anchor: "95%",
+		});
+		//m_psico_exam_niv_intelectual
+		this.m_psico_exam_niv_intelectual = new Ext.form.TextArea({
+			name: "m_psico_exam_niv_intelectual",
+			fieldLabel: "<b>NIVEL INTELECTUAL</b>",
+			anchor: "99%",
+			value: "PROMEDIO",
+			height: 70,
+		});
+		//m_psico_exam_co_visomotriz
+		this.m_psico_exam_co_visomotriz = new Ext.form.TextArea({
+			name: "m_psico_exam_co_visomotriz",
+			fieldLabel: "<b>COORDINACION VISOMOTRIZ</b>",
+			anchor: "99%",
+			value: "ADECUADO",
+			height: 70,
+		});
+		//m_psico_exam_niv_memoria
+		this.m_psico_exam_niv_memoria = new Ext.form.TextArea({
+			name: "m_psico_exam_niv_memoria",
+			fieldLabel: "<b>NIVEL DE MEMORIA</b>",
+			anchor: "99%",
+			value: "CORTO PLAZO, MEDIANO PLAZO, LARGO PLAZO",
+			height: 70,
+		});
+		//m_psico_exam_persona_desc
+		this.m_psico_exam_persona_desc = new Ext.form.TextArea({
+			name: "m_psico_exam_persona_desc",
+			fieldLabel: "<b>PERSONALIDAD</b>",
+			anchor: "99%",
+			value:
+				"RASGOS DE PERSONALIDAD QUE LE PERMITEN UN ADECUADO DESEMPEÑO LABORAL",
+			height: 70,
+		});
+		//m_psico_exam_afectivi_desc
+		this.m_psico_exam_afectivi_desc = new Ext.form.TextArea({
+			name: "m_psico_exam_afectivi_desc",
+			fieldLabel: "<b>AFECTIVIDAD</b>",
+			anchor: "99%",
+			value: "EXPRESIVO",
+			height: 70,
+		});
+		//m_psico_exam_test_maslash
+		this.m_psico_exam_test_maslash = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["ALTO", "ALTO"],
+					["MODERADO", "MODERADO"],
+					["BAJO", "BAJO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_exam_test_maslash",
+			fieldLabel: "<b>TEST DE MASLASCH</b>",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			selectOnFocus: true,
+			anchor: "90%",
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		//m_psico_exam_test_intelig
+		this.m_psico_exam_test_intelig = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["ALTO", "ALTO"],
+					["MODERADO", "MODERADO"],
+					["BAJO", "BAJO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_exam_test_intelig",
+			fieldLabel: "<b>TEST DE INTELIGENCIA</b>",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			selectOnFocus: true,
+			anchor: "90%",
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		//m_psico_exam_test_fatiga
+		this.m_psico_exam_test_fatiga = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["ALTO", "ALTO"],
+					["MODERADO", "MODERADO"],
+					["BAJO", "BAJO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_exam_test_fatiga",
+			fieldLabel: "<b>TEST DE FATIGA</b>",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			selectOnFocus: true,
+			anchor: "90%",
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		//m_psico_exam_test_somnolencia
+		this.m_psico_exam_test_somnolencia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["ALTO", "ALTO"],
+					["MODERADO", "MODERADO"],
+					["BAJO", "BAJO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_exam_test_somnolencia",
+			fieldLabel: "<b>TEST DE SOMNOLENCIA</b>",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			selectOnFocus: true,
+			anchor: "90%",
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		//m_psico_exam_test_ansiedad
+		this.m_psico_exam_test_ansiedad = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["ALTO", "ALTO"],
+					["MODERADO", "MODERADO"],
+					["BAJO", "BAJO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_exam_test_ansiedad",
+			fieldLabel: "<b>TEST DE ANCIEDAD</b>",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			selectOnFocus: true,
+			anchor: "90%",
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		//m_psico_exam_test_depresion
+		this.m_psico_exam_test_depresion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["ALTO", "ALTO"],
+					["MODERADO", "MODERADO"],
+					["BAJO", "BAJO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_exam_test_depresion",
+			fieldLabel: "<b>TEST DE DEPRESIÓN</b>",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			selectOnFocus: true,
+			anchor: "90%",
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		//m_psico_exam_test_acrofobia
+		this.m_psico_exam_test_acrofobia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["ALTO", "ALTO"],
+					["MODERADO", "MODERADO"],
+					["BAJO", "BAJO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_exam_test_acrofobia",
+			fieldLabel: "<b>TEST DE ACROFOBIA</b>",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			selectOnFocus: true,
+			anchor: "90%",
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		//m_psico_exam_test_estres
+		this.m_psico_exam_test_estres = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["ALTO", "ALTO"],
+					["MODERADO", "MODERADO"],
+					["BAJO", "BAJO"],
+					["-", "-"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_exam_test_estres",
+			fieldLabel: "<b>TEST DE ESTRES</b>",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			selectOnFocus: true,
+			anchor: "90%",
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+		//m_psico_exam_aptitud
+		this.m_psico_exam_aptitud = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["APTO", "APTO"],
+					["NO APTO", "NO APTO"],
+					["OBSERVADO", "BAJO"],
+					["APTO CON RESTRICCIONES", "APTO CON RESTRICCIONES"],
+					["EVALUADO", "EVALUADO"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "m_psico_exam_aptitud",
+			fieldLabel: "<b>APTITUD</b>",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			selectOnFocus: true,
+			anchor: "90%",
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("APTO");
+					descripcion.setRawValue("APTO");
+				},
+			},
+		});
+		//m_psico_exam_aptitud_desc
+		this.m_psico_exam_aptitud_desc = new Ext.form.TextArea({
+			name: "m_psico_exam_aptitud_desc",
+			fieldLabel: "<b>APTITUD PSICOLOGICA</b>",
+			anchor: "99%",
+			value: "APTO PSICOLOGICAMENTE PARA EL PUESTO",
+			height: 70,
+		});
+		//m_psico_exam_medico
+		this.m_psico_exam_medico = new Ext.form.ComboBox({
+			typeAhead: true,
+			triggerAction: "all",
+			lazyRender: true,
+			allowBlank: false,
+			mode: "local",
+			store: this.load_medico,
+			forceSelection: true,
+			hiddenName: "m_psico_exam_medico",
+			fieldLabel: "<b>MÉDICO EVALUADOR</b>",
+			name: "m_psico_exam_medico",
+			valueField: "medico_id",
+			displayField: "nombre",
+			anchor: "90%",
+		});
+		
+
+		//RECOMENDACIONES E INDICACIONES
+		this.tbar5 = new Ext.Toolbar({
+			items: [
+				'<b style="color:#000000;">RECOMENDACIONES E INDICACIONES</b>',
+				"-",
+				"->",
+				{
+					text: "Nuevo",
+					iconCls: "nuevo",
+					handler: function () {
+						mod.psicologia.recomendaciones.init(null);
+					},
+				},
+			],
+		});
+		this.dt_grid5 = new Ext.grid.GridPanel({
+			store: this.list_recom,
+			region: "west",
+			border: true,
+			tbar: this.tbar5,
+			loadMask: true,
+			iconCls: "icon-grid",
+			plugins: new Ext.ux.PanelResizer({
+				minHeight: 100,
+			}),
+			height: 260,
+			listeners: {
+				rowdblclick: function (grid, rowIndex, e) {
+					e.stopEvent();
+					var rec = grid.getStore().getAt(rowIndex);
+					mod.psicologia.recomendaciones.init(rec);
+				},
+			},
+			autoExpandColumn: "diag",
+			columns: [
+				new Ext.grid.RowNumberer(),
+				{
+					id: "diag",
+					header: "RECOMENDACIONES E INDICACIONES",
+					dataIndex: "m_psico_recom_desc",
+				},
+				{
+					header: "PLAZO",
+					width: 100,
+					dataIndex: "m_psico_recom_plazo",
+				},
+			],
+		});
 		this.frm = new Ext.FormPanel({
 			region: "center",
 			url: "<[controller]>",
@@ -2417,6 +3036,14 @@ mod.psicologia.examen_psicologia = {
 					bodyStyle: "padding:10px 10px 20px 10px;",
 					labelWidth: 60,
 					items: [
+						{
+							columnWidth: 1,
+							border: false,
+							layout: "form",
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							labelAlign: "top",
+							items: [this.m_psico_exam_motivo_eva],
+						},
 						{
 							xtype: "panel",
 							border: false,
@@ -2452,7 +3079,180 @@ mod.psicologia.examen_psicologia = {
 												this.m_psico_exam_activ_empresa,
 												this.m_psico_exam_princ_riesgos,
 												this.m_psico_exam_medi_seguridad,
+												this.m_psico_exam_operacion,
 											],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.33,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "ANTECEDENTE 01:",
+									items: [
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante01_fech_ini],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante01_empresa],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante01_act_emp],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante01_puesto],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante01_opera],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante01_causa],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.33,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "ANTECEDENTE 02:",
+									items: [
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante02_fech_ini],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante02_empresa],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante02_act_emp],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante02_puesto],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante02_opera],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante02_causa],
+										},
+									],
+								},
+							],
+						},
+
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.33,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "ANTECEDENTE 03:",
+									items: [
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante03_fech_ini],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante03_empresa],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante03_act_emp],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante03_puesto],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante03_opera],
+										},
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_ante03_causa],
 										},
 									],
 								},
@@ -2692,20 +3492,213 @@ mod.psicologia.examen_psicologia = {
 							],
 						},
 						{
-							columnWidth: 0.5,
+							xtype: "panel",
 							border: false,
-							layout: "form",
+							columnWidth: 1,
 							bodyStyle: "padding:2px 22px 0px 5px;",
-							labelAlign: "top",
-							items: [this.m_psico_exam_area_cognitiva],
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "EXAMEN DIAGNOSTICO FINAL:",
+									items: [
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_area_cognitiva],
+										},
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_area_emocional],
+										},
+									],
+								},
+							],
 						},
 						{
-							columnWidth: 0.5,
+							xtype: "panel",
 							border: false,
-							layout: "form",
+							columnWidth: 1,
 							bodyStyle: "padding:2px 22px 0px 5px;",
-							labelAlign: "top",
-							items: [this.m_psico_exam_area_emocional],
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "RESULTADOS DE LA EVALUACION:",
+									items: [
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_niv_intelectual],
+										},
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_co_visomotriz],
+										},
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_niv_memoria],
+										},
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_persona_desc],
+										},
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_afectivi_desc],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "TESTS:",
+									items: [
+										{
+											columnWidth: 0.25,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_test_maslash],
+										},
+										{
+											columnWidth: 0.25,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_test_intelig],
+										},
+										{
+											columnWidth: 0.25,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_test_fatiga],
+										},
+										{
+											columnWidth: 0.25,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_test_somnolencia],
+										},
+										{
+											columnWidth: 0.25,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_test_ansiedad],
+										},
+										{
+											columnWidth: 0.25,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_test_depresion],
+										},
+										{
+											columnWidth: 0.25,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_test_acrofobia],
+										},
+										{
+											columnWidth: 0.25,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_test_estres],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "APTITUD PSICOLOGICA Y MEDICO EVALUADOR:",
+									items: [
+										{
+											columnWidth: 0.33,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_aptitud_desc],
+										},
+										{
+											columnWidth: 0.33,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_aptitud],
+										},
+										{
+											columnWidth: 0.33,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_psico_exam_medico],
+										},
+									],
+								},
+							],
+						},
+						
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "",
+									items: [
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.dt_grid5],
+										},
+									],
+								},
+							],
 						},
 					],
 				},
@@ -5914,7 +6907,7 @@ mod.psicologia.psico_confinados = {
 			},
 		});
 		// m_psico_confinados_formato
-		
+
 		this.m_psico_confinados_formato = new Ext.form.ComboBox({
 			store: new Ext.data.ArrayStore({
 				fields: ["campo", "descripcion"],
@@ -6551,6 +7544,195 @@ mod.psicologia.confinados_conclu = {
 			height: 140,
 			modal: true,
 			title: "REGISTRO DE RECOMENDACIONES Y CONCLUSIONES",
+			border: false,
+			maximizable: true,
+			resizable: false,
+			draggable: true,
+			closable: true,
+			layout: "border",
+			items: [this.frm],
+		});
+	},
+};
+
+
+mod.psicologia.recomendaciones = {
+	rec: null,
+	win: null,
+	frm: null,
+	m_psico_recom_desc: null,
+	m_psico_recom_plazo: null,
+	init: function (r) {
+		this.rec = r;
+		this.crea_stores();
+		this.st_busca_recom.load();
+		this.crea_controles();
+		if (this.rec !== null) {
+			this.cargar_data();
+		}
+		this.win.show();
+	},
+	cargar_data: function () {
+		this.frm.getForm().load({
+			waitMsg: "Recuperando Informacion...",
+			waitTitle: "Espere",
+			params: {
+				acction: "load_recom",
+				format: "json",
+				m_psico_recom_id: this.rec.get("m_psico_recom_id"),
+				m_psico_recom_adm: this.rec.get("m_psico_recom_adm"),
+			},
+			scope: this,
+			success: function (frm, action) {
+				r = action.result.data;
+			},
+		});
+	},
+	crea_stores: function () {
+		this.st_busca_recom = new Ext.data.JsonStore({
+			url: "<[controller]>",
+			baseParams: {
+				acction: "st_busca_recom",
+				format: "json",
+			},
+			fields: ["m_psico_recom_desc"],
+			root: "data",
+		});
+	},
+	crea_controles: function () {
+		this.cie10Tpl = new Ext.XTemplate(
+			'<tpl for="."><div class="search-item">',
+			'<div class="div-table-col">',
+			"<h3><b>{cie4_desc}</b></h3>",
+			"</div>",
+			"</div></tpl>"
+		);
+		this.m_psico_recom_plazo = new Ext.form.RadioGroup({
+			fieldLabel: "<b>PLAZO</b>",
+			itemCls: "x-check-group-alt",
+			columns: 4,
+			items: [
+				{
+					boxLabel: "NINGUNO(-)",
+					name: "m_psico_recom_plazo",
+					inputValue: "-",
+					checked: true,
+				},
+				{ boxLabel: "INMEDIATO", name: "m_psico_recom_plazo", inputValue: "INMEDIATO" },
+				{ boxLabel: "03 MESES", name: "m_psico_recom_plazo", inputValue: "03 MESES" },
+				{ boxLabel: "06 MESES", name: "m_psico_recom_plazo", inputValue: "06 MESES" },
+			],
+		});
+		this.m_psico_recom_desc = new Ext.form.ComboBox({
+			store: this.st_busca_recom,
+			hiddenName: "m_psico_recom_desc",
+			displayField: "m_psico_recom_desc",
+			//            disabled: true,
+			valueField: "m_psico_recom_desc",
+			minChars: 1,
+			validateOnBlur: true,
+			forceSelection: false,
+			autoSelect: false,
+			allowBlank: false,
+			enableKeyEvents: true,
+			selectOnFocus: false,
+			fieldLabel: "<b>RECOMENDACIONES</b>",
+			typeAhead: false,
+			hideTrigger: true,
+			triggerAction: "all",
+			mode: "local",
+			anchor: "95%",
+		});
+		this.frm = new Ext.FormPanel({
+			region: "center",
+			url: "<[controller]>",
+			monitorValid: true,
+			frame: true,
+			layout: "column",
+			bodyStyle: "padding:10px;",
+			labelWidth: 99,
+			items: [
+				{
+					columnWidth: 0.999,
+					border: false,
+					labelAlign: "top",
+					layout: "form",
+					items: [this.m_psico_recom_desc],
+				},
+				{
+					columnWidth: 0.999,
+					border: false,
+					labelAlign: "top",
+					layout: "form",
+					items: [this.m_psico_recom_plazo],
+				},
+			],
+			buttons: [
+				{
+					text: "Guardar",
+					iconCls: "guardar",
+					formBind: true,
+					scope: this,
+					handler: function () {
+						mod.psicologia.recomendaciones.win.el.mask(
+							"Guardando…",
+							"x-mask-loading"
+						);
+						var metodo;
+						var m_psico_recom_id;
+						if (this.rec !== null) {
+							metodo = "update";
+							m_psico_recom_id = mod.psicologia.recomendaciones.rec.get("m_psico_recom_id");
+						} else {
+							metodo = "save";
+							m_psico_recom_id = "1";
+						}
+
+						this.frm.getForm().submit({
+							params: {
+								acction: metodo + "_recom",
+								m_psico_recom_adm: mod.psicologia.examen_psicologia.record.get("adm"),
+								m_psico_recom_id: m_psico_recom_id,
+							},
+							success: function (form, action) {
+								obj = Ext.util.JSON.decode(action.response.responseText);
+								//                                Ext.MessageBox.alert('En hora buena', 'El paciente se registro correctamente');
+								mod.psicologia.recomendaciones.win.el.unmask();
+								mod.psicologia.examen_psicologia.list_recom.reload();
+								mod.psicologia.recomendaciones.win.close();
+							},
+							failure: function (form, action) {
+								mod.psicologia.recomendaciones.win.el.unmask();
+								switch (action.failureType) {
+									case Ext.form.Action.CLIENT_INVALID:
+										Ext.Msg.alert("Failure", "Existen valores Invalidos");
+										break;
+									case Ext.form.Action.CONNECT_FAILURE:
+										Ext.Msg.alert(
+											"Failure",
+											"Error de comunicacion con servidor"
+										);
+										break;
+									case Ext.form.Action.SERVER_INVALID:
+										Ext.Msg.alert("Failure mik", action.result.error);
+										break;
+									default:
+										Ext.Msg.alert("Failure", action.result.error);
+								}
+								mod.psicologia.examen_psicologia.list_recom.reload();
+								mod.psicologia.recomendaciones.win.close();
+							},
+						});
+					},
+				},
+			],
+		});
+
+		this.win = new Ext.Window({
+			width: 1000,
+			height: 180,
+			modal: true,
+			title: "REGISTRO DE RECOMENDACIONES",
 			border: false,
 			maximizable: true,
 			resizable: false,

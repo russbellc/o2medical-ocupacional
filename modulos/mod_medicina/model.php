@@ -4576,7 +4576,7 @@ class model extends core
         $sede = $this->user->con_sedid;
         return $this->sql("SELECT medico_id, concat(medico_apepat,' ',medico_apemat,', ',medico_nombre)as nombre
         FROM medico
-        where medico_sede=$sede and medico_st=1 and medico_auditor='NO';");
+        where medico_sede=$sede and medico_st=1 and medico_auditor='NO' AND medico_tipo = 'MEDICO';");
     }
 
     public function busca_medico($medico_id)
@@ -4773,7 +4773,7 @@ class model extends core
         $params_2[':m_312_medico_ocupa'] = $_POST['m_312_medico_ocupa'];
         $params_2[':m_312_medico_auditor'] = $_POST['m_312_medico_auditor'];
 
-        $params_2[':m_312_pato_tbc_fecha'] = $_POST['m_312_pato_tbc_fecha'];
+        // $params_2[':m_312_pato_tbc_fecha'] = $_POST['m_312_pato_tbc_fecha'];
         $timestamp0 = strtotime($_POST['m_312_pato_tbc_fecha']);
         $m_312_pato_tbc_fecha = ((strlen($_POST['m_312_pato_tbc_fecha']) > 0) ? date('Y-m-d', $timestamp0) : null);
         $params_2[':m_312_pato_tbc_fecha'] = $m_312_pato_tbc_fecha;

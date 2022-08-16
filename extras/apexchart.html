@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+		<style type="text/css">
+			@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+			body {
+				font-family: Roboto, sans-serif;
+			}
+
+			#chart {
+				max-width: 650px;
+				margin: 35px auto;
+			}
+		</style>
+		<script type="text/javascript">
+			var options = {
+				chart: {
+					type: "bar",
+				},
+				series: [
+					{
+						name: "sales",
+						data: [30, 40, 45, 50, 49, 60, 70, 91, 125],
+					},
+				],
+				xaxis: {
+					categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
+				},
+			};
+
+			var chart = new ApexCharts(document.querySelector("#chart"), options);
+
+			// chart.render();
+		</script>
+	</head>
+	<body>
+		<div id="chart"></div>
+	</body>
+</html>

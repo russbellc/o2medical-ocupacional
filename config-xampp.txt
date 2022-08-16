@@ -1,0 +1,70 @@
+RewriteEngine on
+RewriteRule ^code/?$ system/loader.php [L,NC]
+RewriteRule ^code/([a-zA-Z0-9\_]+)(/)?([a-zA-Z]+)?(/)?(.*)?$ system/loader.php?sys_acction=$1&format=$3&$5 [L,NC]
+RewriteRule ^images/(.*)?$ system/images/$1 [L,NC]
+
+
+/opt/lampp/xampp start
+/opt/lampp/xampp startmysql
+/opt/lampp/xampp startapache
+
+/opt/lampp/xampp restart
+
+/opt/lampp/xampp stop
+/opt/lampp/xampp stopapache
+/opt/lampp/xampp stopmysql
+
+
+display_errors=Off
+display_startup_errors=Off
+log_errors=Off
+short_open_tag=On
+
+
+<Directory "/opt/lampp/apache2/htdocs">
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+</Directory>
+
+<Directory "/opt/lampp/phpmyadmin">
+    #AllowOverride AuthConfig Limit
+    #Require local
+    #ErrorDocument 403 /error/XAMPP_FORBIDDEN.html.var
+    AllowOverride AuthConfig Limit
+    Order allow,deny
+    Require all granted
+    Allow from all
+</Directory>
+
+
+
+<?php
+#datos configuracion
+define("__driver","mysql");
+define("__dbserver", "localhost");
+define("__dbname", "livecode_optima");
+define("__dbuser", "root");
+define("__dbpass", "");
+define("__sesname","code");
+define("__modpath", "modulos");
+define("__tinactivida", 28800);
+define("__log", __DIR__."/errors.log.txt")
+?>
+
+
+
+
+<?php
+#datos configuracion
+define("__driver","mysql");
+define("__dbserver", "cm-optima.com");
+define("__dbname", "livecode_vigpro2");
+define("__dbuser", "livecode_vigpro");
+define("__dbpass", "Admin_01");
+define("__sesname","code");
+define("__modpath", "modulos");
+define("__tinactivida", 28800);
+define("__log", __DIR__."/errors.log.txt")
+?>

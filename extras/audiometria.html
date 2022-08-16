@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<script
+			type="text/javascript"
+			src="https://www.gstatic.com/charts/loader.js"
+		></script>
+		<script type="text/javascript">
+			google.charts.load("current", {
+				packages: ["corechart", "line"],
+			});
+			google.charts.setOnLoadCallback(drawLineColors);
+
+			function drawLineColors() {
+				var data = new google.visualization.DataTable();
+				data.addColumn("number", "X");
+				data.addColumn("number", "OI Derecho");
+
+				data.addRows([
+					[250, 20],
+					[500, 25],
+					[1000, 20],
+					[2000, 20],
+					[3000, 15],
+					[4000, 20],
+					[6000, 25],
+					[8000, 35],
+				]);
+
+				var options = {
+					title: "Audiograma - Oido Derecho",
+					legend: "none",
+					width: 900,
+					height: 500,
+					lineWidth: 5,
+					hAxis: {
+						title: "Frecuencia Hz",
+						minorGridlines: {
+							count: -1,
+						},
+						//minValue: 0, maxValue: 9000,
+						ticks: [
+							{ v: -300, f: "0" },
+							{ v: 250, f: "250" },
+							{ v: 500, f: "500" },
+							{ v: 1000, f: "1k" },
+							{ v: 2000, f: "2k" },
+							{ v: 3000, f: "3k" },
+							{ v: 4000, f: "4k" },
+							{ v: 5000, f: "" },
+							{ v: 6000, f: "6k" },
+							{ v: 7000, f: "" },
+							{ v: 8000, f: "8k" },
+							{ v: 8500, f: "" },
+						],
+						//ticks: [250, 500, 1000, 2000, 3000, 4000, 6000, 8000]
+					},
+					vAxis: {
+						title: "Nivel Auditivo dB",
+						gridlines: {
+							count: -1,
+						},
+						//scaleType: 'mirrorLog',
+						minValue: -10,
+						maxValue: 100,
+						direction: -1,
+					},
+					pointSize: 15,
+					pointShape: "circle",
+					colors: ["#a52714", "#097138"],
+				};
+
+				let div = document.getElementById("chart_div");
+				let div2 = document.getElementById("chart_div2");
+				// console.log(new google.visualization.LineChart(div));
+				// console.log(new google.visualization.LineChart());
+				var chart = new google.visualization.LineChart(div);
+				google.visualization.events.addListener(chart, "ready", function () {
+					div2.innerHTML = '<img src="' + chart.getImageURI() + '">';
+					console.log(chart.getImageURI());
+				});
+				chart.draw(data, options);
+			}
+		</script>
+	</head>
+	<body>
+		<div id="chart_div"></div>
+		<div id="chart_div2"></div>
+	</body>
+</html>
