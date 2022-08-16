@@ -18,25 +18,32 @@
 			function drawLineColors() {
 				var data = new google.visualization.DataTable();
 				data.addColumn("number", "X");
-				data.addColumn("number", "OI Derecho");
+				data.addColumn("number", "Oido Derecho");
+				data.addColumn("number", "Oido izquierdo");
 
 				data.addRows([
-					[250, 20],
-					[500, 25],
-					[1000, 20],
-					[2000, 20],
-					[3000, 15],
-					[4000, 20],
-					[6000, 25],
-					[8000, 35],
+					[250, 20, 25],
+					[500, 25, 25],
+					[1000, 20, 25],
+					[2000, 20, 25],
+					[3000, 15, 15],
+					[4000, 20, 25],
+					[6000, 25, 25],
+					[8000, 35, 35],
 				]);
 
 				var options = {
-					title: "Audiograma - Oido Derecho",
+					title: "Audiograma - Via Aereo",
 					legend: "none",
-					width: 900,
-					height: 500,
-					lineWidth: 5,
+					width: 800,
+					height: 430,
+					lineWidth: 3,
+					pointSize: 11,
+					colors: ["#a52714", "#0D4573"],
+					series: {
+						0: { pointShape: "circle" },
+						1: { pointShape: "square" },
+					},
 					hAxis: {
 						title: "Frecuencia Hz",
 						minorGridlines: {
@@ -46,7 +53,7 @@
 						ticks: [
 							{ v: -300, f: "0" },
 							{ v: 250, f: "250" },
-							{ v: 500, f: "500" },
+							{ v: 500, f: "" },
 							{ v: 1000, f: "1k" },
 							{ v: 2000, f: "2k" },
 							{ v: 3000, f: "3k" },
@@ -64,23 +71,25 @@
 						gridlines: {
 							count: -1,
 						},
-						//scaleType: 'mirrorLog',
 						minValue: -10,
 						maxValue: 100,
 						direction: -1,
+						ticks: [
+							{ v: -20, f: "-20" },
+							{ v: 0, f: "0" },
+							{ v: 20, f: "20" },
+							{ v: 40, f: "40" },
+							{ v: 60, f: "60" },
+							{ v: 80, f: "80" },
+							{ v: 100, f: "100" },
+						],
 					},
-					pointSize: 15,
-					pointShape: "circle",
-					colors: ["#a52714", "#097138"],
 				};
 
 				let div = document.getElementById("chart_div");
-				let div2 = document.getElementById("chart_div2");
-				// console.log(new google.visualization.LineChart(div));
-				// console.log(new google.visualization.LineChart());
 				var chart = new google.visualization.LineChart(div);
 				google.visualization.events.addListener(chart, "ready", function () {
-					div2.innerHTML = '<img src="' + chart.getImageURI() + '">';
+					// div.innerHTML = '<img src="' + chart.getImageURI() + '">';
 					console.log(chart.getImageURI());
 				});
 				chart.draw(data, options);
@@ -88,7 +97,6 @@
 		</script>
 	</head>
 	<body>
-		<div id="chart_div"></div>
-		<div id="chart_div2"></div>
+		<div id="chart_div" style="height: 450px"></div>
 	</body>
 </html>

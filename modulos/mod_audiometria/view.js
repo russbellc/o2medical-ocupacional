@@ -692,6 +692,10 @@ mod.audio.audio_audio = {
 		}
 		this.win.show();
 	},
+	crea_audiograma: function (vTarget) {
+		console.log(vTarget.value);
+		console.log(vTarget.name);
+	},
 	cargar_data: function () {
 		this.frm.getForm().load({
 			waitMsg: "Recuperando Informacion...",
@@ -1453,6 +1457,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_250_od
 		this.m_a_audio_aereo_250_od = new Ext.form.TextField({
@@ -1467,6 +1481,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_500_od
 		this.m_a_audio_aereo_500_od = new Ext.form.TextField({
@@ -1481,6 +1505,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_1000_od
 		this.m_a_audio_aereo_1000_od = new Ext.form.TextField({
@@ -1495,6 +1529,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_2000_od
 		this.m_a_audio_aereo_2000_od = new Ext.form.TextField({
@@ -1509,6 +1553,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_3000_od
 		this.m_a_audio_aereo_3000_od = new Ext.form.TextField({
@@ -1523,6 +1577,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_4000_od
 		this.m_a_audio_aereo_4000_od = new Ext.form.TextField({
@@ -1537,6 +1601,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_6000_od
 		this.m_a_audio_aereo_6000_od = new Ext.form.TextField({
@@ -1551,6 +1625,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_8000_od
 		this.m_a_audio_aereo_8000_od = new Ext.form.TextField({
@@ -1565,6 +1649,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_125_oi
 		this.m_a_audio_aereo_125_oi = new Ext.form.TextField({
@@ -1579,6 +1673,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_250_oi
 		this.m_a_audio_aereo_250_oi = new Ext.form.TextField({
@@ -1593,6 +1697,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_500_oi
 		this.m_a_audio_aereo_500_oi = new Ext.form.TextField({
@@ -1607,6 +1721,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_1000_oi
 		this.m_a_audio_aereo_1000_oi = new Ext.form.TextField({
@@ -1621,6 +1745,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_2000_oi
 		this.m_a_audio_aereo_2000_oi = new Ext.form.TextField({
@@ -1635,6 +1769,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_3000_oi
 		this.m_a_audio_aereo_3000_oi = new Ext.form.TextField({
@@ -1649,6 +1793,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_4000_oi
 		this.m_a_audio_aereo_4000_oi = new Ext.form.TextField({
@@ -1663,6 +1817,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_6000_oi
 		this.m_a_audio_aereo_6000_oi = new Ext.form.TextField({
@@ -1677,6 +1841,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_aereo_8000_oi
 		this.m_a_audio_aereo_8000_oi = new Ext.form.TextField({
@@ -1691,6 +1865,16 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma(target);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_125_od
 		this.m_a_audio_oseo_125_od = new Ext.form.TextField({
@@ -2671,6 +2855,19 @@ mod.audio.audio_audio = {
 						{
 							xtype: "panel",
 							border: false,
+							columnWidth: 0.7,
+							// bodyStyle: "padding:2px 22px 0px 5px;",
+
+							// border: true,
+							monitorValid: true,
+							autoLoad: {
+								url: "./extras/audiometria.html",
+								scripts: true,
+							},
+						},
+						{
+							xtype: "panel",
+							border: false,
 							columnWidth: 0.28,
 							labelWidth: 35,
 							bodyStyle: "padding:2px 15px 0px 22px;",
@@ -2782,20 +2979,7 @@ mod.audio.audio_audio = {
 						{
 							xtype: "panel",
 							border: false,
-							columnWidth: 1,
-							// bodyStyle: "padding:2px 22px 0px 5px;",
-
-							border: false,
-							monitorValid: true,
-							autoLoad: {
-								url: "./extras/audiometria.html",
-								scripts: true,
-							},
-						},
-						{
-							xtype: "panel",
-							border: false,
-							columnWidth: 0.44,
+							columnWidth: 0.5,
 							bodyStyle: "padding:2px 22px 0px 5px;",
 							items: [
 								{
@@ -2826,16 +3010,16 @@ mod.audio.audio_audio = {
 						{
 							xtype: "panel",
 							border: false,
-							columnWidth: 0.999,
-							bodyStyle: "padding:2px 22px 0px 22px;",
+							columnWidth: 0.5,
+							bodyStyle: "padding:2px 22px 0px 2px;",
 							items: [
 								{
 									xtype: "fieldset",
 									layout: "column",
-									title: "",
+									title: "--",
 									items: [
 										{
-											columnWidth: 0.5,
+											columnWidth: 1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -2843,7 +3027,7 @@ mod.audio.audio_audio = {
 											items: [this.m_a_audio_kclokhoff],
 										},
 										{
-											columnWidth: 0.5,
+											columnWidth: 1,
 											border: false,
 											//                                            labelWidth: 120,
 											layout: "form",
@@ -3073,7 +3257,7 @@ mod.audio.audio_audio = {
 			],
 		});
 		this.win = new Ext.Window({
-			width: 1000,
+			width: 1100,
 			height: 600,
 			border: false,
 			modal: true,
