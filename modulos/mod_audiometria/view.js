@@ -692,9 +692,273 @@ mod.audio.audio_audio = {
 		}
 		this.win.show();
 	},
-	crea_audiograma: function (vTarget) {
-		console.log(vTarget.value);
-		console.log(vTarget.name);
+	crea_audiograma_oseo: function (Tname = "", Tvalue = "") {
+		let m_a_audio_oseo_125_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_125_od.getValue()
+		);
+		let m_a_audio_oseo_250_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_250_od.getValue()
+		);
+		let m_a_audio_oseo_500_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_500_od.getValue()
+		);
+		let m_a_audio_oseo_1000_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_1000_od.getValue()
+		);
+		let m_a_audio_oseo_2000_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_2000_od.getValue()
+		);
+		let m_a_audio_oseo_3000_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_3000_od.getValue()
+		);
+		let m_a_audio_oseo_4000_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_4000_od.getValue()
+		);
+		let m_a_audio_oseo_6000_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_6000_od.getValue()
+		);
+		let m_a_audio_oseo_8000_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_8000_od.getValue()
+		);
+
+		let m_a_audio_oseo_125_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_125_oi.getValue()
+		);
+		let m_a_audio_oseo_250_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_250_oi.getValue()
+		);
+		let m_a_audio_oseo_500_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_500_oi.getValue()
+		);
+		let m_a_audio_oseo_1000_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_1000_oi.getValue()
+		);
+		let m_a_audio_oseo_2000_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_2000_oi.getValue()
+		);
+		let m_a_audio_oseo_3000_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_3000_oi.getValue()
+		);
+		let m_a_audio_oseo_4000_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_4000_oi.getValue()
+		);
+		let m_a_audio_oseo_6000_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_6000_oi.getValue()
+		);
+		let m_a_audio_oseo_8000_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_oseo_8000_oi.getValue()
+		);
+
+		switch (Tname) {
+			case "m_a_audio_oseo_125_od":
+				m_a_audio_oseo_125_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_250_od":
+				m_a_audio_oseo_250_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_500_od":
+				m_a_audio_oseo_500_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_1000_od":
+				m_a_audio_oseo_1000_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_2000_od":
+				m_a_audio_oseo_2000_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_3000_od":
+				m_a_audio_oseo_3000_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_4000_od":
+				m_a_audio_oseo_4000_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_6000_od":
+				m_a_audio_oseo_6000_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_8000_od":
+				m_a_audio_oseo_8000_od = parseInt(Tvalue);
+				break;
+
+			case "m_a_audio_oseo_125_oi":
+				m_a_audio_oseo_125_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_250_oi":
+				m_a_audio_oseo_250_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_500_oi":
+				m_a_audio_oseo_500_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_1000_oi":
+				m_a_audio_oseo_1000_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_2000_oi":
+				m_a_audio_oseo_2000_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_3000_oi":
+				m_a_audio_oseo_3000_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_4000_oi":
+				m_a_audio_oseo_4000_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_6000_oi":
+				m_a_audio_oseo_6000_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_oseo_8000_oi":
+				m_a_audio_oseo_8000_oi = parseInt(Tvalue);
+				break;
+
+			default:
+				break;
+		}
+		var arreglo02 = [
+			[125, m_a_audio_oseo_125_od, m_a_audio_oseo_125_oi],
+			[250, m_a_audio_oseo_250_od, m_a_audio_oseo_250_oi],
+			[500, m_a_audio_oseo_500_od, m_a_audio_oseo_500_oi],
+			[1000, m_a_audio_oseo_1000_od, m_a_audio_oseo_1000_oi],
+			[2000, m_a_audio_oseo_2000_od, m_a_audio_oseo_2000_oi],
+			[3000, m_a_audio_oseo_3000_od, m_a_audio_oseo_3000_oi],
+			[4000, m_a_audio_oseo_4000_od, m_a_audio_oseo_4000_oi],
+			[6000, m_a_audio_oseo_6000_od, m_a_audio_oseo_6000_oi],
+			[8000, m_a_audio_oseo_8000_od, m_a_audio_oseo_8000_oi],
+		];
+		change_data2(arreglo02);
+		const audiograma_img_oseo = document.querySelector(".array01");
+		mod.audio.audio_audio.audiograma_oseo.setValue(
+			audiograma_img_oseo.textContent
+		);
+		// console.log(audiograma_img.textContent);
+	},
+	crea_audiograma: function (Tname = "", Tvalue = "") {
+		let m_a_audio_aereo_125_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_125_od.getValue()
+		);
+		let m_a_audio_aereo_250_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_250_od.getValue()
+		);
+		let m_a_audio_aereo_500_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_500_od.getValue()
+		);
+		let m_a_audio_aereo_1000_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_1000_od.getValue()
+		);
+		let m_a_audio_aereo_2000_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_2000_od.getValue()
+		);
+		let m_a_audio_aereo_3000_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_3000_od.getValue()
+		);
+		let m_a_audio_aereo_4000_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_4000_od.getValue()
+		);
+		let m_a_audio_aereo_6000_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_6000_od.getValue()
+		);
+		let m_a_audio_aereo_8000_od = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_8000_od.getValue()
+		);
+
+		let m_a_audio_aereo_125_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_125_oi.getValue()
+		);
+		let m_a_audio_aereo_250_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_250_oi.getValue()
+		);
+		let m_a_audio_aereo_500_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_500_oi.getValue()
+		);
+		let m_a_audio_aereo_1000_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_1000_oi.getValue()
+		);
+		let m_a_audio_aereo_2000_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_2000_oi.getValue()
+		);
+		let m_a_audio_aereo_3000_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_3000_oi.getValue()
+		);
+		let m_a_audio_aereo_4000_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_4000_oi.getValue()
+		);
+		let m_a_audio_aereo_6000_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_6000_oi.getValue()
+		);
+		let m_a_audio_aereo_8000_oi = parseInt(
+			mod.audio.audio_audio.m_a_audio_aereo_8000_oi.getValue()
+		);
+
+		switch (Tname) {
+			case "m_a_audio_aereo_125_od":
+				m_a_audio_aereo_125_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_250_od":
+				m_a_audio_aereo_250_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_500_od":
+				m_a_audio_aereo_500_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_1000_od":
+				m_a_audio_aereo_1000_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_2000_od":
+				m_a_audio_aereo_2000_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_3000_od":
+				m_a_audio_aereo_3000_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_4000_od":
+				m_a_audio_aereo_4000_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_6000_od":
+				m_a_audio_aereo_6000_od = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_8000_od":
+				m_a_audio_aereo_8000_od = parseInt(Tvalue);
+				break;
+
+			case "m_a_audio_aereo_125_oi":
+				m_a_audio_aereo_125_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_250_oi":
+				m_a_audio_aereo_250_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_500_oi":
+				m_a_audio_aereo_500_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_1000_oi":
+				m_a_audio_aereo_1000_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_2000_oi":
+				m_a_audio_aereo_2000_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_3000_oi":
+				m_a_audio_aereo_3000_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_4000_oi":
+				m_a_audio_aereo_4000_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_6000_oi":
+				m_a_audio_aereo_6000_oi = parseInt(Tvalue);
+				break;
+			case "m_a_audio_aereo_8000_oi":
+				m_a_audio_aereo_8000_oi = parseInt(Tvalue);
+				break;
+
+			default:
+				break;
+		}
+		var arreglo01 = [
+			[125, m_a_audio_aereo_125_od, m_a_audio_aereo_125_oi],
+			[250, m_a_audio_aereo_250_od, m_a_audio_aereo_250_oi],
+			[500, m_a_audio_aereo_500_od, m_a_audio_aereo_500_oi],
+			[1000, m_a_audio_aereo_1000_od, m_a_audio_aereo_1000_oi],
+			[2000, m_a_audio_aereo_2000_od, m_a_audio_aereo_2000_oi],
+			[3000, m_a_audio_aereo_3000_od, m_a_audio_aereo_3000_oi],
+			[4000, m_a_audio_aereo_4000_od, m_a_audio_aereo_4000_oi],
+			[6000, m_a_audio_aereo_6000_od, m_a_audio_aereo_6000_oi],
+			[8000, m_a_audio_aereo_8000_od, m_a_audio_aereo_8000_oi],
+		];
+		change_data(arreglo01);
+		const audiograma_img = document.querySelector(".array02");
+		mod.audio.audio_audio.audiograma_aereo.setValue(audiograma_img.textContent);
+		// console.log(audiograma_img.textContent);
 	},
 	cargar_data: function () {
 		this.frm.getForm().load({
@@ -709,6 +973,13 @@ mod.audio.audio_audio = {
 			scope: this,
 			success: function (frm, action) {
 				r = action.result.data;
+				// const audiograma_img = document.querySelector(".chart_div");
+				// audiograma_img.innerHTML =
+				// 	'<img src="<[sys_images]>/audio/audiograma_aereo" + this.record.get("adm") + ".png">';
+				setTimeout(() => {
+					this.crea_audiograma((Tname = "nada"), (Tvalue = ""));
+					this.crea_audiograma_oseo((Tname = "nada"), (Tvalue = ""));
+				}, 2000);
 				//                mod.audio.audio_audio.val_medico.setValue(r.val_medico);
 				//                mod.audio.audio_audio.val_medico.setRawValue(r.medico_nom);
 			},
@@ -1444,6 +1715,22 @@ mod.audio.audio_audio = {
 			},
 		});
 
+		// this.audiograma = new Ext.form.TextArea({
+		// 	fieldLabel: "<b>audiograma</b>",
+		// 	name: "audiograma",
+		// 	value: "-",
+		// 	anchor: "95%",
+		// 	height: 100,
+		// });
+		this.audiograma_aereo = new Ext.form.Hidden({
+			fieldLabel: "<b>id</b>",
+			name: "audiograma_aereo",
+		});
+		this.audiograma_oseo = new Ext.form.Hidden({
+			fieldLabel: "<b>id</b>",
+			name: "audiograma_oseo",
+		});
+
 		//m_a_audio_aereo_125_od
 		this.m_a_audio_aereo_125_od = new Ext.form.TextField({
 			name: "m_a_audio_aereo_125_od",
@@ -1461,7 +1748,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1485,7 +1772,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1509,7 +1796,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1533,7 +1820,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1557,7 +1844,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1581,7 +1868,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1605,7 +1892,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1629,7 +1916,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1653,7 +1940,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1677,7 +1964,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1701,7 +1988,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1725,7 +2012,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1749,7 +2036,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1773,7 +2060,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1797,7 +2084,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1821,7 +2108,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1845,7 +2132,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1869,7 +2156,7 @@ mod.audio.audio_audio = {
 				render: function (editorObject) {
 					editorObject.getEl().on({
 						blur: function (event, target, scope) {
-							mod.audio.audio_audio.crea_audiograma(target);
+							mod.audio.audio_audio.crea_audiograma(target.name, target.value);
 						},
 						scope: editorObject,
 					});
@@ -1889,6 +2176,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_250_od
 		this.m_a_audio_oseo_250_od = new Ext.form.TextField({
@@ -1903,6 +2203,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_500_od
 		this.m_a_audio_oseo_500_od = new Ext.form.TextField({
@@ -1917,6 +2230,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_1000_od
 		this.m_a_audio_oseo_1000_od = new Ext.form.TextField({
@@ -1931,6 +2257,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_2000_od
 		this.m_a_audio_oseo_2000_od = new Ext.form.TextField({
@@ -1945,6 +2284,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_3000_od
 		this.m_a_audio_oseo_3000_od = new Ext.form.TextField({
@@ -1959,6 +2311,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_4000_od
 		this.m_a_audio_oseo_4000_od = new Ext.form.TextField({
@@ -1973,6 +2338,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_6000_od
 		this.m_a_audio_oseo_6000_od = new Ext.form.TextField({
@@ -1987,6 +2365,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_8000_od
 		this.m_a_audio_oseo_8000_od = new Ext.form.TextField({
@@ -2001,6 +2392,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_125_oi
 		this.m_a_audio_oseo_125_oi = new Ext.form.TextField({
@@ -2015,6 +2419,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_250_oi
 		this.m_a_audio_oseo_250_oi = new Ext.form.TextField({
@@ -2029,6 +2446,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_500_oi
 		this.m_a_audio_oseo_500_oi = new Ext.form.TextField({
@@ -2043,6 +2473,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_1000_oi
 		this.m_a_audio_oseo_1000_oi = new Ext.form.TextField({
@@ -2057,6 +2500,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_2000_oi
 		this.m_a_audio_oseo_2000_oi = new Ext.form.TextField({
@@ -2071,6 +2527,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_3000_oi
 		this.m_a_audio_oseo_3000_oi = new Ext.form.TextField({
@@ -2085,6 +2554,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_4000_oi
 		this.m_a_audio_oseo_4000_oi = new Ext.form.TextField({
@@ -2099,6 +2581,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_6000_oi
 		this.m_a_audio_oseo_6000_oi = new Ext.form.TextField({
@@ -2113,6 +2608,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_oseo_8000_oi
 		this.m_a_audio_oseo_8000_oi = new Ext.form.TextField({
@@ -2127,6 +2635,19 @@ mod.audio.audio_audio = {
 				autocomplete: "off",
 			},
 			width: 80,
+			listeners: {
+				render: function (editorObject) {
+					editorObject.getEl().on({
+						blur: function (event, target, scope) {
+							mod.audio.audio_audio.crea_audiograma_oseo(
+								target.name,
+								target.value
+							);
+						},
+						scope: editorObject,
+					});
+				},
+			},
 		});
 		//m_a_audio_diag_aereo_od
 		this.Tpl_m_a_audio_diag_aereo_od = new Ext.XTemplate(
@@ -2349,7 +2870,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 310,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_ruido_laboral],
 										},
 									],
@@ -2372,7 +2893,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_sintoma_01],
 										},
 										{
@@ -2380,7 +2901,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_sintoma_02],
 										},
 										{
@@ -2388,7 +2909,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_sintoma_03],
 										},
 										{
@@ -2396,7 +2917,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_sintoma_04],
 										},
 										{
@@ -2404,7 +2925,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_sintoma_05],
 										},
 										{
@@ -2412,7 +2933,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_sintoma_06],
 										},
 										{
@@ -2420,14 +2941,14 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_sintoma_07],
 										},
 										{
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
-											//                                            labelWidth: 350,
+											//labelWidth: 350,
 											labelAlign: "top",
 											items: [this.m_a_audio_sintoma_07_desc],
 										},
@@ -2451,7 +2972,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_antece_01],
 										},
 										{
@@ -2459,7 +2980,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_antece_02],
 										},
 										{
@@ -2467,7 +2988,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_antece_03],
 										},
 										{
@@ -2475,7 +2996,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_antece_04],
 										},
 										{
@@ -2483,7 +3004,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_antece_05],
 										},
 										{
@@ -2491,7 +3012,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_antece_06],
 										},
 										{
@@ -2499,7 +3020,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_antece_07],
 										},
 										{
@@ -2507,7 +3028,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_antece_08],
 										},
 										{
@@ -2515,7 +3036,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_antece_09],
 										},
 										{
@@ -2523,7 +3044,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 350,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_antece_10],
 										},
 									],
@@ -2546,7 +3067,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 80,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_tapones],
 										},
 										{
@@ -2554,7 +3075,7 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelWidth: 80,
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_orejeras],
 										},
 									],
@@ -2606,7 +3127,7 @@ mod.audio.audio_audio = {
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											labelWidth: 150,
 											items: [this.m_a_audio_otos_triangulo_od],
 										},
@@ -2614,7 +3135,7 @@ mod.audio.audio_audio = {
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											labelWidth: 150,
 											items: [this.m_a_audio_otos_perfora_od],
 										},
@@ -2622,7 +3143,7 @@ mod.audio.audio_audio = {
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											labelWidth: 150,
 											items: [this.m_a_audio_otos_permeable_od],
 										},
@@ -2630,7 +3151,7 @@ mod.audio.audio_audio = {
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											labelWidth: 150,
 											items: [this.m_a_audio_otos_retraccion_od],
 										},
@@ -2638,7 +3159,7 @@ mod.audio.audio_audio = {
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											labelWidth: 150,
 											items: [this.m_a_audio_otos_abomba_od],
 										},
@@ -2646,7 +3167,7 @@ mod.audio.audio_audio = {
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											labelWidth: 150,
 											items: [this.m_a_audio_otos_serumen_od],
 										},
@@ -2669,7 +3190,7 @@ mod.audio.audio_audio = {
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											labelWidth: 150,
 											items: [this.m_a_audio_otos_triangulo_oi],
 										},
@@ -2678,14 +3199,14 @@ mod.audio.audio_audio = {
 											border: false,
 											labelWidth: 150,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_otos_perfora_oi],
 										},
 										{
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											labelWidth: 150,
 											items: [this.m_a_audio_otos_permeable_oi],
 										},
@@ -2693,7 +3214,7 @@ mod.audio.audio_audio = {
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											labelWidth: 150,
 											items: [this.m_a_audio_otos_retraccion_oi],
 										},
@@ -2702,7 +3223,7 @@ mod.audio.audio_audio = {
 											border: false,
 											labelWidth: 150,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_otos_abomba_oi],
 										},
 										{
@@ -2710,7 +3231,7 @@ mod.audio.audio_audio = {
 											border: false,
 											labelWidth: 150,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_otos_serumen_oi],
 										},
 									],
@@ -2732,7 +3253,7 @@ mod.audio.audio_audio = {
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											labelWidth: 120,
 											items: [this.m_a_audio_nariz],
 										},
@@ -2741,7 +3262,7 @@ mod.audio.audio_audio = {
 											border: false,
 											labelWidth: 120,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_nariz_esp],
 										},
 									],
@@ -2763,7 +3284,7 @@ mod.audio.audio_audio = {
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											labelWidth: 120,
 											items: [this.m_a_audio_orofaringe],
 										},
@@ -2772,7 +3293,7 @@ mod.audio.audio_audio = {
 											border: false,
 											labelWidth: 120,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_orofaringe_esp],
 										},
 									],
@@ -2794,7 +3315,7 @@ mod.audio.audio_audio = {
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											labelWidth: 120,
 											items: [this.m_a_audio_oido],
 										},
@@ -2803,7 +3324,7 @@ mod.audio.audio_audio = {
 											border: false,
 											labelWidth: 120,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_oido_esp],
 										},
 									],
@@ -2825,7 +3346,7 @@ mod.audio.audio_audio = {
 											columnWidth: 0.999,
 											border: false,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											labelWidth: 120,
 											items: [this.m_a_audio_otros],
 										},
@@ -2834,7 +3355,7 @@ mod.audio.audio_audio = {
 											border: false,
 											labelWidth: 120,
 											layout: "form",
-											//                                            labelAlign: 'top',
+											//labelAlign: 'top',
 											items: [this.m_a_audio_otros_esp],
 										},
 									],
@@ -2973,6 +3494,14 @@ mod.audio.audio_audio = {
 											],
 										},
 									],
+								}, //audiograma
+								{
+									columnWidth: 0.28,
+									border: false,
+									layout: "form",
+									labelAlign: "top",
+									//labelWidth: 120,
+									items: [this.audiograma_aereo],
 								},
 							],
 						},
@@ -2992,13 +3521,13 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											//                                            labelWidth: 120,
+											//labelWidth: 120,
 											items: [this.m_a_audio_diag_aereo_od],
 										},
 										{
 											columnWidth: 0.999,
 											border: false,
-											//                                            labelWidth: 120,
+											//labelWidth: 120,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_a_audio_diag_aereo_oi],
@@ -3023,13 +3552,13 @@ mod.audio.audio_audio = {
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											//                                            labelWidth: 120,
+											//labelWidth: 120,
 											items: [this.m_a_audio_kclokhoff],
 										},
 										{
 											columnWidth: 1,
 											border: false,
-											//                                            labelWidth: 120,
+											//labelWidth: 120,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_a_audio_comentarios],
@@ -3050,6 +3579,16 @@ mod.audio.audio_audio = {
 					bodyStyle: "padding:10px 10px 20px 10px;",
 					//                    labelWidth: 60,
 					items: [
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.7,
+							monitorValid: true,
+							autoLoad: {
+								url: "./extras/audio_oseo.html",
+								scripts: true,
+							},
+						},
 						{
 							xtype: "panel",
 							border: false,
@@ -3164,7 +3703,7 @@ mod.audio.audio_audio = {
 						{
 							xtype: "panel",
 							border: false,
-							columnWidth: 0.44,
+							columnWidth: 1,
 							bodyStyle: "padding:2px 22px 0px 5px;",
 							items: [
 								{
@@ -3173,22 +3712,30 @@ mod.audio.audio_audio = {
 									title: "DIAGNOSTICO OSEO",
 									items: [
 										{
-											columnWidth: 0.999,
+											columnWidth: 0.5,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
-											//                                            labelWidth: 120,
+											//labelWidth: 120,
 											items: [this.m_a_audio_diag_osteo_od],
 										},
 										{
-											columnWidth: 0.999,
+											columnWidth: 0.5,
 											border: false,
-											//                                            labelWidth: 120,
+											//labelWidth: 120,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_a_audio_diag_osteo_oi],
 										},
 									],
+								},
+								{
+									columnWidth: 0.28,
+									border: false,
+									layout: "form",
+									labelAlign: "top",
+									//labelWidth: 120,
+									items: [this.audiograma_oseo],
 								},
 							],
 						},

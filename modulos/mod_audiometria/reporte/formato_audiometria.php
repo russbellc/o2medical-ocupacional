@@ -1,31 +1,33 @@
 <?php
 
-class MYPDF extends TCPDF {
+class MYPDF extends TCPDF
+{
 
-    public $user;
+  public $user;
 
-    public function Header() {
-        
+  public function Header()
+  {
+  }
+
+  function zerofill($entero, $largo)
+  {
+    $entero = (int) $entero;
+    $largo = (int) $largo;
+    $relleno = '';
+
+    if (strlen($entero) < $largo) {
+      $relleno = str_repeat(0, $largo - strlen($entero));
     }
+    return $relleno . $entero;
+  }
 
-    function zerofill($entero, $largo) {
-        $entero = (int) $entero;
-        $largo = (int) $largo;
-        $relleno = '';
-
-        if (strlen($entero) < $largo) {
-            $relleno = str_repeat(0, $largo - strlen($entero));
-        }
-        return $relleno . $entero;
-    }
-
-    public function Footer() {
-        $this->SetY(-15);
-        $this->SetFont('helvetica', 'I', 8);
-        $this->Cell(0, 10, $this->user->sed_desc, 0, false, 'L', 0, '', 0, false, 'T', 'M');
-        $this->Cell(0, 10, 'Pagina - ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, false, 'R', 0, '', 0, false, 'T', 'M');
-    }
-
+  public function Footer()
+  {
+    $this->SetY(-15);
+    $this->SetFont('helvetica', 'I', 8);
+    $this->Cell(0, 10, $this->user->sed_desc, 0, false, 'L', 0, '', 0, false, 'T', 'M');
+    $this->Cell(0, 10, 'Pagina - ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, false, 'R', 0, '', 0, false, 'T', 'M');
+  }
 }
 
 $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -40,8 +42,8 @@ $pdf->SetKeywords('');
 
 // Contenido de la cabecera
 // Fuente de la cabecera y el pie de página
-$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+$pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
 // Márgenes
 $pdf->SetMargins(PDF_MARGIN_LEFT, 5, PDF_MARGIN_RIGHT, 2);
@@ -66,25 +68,34 @@ $audio = $model->mod_audio_audio_report($_REQUEST['adm']);
 
 
 $pdf->AddPage('P', 'A4');
-$h = 4.5;
+
+
+
+//$pdf->Image('images/bambas.png', 16, 7, 20, '', 'PNG');
+// $pdf->ImageSVG('images/logo_pdf.svg', 10, 7, 46, '', $link = '', '', 'T');
+//CLINICA O2
+$pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
+// $pdf->Image('images/formato/contactos_o2.jpg', 148, 5, 50, '', 'JPEG');
+
+
+
+
+$h = 4;
 $titulo = 7;
 $texto = 7;
-$salto = 2;
-$pdf->SetFont('helvetica', 'B', 7);
-//$pdf->Image('images/bambas.png', 16, 7, 20, '', 'PNG');
-$pdf->ImageSVG('images/logo_pdf.svg', 10, 7, 46, '', $link = '', '', 'T');
-
+$salto = 1;
 $pdf->SetFont('helvetica', 'B', 13);
 $pdf->Ln(6);
 $pdf->Cell(180, $h, 'FICHA AUDIOMETRIA', 0, 1, 'C', 0);
 //$pdf->Cell(180, $h, 'EVALUACION MEDICA PERFIL VISITA A 4000 m.s.n.m.', 0, 1, 'C', 0);
-$pdf->Ln(7);
+$pdf->Ln(4);
 
 
 $pdf->SetFont('helvetica', 'B', $titulo);
 //$pdf->Cell(80, $h, 'DATOS PERSONALES', 0, 1, 'L', 0);
 
-$pdf->Cell(90, $h, 'DATOS GENERALES', 1, 1, 'L', 1);
+$pdf->Cell(90, $h, '', 0, 0, 'L', 0);
+$pdf->Cell(90, $h, 'DATOS GENERALES', 1, 1, 'C', 1);
 
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(20, $h, 'EMPRESA:', 'LT', 0, 'L', 0);
@@ -456,10 +467,19 @@ $pdf->Cell(8, $h, $audio->data[0]->m_a_audio_oseo_6000_oi, 1, 0, 'C', 0);
 $pdf->Cell(8, $h, $audio->data[0]->m_a_audio_oseo_8000_oi, 1, 1, 'C', 0);
 
 
+$pdf->Image("images/audio/audiograma_aereo" . $_GET['adm'] . ".png", 5, '', 115, '', '');
+$pdf->Image("images/audio/audiograma_oseo" . $_GET['adm'] . ".png", 100, '', 115, '', '');
 
 
-$pdf->Ln($salto);
+$pdf->Ln($h*14);
 $pdf->SetFont('helvetica', 'B', $texto);
+// $pdf->Cell(5, $h, '', 0, 0, 'C', 0);
+// $pdf->Cell(82.5, $h, 'VIA AEREA', 0, 0, 'C', 1);
+// $pdf->Cell(5, $h, '', 0, 0, 'C', 0);
+// $pdf->Cell(82.5, $h, 'VIA OSEA', 0, 1, 'C', 1);
+
+
+$pdf->Ln(2);
 $pdf->Cell(180, $h, 'DIAGNOSTICO AEREA', 1, 1, 'C', 1);
 
 $pdf->Cell(25, $h, 'OIDO DERECHO:', 1, 0, 'C', 1);
@@ -470,7 +490,7 @@ $pdf->Cell(25, $h, 'OIDO IZQUIERDO:', 1, 0, 'C', 1);
 $pdf->SetFont('helvetica', '', $texto);
 $pdf->Cell(155, $h, $audio->data[0]->m_a_audio_diag_aereo_oi, 1, 1, 'L', 0);
 
-$pdf->Ln($salto);
+// $pdf->Ln($salto);
 $pdf->SetFont('helvetica', 'B', $texto);
 $pdf->Cell(180, $h, 'DIAGNOSTICO OSEO', 1, 1, 'C', 1);
 
@@ -484,23 +504,19 @@ $pdf->Cell(155, $h, $audio->data[0]->m_a_audio_diag_osteo_oi, 1, 1, 'L', 0);
 
 
 
-$pdf->Ln($salto);
+// $pdf->Ln($salto);
 $pdf->SetFont('helvetica', 'B', $texto);
 $pdf->Cell(120, $h, 'CLASIFICACION DE KCLOKHOFF MOD.', 1, 1, 'L', 1);
 $pdf->SetFont('helvetica', '', $texto);
 $pdf->Cell(120, $h, $audio->data[0]->m_a_audio_kclokhoff, 1, 1, 'L', 0);
 
 
-$pdf->Ln($salto);
+// $pdf->Ln($salto);
 $pdf->SetFont('helvetica', 'B', $texto);
 $pdf->Cell(120, $h, 'COMENTARIOS', 1, 1, 'L', 1);
 $pdf->SetFont('helvetica', '', $texto);
-$pdf->MultiCell(120, 8, $audio->data[0]->m_a_audio_comentarios, 1, 'L', 0, 1);
+$pdf->MultiCell(120, $h, $audio->data[0]->m_a_audio_comentarios, 1, 'L', 0, 1);
 
 
-$pdf->Ln($salto);
-$pdf->Ln($salto);
-$pdf->Ln($salto);
-$pdf->Ln($salto);
 //http://localhost/Dropbox/saludocupacional/kaori/system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_medicina&sys_report=inf_nuevo_anexo_16&adm=1003
 $pdf->Output('audiometria_' . $_REQUEST['adm'] . '.PDF', 'I');

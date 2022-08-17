@@ -11,20 +11,20 @@
 		></script>
 	</head>
 	<body>
-		<div id="chart_div" class="chart_div" style="height: 450px"></div>
-		<div class="array02" style="display: none"></div>
+		<div id="chart_div2" class="chart_div2" style="height: 450px"></div>
+		<div class="array01" style="display: none"></div>
 
 		<script type="text/javascript">
 			google.charts.load("current", {
 				packages: ["corechart", "line"],
 			});
-			google.charts.setOnLoadCallback(drawLineColors);
-			const array02 = document.querySelector(".array02");
+			google.charts.setOnLoadCallback(drawLineColors2);
+			const array01 = document.querySelector(".array01");
 
-			arreglo01 = [];
-			var chart;
-			var options = {
-				title: "Audiograma - Via Aereo",
+			arreglo02 = [];
+			var chart2;
+			var options2 = {
+				title: "Audiograma - Via Oseo",
 				legend: "none",
 				width: 800,
 				height: 430,
@@ -83,31 +83,31 @@
 				},
 			};
 
-			function drawLineColors() {
-				data = new google.visualization.DataTable();
-				data.addColumn("number", "X");
-				data.addColumn("number", "Oido Derecho");
-				data.addColumn("number", "Oido izquierdo");
+			function drawLineColors2() {
+				data2 = new google.visualization.DataTable();
+				data2.addColumn("number", "X");
+				data2.addColumn("number", "Oido Derecho");
+				data2.addColumn("number", "Oido izquierdo");
 
-				data.addRows(arreglo01);
+				data2.addRows(arreglo02);
 
-				let div = document.getElementById("chart_div");
-				chart = new google.visualization.LineChart(div);
+				let div2 = document.getElementById("chart_div2");
+				chart2 = new google.visualization.LineChart(div2);
 				// google.visualization.events.addListener(chart, "ready", function () {
-				// 	array02.innerHTML = '<img src="' + chart.getImageURI() + '">';
+				// 	array01.innerHTML = '<img src="' + chart.getImageURI() + '">';
 				// });
-				chart.draw(data, options);
-				google.visualization.events.addListener(chart, "ready", function () {
-					array02.textContent = chart.getImageURI();
+				chart2.draw(data2, options2);
+				google.visualization.events.addListener(chart2, "ready", function () {
+					array01.textContent = chart2.getImageURI();
 				});
 			}
 
-			function change_data(arreglo01) {
-				data.removeRows(0, data.getNumberOfRows());
-				data.addRows(arreglo01);
-				chart.draw(data, options);
-				google.visualization.events.addListener(chart, "ready", function () {
-					array02.textContent = chart.getImageURI();
+			function change_data2(arreglo02) {
+				data2.removeRows(0, data2.getNumberOfRows());
+				data2.addRows(arreglo02);
+				chart2.draw(data2, options2);
+				google.visualization.events.addListener(chart2, "ready", function () {
+					array01.textContent = chart2.getImageURI();
 				});
 			}
 		</script>

@@ -1,8 +1,10 @@
 <?php
 
-class model extends core {
+class model extends core
+{
 
-    public function list_paciente() {
+    public function list_paciente()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $columna = isset($_POST['columna']) ? $_POST['columna'] : NULL;
@@ -56,7 +58,8 @@ class model extends core {
         return $sql;
     }
 
-    public function list_formatos() {
+    public function list_formatos()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $adm_id = isset($_POST['adm']) ? $_POST['adm'] : NULL;
@@ -86,7 +89,8 @@ class model extends core {
 
     //LOAD SAVE UPDATE LABORATORIO
 
-    public function load_audio_pred() {
+    public function load_audio_pred()
+    {
         $adm = $_POST['adm'];
         $examen = $_POST['examen'];
         $query = "SELECT * FROM mod_audio_pred where m_audio_pred_adm='$adm' and m_audio_pred_examen='$examen';";
@@ -94,7 +98,8 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function save_audio_pred() {
+    public function save_audio_pred()
+    {
 
         $adm = $_POST['adm'];
         $exa = $_POST['ex_id'];
@@ -156,7 +161,8 @@ class model extends core {
         }
     }
 
-    public function update_audio_pred() {
+    public function update_audio_pred()
+    {
         $params = array();
 
         $params[':usuario'] = $this->user->us_id;
@@ -197,15 +203,17 @@ class model extends core {
 
     //LOAD SAVE UPDATE psico_examen
 
-    public function load_audio_audio() {
+    public function load_audio_audio()
+    {
         $adm = $_POST['adm'];
-//        $examen = $_POST['examen'];
+        //        $examen = $_POST['examen'];
         $query = "SELECT * FROM mod_audio_audio where m_a_audio_adm='$adm';";
         $q = $this->sql($query);
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function save_audio_audio() {
+    public function save_audio_audio()
+    {
 
         $adm = $_POST['adm'];
         $exa = $_POST['ex_id'];
@@ -378,6 +386,7 @@ class model extends core {
                 :m_a_audio_otos_serumen_oi,                
                 :m_a_audio_otos_permeable_oi,
                 :m_a_audio_otos_retraccion_oi,
+
                 :m_a_audio_aereo_125_od,
                 :m_a_audio_aereo_250_od,
                 :m_a_audio_aereo_500_od,
@@ -387,6 +396,7 @@ class model extends core {
                 :m_a_audio_aereo_4000_od,
                 :m_a_audio_aereo_6000_od,
                 :m_a_audio_aereo_8000_od,
+
                 :m_a_audio_aereo_125_oi,
                 :m_a_audio_aereo_250_oi,
                 :m_a_audio_aereo_500_oi,
@@ -396,6 +406,7 @@ class model extends core {
                 :m_a_audio_aereo_4000_oi,
                 :m_a_audio_aereo_6000_oi,
                 :m_a_audio_aereo_8000_oi,
+
                 :m_a_audio_oseo_125_od,
                 :m_a_audio_oseo_250_od,
                 :m_a_audio_oseo_500_od,
@@ -435,8 +446,37 @@ class model extends core {
             if ($sql_1->success) {
                 $sql_2 = $this->sql($q_2, $params_2);
                 if ($sql_2->success) {
-                    $this->commit();
-                    return $sql_2;
+                    if (strlen($_POST['audiograma_aereo']) > 1) {
+                        $upload_dir = "images/audio/";
+                        $audio_aereo = $_POST['audiograma_aereo'];
+
+                        unlink("images/audio/audiograma_aereo" . $adm . ".png");
+                        $audio_aereo = str_replace('data:image/png;base64,', '', $audio_aereo);
+                        $audio_aereo = str_replace(' ', '+', $audio_aereo);
+                        $data = base64_decode($audio_aereo);
+                        $file = $upload_dir . "audiograma_aereo" . $adm . ".png";
+                        $success = file_put_contents($file, $data);
+
+
+
+                        $audio_oseo = $_POST['audiograma_oseo'];
+                        unlink("images/audio/audiograma_oseo" . $adm . ".png");
+                        $audio_oseo = str_replace('data:image/png;base64,', '', $audio_oseo);
+                        $audio_oseo = str_replace(' ', '+', $audio_oseo);
+                        $data2 = base64_decode($audio_oseo);
+                        $file2 = $upload_dir . "audiograma_oseo" . $adm . ".png";
+                        $success_oseo = file_put_contents($file2, $data2);
+
+                        $this->commit();
+                        return $sql_2;
+                        // $this->rollback();
+                        // return array('success' => false, 'error' => 'Problemas con el registro.');
+                    } else {
+                        // $this->rollback();
+                        // return array('success' => false, 'error' => 'Problemas con el registro.');
+                        $this->commit();
+                        return $sql_2;
+                    }
                 } else {
                     $this->rollback();
                     return array('success' => false, 'error' => 'Problemas con el registro.');
@@ -448,7 +488,9 @@ class model extends core {
         }
     }
 
-    public function update_audio_audio() {
+    public function update_audio_audio()
+    {
+        $adm = $_POST['adm'];
         $this->begin();
 
         $params_1 = array();
@@ -656,8 +698,38 @@ class model extends core {
         if ($sql_2->success) {
             $sql_1 = $this->sql($q_1, $params_1);
             if ($sql_1->success && $sql_1->total == 1) {
-                $this->commit();
-                return $sql_1;
+                if (strlen($_POST['audiograma_aereo']) > 1) {
+                    $upload_dir = "images/audio/";
+                    $audio_aereo = $_POST['audiograma_aereo'];
+
+                    unlink("images/audio/audiograma_aereo" . $adm . ".png");
+                    $audio_aereo = str_replace('data:image/png;base64,', '', $audio_aereo);
+                    $audio_aereo = str_replace(' ', '+', $audio_aereo);
+                    $data = base64_decode($audio_aereo);
+                    $file = $upload_dir . "audiograma_aereo" . $adm . ".png";
+                    $success = file_put_contents($file, $data);
+
+
+
+                    $audio_oseo = $_POST['audiograma_oseo'];
+                    unlink("images/audio/audiograma_oseo" . $adm . ".png");
+                    $audio_oseo = str_replace('data:image/png;base64,', '', $audio_oseo);
+                    $audio_oseo = str_replace(' ', '+', $audio_oseo);
+                    $data2 = base64_decode($audio_oseo);
+                    $file2 = $upload_dir . "audiograma_oseo" . $adm . ".png";
+                    $success_oseo = file_put_contents($file2, $data2);
+
+                    $this->commit();
+                    return $sql_1;
+                    // $this->rollback();
+                    // return array('success' => false, 'error' => 'Problemas con el registro.');
+                } else {
+                    // $this->rollback();
+                    // return array('success' => false, 'error' => 'Problemas con el registro.');
+
+                    $this->commit();
+                    return $sql_1;
+                }
             } else {
                 $this->rollback();
                 return array('success' => false, 'error' => 'Problemas con el registro.');
@@ -669,7 +741,8 @@ class model extends core {
     }
 
     //AUTO GUARDADO
-    public function st_m_a_audio_diag_aereo_od() {
+    public function st_m_a_audio_diag_aereo_od()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_a_audio_diag_aereo_od FROM mod_audio_audio
                             where
@@ -678,7 +751,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_m_a_audio_diag_aereo_oi() {
+    public function st_m_a_audio_diag_aereo_oi()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_a_audio_diag_aereo_oi FROM mod_audio_audio
                             where
@@ -687,7 +761,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_m_a_audio_diag_osteo_od() {
+    public function st_m_a_audio_diag_osteo_od()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_a_audio_diag_osteo_od FROM mod_audio_audio
                             where
@@ -696,7 +771,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_m_a_audio_diag_osteo_oi() {
+    public function st_m_a_audio_diag_osteo_oi()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_a_audio_diag_osteo_oi FROM mod_audio_audio
                             where
@@ -705,7 +781,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_m_a_audio_kclokhoff() {
+    public function st_m_a_audio_kclokhoff()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT m_a_audio_kclokhoff FROM mod_audio_audio
                             where
@@ -716,7 +793,8 @@ class model extends core {
 
     //LOAD SAVE UPDATE PDF
 
-    public function paciente($adm) {
+    public function paciente($adm)
+    {
         $sql = $this->sql("SELECT
             adm_id as adm
             ,concat(pac_nombres,', ',pac_appat,' ',pac_apmat) nom_ap
@@ -754,16 +832,15 @@ class model extends core {
         return $sql;
     }
 
-    public function mod_audio_audio_report($adm) {
+    public function mod_audio_audio_report($adm)
+    {
         $sql = $this->sql("SELECT *
         FROM mod_audio_audio
         where m_a_audio_adm=$adm;");
         return $sql;
     }
-
 }
 
 //$sesion = new model(); 
 //echo json_encode($sesion->save());
 //http://localhost/ocupacional/system/loader.php?sys_acction=sys_loadmodel&sys_modname=mod_hruta
-?>
