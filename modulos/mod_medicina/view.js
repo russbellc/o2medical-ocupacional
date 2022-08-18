@@ -568,7 +568,7 @@ mod.medicina.formatos = {
 			listeners: {
 				rowdblclick: function (grid, rowIndex, e) {
 					e.stopEvent();
-					var record = grid.getStore().getAt(rowIndex); //anexo312
+					var record = grid.getStore().getAt(rowIndex);
 					if (record.get("ex_id") == 20) {
 						//NUEVO EXAMEN DE MEDICINA ANEXO 16
 						mod.medicina.nuevoAnexo16.init(record);
@@ -585,6 +585,9 @@ mod.medicina.formatos = {
 					} else if (record.get("ex_id") == 41) {
 						//EXAMEN OSTEO MUSCULAR
 						mod.medicina.nuevoOsteo.init(record);
+					} else if (record.get("ex_id") == 15) {
+						//EXAMEN MUSCULO ESQUELETICO
+						mod.medicina.musculo.init(record);
 					} else if (record.get("ex_id") == 42) {
 						//EXAMEN ANEXO 16A - PERFIL VISITA
 						mod.medicina.anexo_16a.init(record);
@@ -639,15 +642,12 @@ mod.medicina.formatos = {
 								items: [
 									{
 										text:
-											"Anexo 312 Informe N°: <B>" +
-											record.get("adm") +
-											"<B>",
+											"Anexo 312 Informe N°: <B>" + record.get("adm") + "<B>",
 										iconCls: "reporte",
 										handler: function () {
 											if (record.get("st") >= 1) {
 												new Ext.Window({
-													title:
-														"Anexo 312 Informe N° " + record.get("adm"),
+													title: "Anexo 312 Informe N° " + record.get("adm"),
 													width: 800,
 													height: 600,
 													maximizable: true,
@@ -669,7 +669,7 @@ mod.medicina.formatos = {
 									},
 								],
 							}).showAt(event.xy);
-						}  else if (record.get("ex_id") == 39) {
+						} else if (record.get("ex_id") == 39) {
 							new Ext.menu.Menu({
 								items: [
 									{
@@ -6242,7 +6242,7 @@ mod.medicina.anexo312 = {
 				acction: "load_conclusiones",
 				format: "json",
 				adm: adm,
-				st: this.record.get("st")
+				st: this.record.get("st"),
 			},
 			scope: this,
 			success: function (frm, action) {
@@ -7671,42 +7671,48 @@ mod.medicina.anexo312 = {
 
 		this.psicologia = new Ext.form.TextArea({
 			name: "psicologia",
-			fieldLabel: "<b>PSICOLOGIA *(solo es para informacion no se imprimira en el formato 312)</b>",
+			fieldLabel:
+				"<b>PSICOLOGIA *(solo es para informacion no se imprimira en el formato 312)</b>",
 			readOnly: true,
 			anchor: "95%",
 			height: 50,
 		});
 		this.rx = new Ext.form.TextArea({
 			name: "rx",
-			fieldLabel: "<b>RAYOS X *(solo es para informacion no se imprimira en el formato 312)</b>",
+			fieldLabel:
+				"<b>RAYOS X *(solo es para informacion no se imprimira en el formato 312)</b>",
 			readOnly: true,
 			anchor: "95%",
 			height: 50,
 		});
 		this.laboratorio = new Ext.form.TextArea({
 			name: "laboratorio",
-			fieldLabel: "<b>LABORATORIO *(solo es para informacion no se imprimira en el formato 312)</b>",
+			fieldLabel:
+				"<b>LABORATORIO *(solo es para informacion no se imprimira en el formato 312)</b>",
 			readOnly: true,
 			anchor: "95%",
 			height: 50,
 		});
 		this.audiometria = new Ext.form.TextArea({
 			name: "audiometria",
-			fieldLabel: "<b>AUDIOMETRIA *(solo es para informacion no se imprimira en el formato 312)</b>",
+			fieldLabel:
+				"<b>AUDIOMETRIA *(solo es para informacion no se imprimira en el formato 312)</b>",
 			readOnly: true,
 			anchor: "95%",
 			height: 50,
 		});
 		this.espirometia = new Ext.form.TextArea({
 			name: "espirometia",
-			fieldLabel: "<b>ESPIROMETRIA *(solo es para informacion no se imprimira en el formato 312)</b>",
+			fieldLabel:
+				"<b>ESPIROMETRIA *(solo es para informacion no se imprimira en el formato 312)</b>",
 			readOnly: true,
 			anchor: "95%",
 			height: 50,
 		});
 		this.otros = new Ext.form.TextArea({
 			name: "otros",
-			fieldLabel: "<b>OTROS *(solo es para informacion no se imprimira en el formato 312)</b>",
+			fieldLabel:
+				"<b>OTROS *(solo es para informacion no se imprimira en el formato 312)</b>",
 			readOnly: true,
 			anchor: "95%",
 			height: 50,
@@ -8723,6 +8729,7093 @@ mod.medicina.anexo312 = {
 			border: false,
 			modal: true,
 			title: "EXAMEN FORMATO ANEXO 312: ",
+			maximizable: false,
+			resizable: false,
+			draggable: true,
+			closable: true,
+			layout: "border",
+			items: [this.frm],
+		});
+	},
+};
+
+//MEDICINA musculo
+mod.medicina.musculo = {
+	win: null,
+	frm: null,
+	record: null,
+	init: function (r) {
+		this.record = r;
+		this.crea_stores();
+		this.crea_controles();
+		if (this.record.get("st") >= 1) {
+			this.cargar_data();
+		}
+		this.win.show();
+	},
+	cargar_data: function () {
+		// Ext.Ajax.request({
+		// 	waitMsg: "Recuperando Informacion...",
+		// 	waitTitle: "Espere",
+		// 	url: "<[controller]>",
+		// 	params: {
+		// 		acction: "load_musculo",
+		// 		format: "json",
+		// 		adm: mod.medicina.musculo.record.get("adm"),
+		// 		exa: mod.medicina.musculo.record.get("ex_id"),
+		// 	},
+		// 	success: function (response, opts) {
+		// 		var dato = Ext.decode(response.responseText);
+		// 		if (dato.success == true) {
+		// 			mod.medicina.musculo.frm.getForm().loadRecord(dato);
+		// 			// mod.medicina.musculo.m_312_medico_ocupa.setValue(
+		// 			// 	dato.data.m_312_medico_ocupa
+		// 			// );
+		// 			// mod.medicina.musculo.m_312_medico_ocupa.setRawValue(
+		// 			// 	dato.data.m_312_medico_ocupa_nom
+		// 			// );
+		// 			// mod.medicina.musculo.load_medico.load();
+		// 			// mod.medicina.musculo.adm_emp.setValue(dato.data.emp_id);
+		// 			// mod.medicina.musculo.adm_emp.setRawValue(dato.data.empresa);
+		// 			// mod.medicina.musculo.st_empre.load();
+		// 			// mod.medicina.musculo.adm_pac.setValue(dato.data.pac_id);
+		// 			// mod.medicina.musculo.adm_pac.setRawValue(dato.data.adm_pac);
+		// 			// mod.medicina.musculo.desc.setValue(dato.data.pk_desc);
+		// 			// mod.medicina.musculo.tficha.setValue(dato.data.tfi_desc);
+		// 		}
+		// 	},
+		// });
+	},
+	crea_stores: function () {
+		this.list_cie10 = new Ext.data.JsonStore({
+			url: "<[controller]>",
+			baseParams: {
+				acction: "list_cie10",
+				format: "json",
+			},
+			fields: ["cie4_id", "cie4_cie3id", "cie4_desc"],
+			root: "data",
+		});
+	},
+	crea_controles: function () {
+		//m_musc_flexi_ptos
+		this.m_musc_flexi_ptos = new Ext.form.TextField({
+			fieldLabel: "<b>Puntos</b>",
+			maskRe: /[\d]/,
+			name: "m_musc_flexi_ptos",
+			minLength: 1,
+			autoCreate: {
+				tag: "input",
+				maxlength: 1,
+				minLength: 1,
+				type: "text",
+				size: "1",
+				autocomplete: "off",
+			},
+			value: "1",
+			width: 24,
+		});
+		//m_musc_flexi_obs
+		this.m_musc_flexi_obs = new Ext.form.TextArea({
+			name: "m_musc_flexi_obs",
+			fieldLabel: "<b>Observaciones</b>",
+			value: "NO",
+			anchor: "100%",
+			height: 50,
+		});
+		//m_musc_cadera_ptos
+		this.m_musc_cadera_ptos = new Ext.form.TextField({
+			fieldLabel: "<b>Puntos</b>",
+			maskRe: /[\d]/,
+			name: "m_musc_cadera_ptos",
+			minLength: 1,
+			autoCreate: {
+				tag: "input",
+				maxlength: 1,
+				minLength: 1,
+				type: "text",
+				size: "1",
+				autocomplete: "off",
+			},
+			value: "1",
+			width: 24,
+		});
+		//m_musc_cadera_obs
+		this.m_musc_cadera_obs = new Ext.form.TextArea({
+			name: "m_musc_cadera_obs",
+			fieldLabel: "<b>Observaciones</b>",
+			value: "NO",
+			anchor: "100%",
+			height: 50,
+		});
+		//m_musc_muslo_ptos
+		this.m_musc_muslo_ptos = new Ext.form.TextField({
+			fieldLabel: "<b>Puntos</b>",
+			maskRe: /[\d]/,
+			name: "m_musc_muslo_ptos",
+			minLength: 1,
+			autoCreate: {
+				tag: "input",
+				maxlength: 1,
+				minLength: 1,
+				type: "text",
+				size: "1",
+				autocomplete: "off",
+			},
+			value: "1",
+			width: 24,
+		});
+		//m_musc_muslo_obs
+		this.m_musc_muslo_obs = new Ext.form.TextArea({
+			name: "m_musc_muslo_obs",
+			fieldLabel: "<b>Observaciones</b>",
+			value: "NO",
+			anchor: "100%",
+			height: 50,
+		});
+		//m_musc_abdom_ptos
+		this.m_musc_abdom_ptos = new Ext.form.TextField({
+			fieldLabel: "<b>Puntos</b>",
+			maskRe: /[\d]/,
+			name: "m_musc_abdom_ptos",
+			minLength: 1,
+			autoCreate: {
+				tag: "input",
+				maxlength: 1,
+				minLength: 1,
+				type: "text",
+				size: "1",
+				autocomplete: "off",
+			},
+			value: "1",
+			width: 24,
+		});
+		//m_musc_abdom_obs
+		this.m_musc_abdom_obs = new Ext.form.TextArea({
+			name: "m_musc_abdom_obs",
+			fieldLabel: "<b>Observaciones</b>",
+			value: "NO",
+			anchor: "100%",
+			height: 50,
+		});
+		//m_musc_abduc_180_ptos
+		this.m_musc_abduc_180_ptos = new Ext.form.TextField({
+			fieldLabel: "<b>Puntos</b>",
+			maskRe: /[\d]/,
+			name: "m_musc_abduc_180_ptos",
+			minLength: 1,
+			autoCreate: {
+				tag: "input",
+				maxlength: 1,
+				minLength: 1,
+				type: "text",
+				size: "1",
+				autocomplete: "off",
+			},
+			value: "1",
+			width: 24,
+		});
+		//m_musc_abduc_180_dolor
+		this.m_musc_abduc_180_dolor = new Ext.form.TextArea({
+			name: "m_musc_abduc_180_dolor",
+			fieldLabel: "<b>Observaciones</b>",
+			value: "NO",
+			anchor: "95%",
+			height: 50,
+		});
+		//m_musc_abduc_80_ptos
+		this.m_musc_abduc_80_ptos = new Ext.form.TextField({
+			fieldLabel: "<b>Puntos</b>",
+			maskRe: /[\d]/,
+			name: "m_musc_abduc_80_ptos",
+			minLength: 1,
+			autoCreate: {
+				tag: "input",
+				maxlength: 1,
+				minLength: 1,
+				type: "text",
+				size: "1",
+				autocomplete: "off",
+			},
+			value: "1",
+			width: 24,
+		});
+		//m_musc_abduc_80_dolor
+		this.m_musc_abduc_80_dolor = new Ext.form.TextArea({
+			name: "m_musc_abduc_80_dolor",
+			fieldLabel: "<b>Observaciones</b>",
+			value: "NO",
+			anchor: "95%",
+			height: 50,
+		});
+		//m_musc_rota_exter_ptos
+		this.m_musc_rota_exter_ptos = new Ext.form.TextField({
+			fieldLabel: "<b>Puntos</b>",
+			maskRe: /[\d]/,
+			name: "m_musc_rota_exter_ptos",
+			minLength: 1,
+			autoCreate: {
+				tag: "input",
+				maxlength: 1,
+				minLength: 1,
+				type: "text",
+				size: "1",
+				autocomplete: "off",
+			},
+			value: "1",
+			width: 24,
+		});
+		//m_musc_rota_exter_dolor
+		this.m_musc_rota_exter_dolor = new Ext.form.TextArea({
+			name: "m_musc_rota_exter_dolor",
+			fieldLabel: "<b>Observaciones</b>",
+			value: "NO",
+			anchor: "95%",
+			height: 50,
+		});
+		//m_musc_rota_inter_ptos
+		this.m_musc_rota_inter_ptos = new Ext.form.TextField({
+			fieldLabel: "<b>Puntos</b>",
+			maskRe: /[\d]/,
+			name: "m_musc_rota_inter_ptos",
+			minLength: 1,
+			autoCreate: {
+				tag: "input",
+				maxlength: 1,
+				minLength: 1,
+				type: "text",
+				size: "1",
+				autocomplete: "off",
+			},
+			value: "1",
+			width: 24,
+		});
+		//m_musc_rota_inter_dolor
+		this.m_musc_rota_inter_dolor = new Ext.form.TextArea({
+			name: "m_musc_rota_inter_dolor",
+			fieldLabel: "<b>Observaciones</b>",
+			value: "NO",
+			anchor: "95%",
+			height: 50,
+		});
+		//m_musc_ra_obs
+		this.m_musc_ra_obs = new Ext.form.TextArea({
+			name: "m_musc_ra_obs",
+			fieldLabel: "<b>Observaciones</b>",
+			value: "NIEGA",
+			anchor: "95%",
+			height: 50,
+		});
+
+		//m_musc_aptitud
+		this.m_musc_aptitud = new Ext.form.RadioGroup({
+			fieldLabel:
+				"<b>Segun la evaluacion de capacidad fisica, el medico que suscribe CERTIFICA que el trabajador:</b>",
+			itemCls: "x-check-group-alt",
+			columns: 1,
+			items: [
+				{
+					boxLabel: "No tiene limitaciones funcionales",
+					name: "m_musc_aptitud",
+					inputValue: "No tiene limitaciones funcionales",
+					checked: true,
+				},
+				{
+					boxLabel: "Tiene limitaciones funcionales",
+					name: "m_musc_aptitud",
+					inputValue: "Tiene limitaciones funcionales",
+				},
+			],
+		});
+		//m_musc_col_cevical_desvia_lateral
+		this.m_musc_col_cevical_desvia_lateral = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["Normal", "Normal"],
+					["Concavidad derecha", "Concavidad derecha"],
+					["Concavidad izquierda", "Concavidad izquierda"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_cevical_desvia_lateral",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("Normal");
+					descripcion.setRawValue("Normal");
+				},
+			},
+		});
+		//m_musc_col_cevical_desvia_antero
+		this.m_musc_col_cevical_desvia_antero = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["Normal", "Normal"],
+					["Aumentada", "Aumentada"],
+					["Disminuida", "Disminuida"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_cevical_desvia_antero",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("Normal");
+					descripcion.setRawValue("Normal");
+				},
+			},
+		});
+		//m_musc_col_cevical_palpa_apofisis
+		this.m_musc_col_cevical_palpa_apofisis = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_cevical_palpa_apofisis",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_col_cevical_palpa_contractura
+		this.m_musc_col_cevical_palpa_contractura = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_cevical_palpa_contractura",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_col_dorsal_desvia_lateral
+		this.m_musc_col_dorsal_desvia_lateral = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["Normal", "Normal"],
+					["Concavidad derecha", "Concavidad derecha"],
+					["Concavidad izquierda", "Concavidad izquierda"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_dorsal_desvia_lateral",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("Normal");
+					descripcion.setRawValue("Normal");
+				},
+			},
+		});
+		//m_musc_col_dorsal_desvia_antero
+		this.m_musc_col_dorsal_desvia_antero = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["Normal", "Normal"],
+					["Aumentada", "Aumentada"],
+					["Disminuida", "Disminuida"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_dorsal_desvia_antero",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("Normal");
+					descripcion.setRawValue("Normal");
+				},
+			},
+		});
+		//m_musc_col_dorsal_palpa_apofisis
+		this.m_musc_col_dorsal_palpa_apofisis = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_dorsal_palpa_apofisis",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_col_dorsal_palpa_contractura
+		this.m_musc_col_dorsal_palpa_contractura = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_dorsal_palpa_contractura",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_col_lumbar_desvia_lateral
+		this.m_musc_col_lumbar_desvia_lateral = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["Normal", "Normal"],
+					["Concavidad derecha", "Concavidad derecha"],
+					["Concavidad izquierda", "Concavidad izquierda"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_lumbar_desvia_lateral",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("Normal");
+					descripcion.setRawValue("Normal");
+				},
+			},
+		});
+		//m_musc_col_lumbar_desvia_antero
+		this.m_musc_col_lumbar_desvia_antero = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["Normal", "Normal"],
+					["Aumentada", "Aumentada"],
+					["Disminuida", "Disminuida"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_lumbar_desvia_antero",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("Normal");
+					descripcion.setRawValue("Normal");
+				},
+			},
+		});
+		//m_musc_col_lumbar_palpa_apofisis
+		this.m_musc_col_lumbar_palpa_apofisis = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_lumbar_palpa_apofisis",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_col_lumbar_palpa_contractura
+		this.m_musc_col_lumbar_palpa_contractura = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_lumbar_palpa_contractura",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
+		//m_musc_col_cevical_flexion
+		this.m_musc_col_cevical_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_cevical_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_cevical_exten
+		this.m_musc_col_cevical_exten = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_cevical_exten",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_cevical_lat_izq
+		this.m_musc_col_cevical_lat_izq = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_cevical_lat_izq",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_cevical_lat_der
+		this.m_musc_col_cevical_lat_der = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_cevical_lat_der",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_cevical_rota_izq
+		this.m_musc_col_cevical_rota_izq = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_cevical_rota_izq",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_cevical_rota_der
+		this.m_musc_col_cevical_rota_der = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_cevical_rota_der",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_cevical_irradia
+		this.m_musc_col_cevical_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_cevical_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_col_cevical_alt_masa
+		this.m_musc_col_cevical_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_cevical_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_col_dorsal_flexion
+		this.m_musc_col_dorsal_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_dorsal_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_dorsal_exten
+		this.m_musc_col_dorsal_exten = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_dorsal_exten",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_dorsal_lat_izq
+		this.m_musc_col_dorsal_lat_izq = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_dorsal_lat_izq",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_dorsal_lat_der
+		this.m_musc_col_dorsal_lat_der = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_dorsal_lat_der",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_dorsal_rota_izq
+		this.m_musc_col_dorsal_rota_izq = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_dorsal_rota_izq",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_dorsal_rota_der
+		this.m_musc_col_dorsal_rota_der = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_dorsal_rota_der",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_dorsal_irradia
+		this.m_musc_col_dorsal_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_dorsal_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_col_dorsal_alt_masa
+		this.m_musc_col_dorsal_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_dorsal_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_col_lumbar_flexion
+		this.m_musc_col_lumbar_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_lumbar_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_lumbar_exten
+		this.m_musc_col_lumbar_exten = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_lumbar_exten",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_lumbar_lat_izq
+		this.m_musc_col_lumbar_lat_izq = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_lumbar_lat_izq",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_lumbar_lat_der
+		this.m_musc_col_lumbar_lat_der = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_lumbar_lat_der",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_lumbar_rota_izq
+		this.m_musc_col_lumbar_rota_izq = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_lumbar_rota_izq",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_lumbar_rota_der
+		this.m_musc_col_lumbar_rota_der = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_lumbar_rota_der",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_col_lumbar_irradia
+		this.m_musc_col_lumbar_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_lumbar_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_col_lumbar_alt_masa
+		this.m_musc_col_lumbar_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_col_lumbar_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_hombro_der_abduccion
+		this.m_musc_hombro_der_abduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_der_abduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_hombro_der_aduccion
+		this.m_musc_hombro_der_aduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_der_aduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_hombro_der_flexion
+		this.m_musc_hombro_der_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_der_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_hombro_der_extencion
+		this.m_musc_hombro_der_extencion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_der_extencion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_hombro_der_rota_exter
+		this.m_musc_hombro_der_rota_exter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_der_rota_exter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_hombro_der_rota_inter
+		this.m_musc_hombro_der_rota_inter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_der_rota_inter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_hombro_der_irradia
+		this.m_musc_hombro_der_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_der_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_hombro_der_alt_masa
+		this.m_musc_hombro_der_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_der_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_hombro_izq_abduccion
+		this.m_musc_hombro_izq_abduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_izq_abduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_hombro_izq_aduccion
+		this.m_musc_hombro_izq_aduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_izq_aduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_hombro_izq_flexion
+		this.m_musc_hombro_izq_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_izq_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_hombro_izq_extencion
+		this.m_musc_hombro_izq_extencion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_izq_extencion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_hombro_izq_rota_exter
+		this.m_musc_hombro_izq_rota_exter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_izq_rota_exter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_hombro_izq_rota_inter
+		this.m_musc_hombro_izq_rota_inter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_izq_rota_inter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_hombro_izq_irradia
+		this.m_musc_hombro_izq_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_izq_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_hombro_izq_alt_masa
+		this.m_musc_hombro_izq_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_hombro_izq_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_codo_der_abduccion
+		this.m_musc_codo_der_abduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_der_abduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_codo_der_aduccion
+		this.m_musc_codo_der_aduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_der_aduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_codo_der_flexion
+		this.m_musc_codo_der_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_der_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_codo_der_extencion
+		this.m_musc_codo_der_extencion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_der_extencion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_codo_der_rota_exter
+		this.m_musc_codo_der_rota_exter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_der_rota_exter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_codo_der_rota_inter
+		this.m_musc_codo_der_rota_inter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_der_rota_inter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_codo_der_irradia
+		this.m_musc_codo_der_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_der_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_codo_der_alt_masa
+		this.m_musc_codo_der_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_der_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_codo_izq_abduccion
+		this.m_musc_codo_izq_abduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_izq_abduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_codo_izq_aduccion
+		this.m_musc_codo_izq_aduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_izq_aduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_codo_izq_flexion
+		this.m_musc_codo_izq_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_izq_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_codo_izq_extencion
+		this.m_musc_codo_izq_extencion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_izq_extencion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_codo_izq_rota_exter
+		this.m_musc_codo_izq_rota_exter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_izq_rota_exter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_codo_izq_rota_inter
+		this.m_musc_codo_izq_rota_inter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_izq_rota_inter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_codo_izq_irradia
+		this.m_musc_codo_izq_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_izq_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_codo_izq_alt_masa
+		this.m_musc_codo_izq_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_codo_izq_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_muneca_der_abduccion
+		this.m_musc_muneca_der_abduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_der_abduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_muneca_der_aduccion
+		this.m_musc_muneca_der_aduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_der_aduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_muneca_der_flexion
+		this.m_musc_muneca_der_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_der_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_muneca_der_extencion
+		this.m_musc_muneca_der_extencion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_der_extencion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_muneca_der_rota_exter
+		this.m_musc_muneca_der_rota_exter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_der_rota_exter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_muneca_der_rota_inter
+		this.m_musc_muneca_der_rota_inter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_der_rota_inter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_muneca_der_irradia
+		this.m_musc_muneca_der_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_der_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_muneca_der_alt_masa
+		this.m_musc_muneca_der_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_der_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_muneca_izq_abduccion
+		this.m_musc_muneca_izq_abduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_izq_abduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_muneca_izq_aduccion
+		this.m_musc_muneca_izq_aduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_izq_aduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_muneca_izq_flexion
+		this.m_musc_muneca_izq_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_izq_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_muneca_izq_extencion
+		this.m_musc_muneca_izq_extencion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_izq_extencion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_muneca_izq_rota_exter
+		this.m_musc_muneca_izq_rota_exter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_izq_rota_exter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_muneca_izq_rota_inter
+		this.m_musc_muneca_izq_rota_inter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_izq_rota_inter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_muneca_izq_irradia
+		this.m_musc_muneca_izq_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_izq_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_muneca_izq_alt_masa
+		this.m_musc_muneca_izq_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_muneca_izq_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_mano_der_abduccion
+		this.m_musc_mano_der_abduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_der_abduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_mano_der_aduccion
+		this.m_musc_mano_der_aduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_der_aduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_mano_der_flexion
+		this.m_musc_mano_der_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_der_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_mano_der_extencion
+		this.m_musc_mano_der_extencion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_der_extencion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_mano_der_rota_exter
+		this.m_musc_mano_der_rota_exter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_der_rota_exter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_mano_der_rota_inter
+		this.m_musc_mano_der_rota_inter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_der_rota_inter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_mano_der_irradia
+		this.m_musc_mano_der_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_der_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_mano_der_alt_masa
+		this.m_musc_mano_der_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_der_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_mano_izq_abduccion
+		this.m_musc_mano_izq_abduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_izq_abduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_mano_izq_aduccion
+		this.m_musc_mano_izq_aduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_izq_aduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_mano_izq_flexion
+		this.m_musc_mano_izq_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_izq_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_mano_izq_extencion
+		this.m_musc_mano_izq_extencion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_izq_extencion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_mano_izq_rota_exter
+		this.m_musc_mano_izq_rota_exter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_izq_rota_exter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_mano_izq_rota_inter
+		this.m_musc_mano_izq_rota_inter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_izq_rota_inter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_mano_izq_irradia
+		this.m_musc_mano_izq_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_izq_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_mano_izq_alt_masa
+		this.m_musc_mano_izq_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_mano_izq_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_cadera_der_abduccion
+		this.m_musc_cadera_der_abduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_der_abduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_cadera_der_aduccion
+		this.m_musc_cadera_der_aduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_der_aduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_cadera_der_flexion
+		this.m_musc_cadera_der_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_der_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_cadera_der_extencion
+		this.m_musc_cadera_der_extencion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_der_extencion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_cadera_der_rota_exter
+		this.m_musc_cadera_der_rota_exter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_der_rota_exter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_cadera_der_rota_inter
+		this.m_musc_cadera_der_rota_inter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_der_rota_inter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_cadera_der_irradia
+		this.m_musc_cadera_der_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_der_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_cadera_der_alt_masa
+		this.m_musc_cadera_der_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_der_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_cadera_izq_abduccion
+		this.m_musc_cadera_izq_abduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_izq_abduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_cadera_izq_aduccion
+		this.m_musc_cadera_izq_aduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_izq_aduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_cadera_izq_flexion
+		this.m_musc_cadera_izq_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_izq_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_cadera_izq_extencion
+		this.m_musc_cadera_izq_extencion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_izq_extencion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_cadera_izq_rota_exter
+		this.m_musc_cadera_izq_rota_exter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_izq_rota_exter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_cadera_izq_rota_inter
+		this.m_musc_cadera_izq_rota_inter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_izq_rota_inter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_cadera_izq_irradia
+		this.m_musc_cadera_izq_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_izq_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_cadera_izq_alt_masa
+		this.m_musc_cadera_izq_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_cadera_izq_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_rodilla_der_abduccion
+		this.m_musc_rodilla_der_abduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_der_abduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_rodilla_der_aduccion
+		this.m_musc_rodilla_der_aduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_der_aduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_rodilla_der_flexion
+		this.m_musc_rodilla_der_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_der_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_rodilla_der_extencion
+		this.m_musc_rodilla_der_extencion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_der_extencion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_rodilla_der_rota_exter
+		this.m_musc_rodilla_der_rota_exter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_der_rota_exter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_rodilla_der_rota_inter
+		this.m_musc_rodilla_der_rota_inter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_der_rota_inter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_rodilla_der_irradia
+		this.m_musc_rodilla_der_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_der_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_rodilla_der_alt_masa
+		this.m_musc_rodilla_der_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_der_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_rodilla_izq_abduccion
+		this.m_musc_rodilla_izq_abduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_izq_abduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_rodilla_izq_aduccion
+		this.m_musc_rodilla_izq_aduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_izq_aduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_rodilla_izq_flexion
+		this.m_musc_rodilla_izq_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_izq_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_rodilla_izq_extencion
+		this.m_musc_rodilla_izq_extencion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_izq_extencion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_rodilla_izq_rota_exter
+		this.m_musc_rodilla_izq_rota_exter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_izq_rota_exter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_rodilla_izq_rota_inter
+		this.m_musc_rodilla_izq_rota_inter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_izq_rota_inter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_rodilla_izq_irradia
+		this.m_musc_rodilla_izq_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_izq_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_rodilla_izq_alt_masa
+		this.m_musc_rodilla_izq_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_rodilla_izq_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_tobillo_der_abduccion
+		this.m_musc_tobillo_der_abduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_der_abduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_tobillo_der_aduccion
+		this.m_musc_tobillo_der_aduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_der_aduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_tobillo_der_flexion
+		this.m_musc_tobillo_der_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_der_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_tobillo_der_extencion
+		this.m_musc_tobillo_der_extencion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_der_extencion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_tobillo_der_rota_exter
+		this.m_musc_tobillo_der_rota_exter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_der_rota_exter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_tobillo_der_rota_inter
+		this.m_musc_tobillo_der_rota_inter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_der_rota_inter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_tobillo_der_irradia
+		this.m_musc_tobillo_der_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_der_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_tobillo_der_alt_masa
+		this.m_musc_tobillo_der_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_der_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_tobillo_izq_abduccion
+		this.m_musc_tobillo_izq_abduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_izq_abduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_tobillo_izq_aduccion
+		this.m_musc_tobillo_izq_aduccion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_izq_aduccion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_tobillo_izq_flexion
+		this.m_musc_tobillo_izq_flexion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_izq_flexion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_tobillo_izq_extencion
+		this.m_musc_tobillo_izq_extencion = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_izq_extencion",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_tobillo_izq_rota_exter
+		this.m_musc_tobillo_izq_rota_exter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_izq_rota_exter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_tobillo_izq_rota_inter
+		this.m_musc_tobillo_izq_rota_inter = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["0", "0"],
+					["1", "1"],
+					["2", "2"],
+					["3", "3"],
+					["4", "4"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_izq_rota_inter",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("0");
+					descripcion.setRawValue("0");
+				},
+			},
+		});
+		//m_musc_tobillo_izq_irradia
+		this.m_musc_tobillo_izq_irradia = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_izq_irradia",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_tobillo_izq_alt_masa
+		this.m_musc_tobillo_izq_alt_masa = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["NO", "NO"],
+					["SI", "SI"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			// fieldLabel: "<b>nombre_combo</b>",
+			hiddenName: "m_musc_tobillo_izq_alt_masa",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			emptyText: "Seleccione...",
+			selectOnFocus: true,
+			anchor: "90%",
+			width: 100,
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("NO");
+					descripcion.setRawValue("NO");
+				},
+			},
+		});
+		//m_musc_colum_punto_ref
+		this.m_musc_colum_punto_ref = new Ext.form.RadioGroup({
+			fieldLabel:
+				"<b>Segun la evaluacion de capacidad fisica, el medico que suscribe CERTIFICA que el trabajador:</b>",
+			itemCls: "x-check-group-alt",
+			columns: 1,
+			items: [
+				{
+					boxLabel: "Grado 0: Ausencia de signos y sintomas",
+					name: "m_musc_colum_punto_ref",
+					inputValue: "Grado 0: Ausencia de signos y sintomas",
+					checked: true,
+				},
+				{
+					boxLabel: "Grado 1: Contractura y/o dolor a la movilizacion",
+					name: "m_musc_colum_punto_ref",
+					inputValue: "Grado 1: Contractura y/o dolor a la movilizacion",
+				},
+				{
+					boxLabel: "Grado 2: Grado1 mas dolor a la palpacion y/o persuacion",
+					name: "m_musc_colum_punto_ref",
+					inputValue: "Grado 2: Grado1 mas dolor a la palpacion y/o persuacion",
+				},
+				{
+					boxLabel:
+						"Grado 3: Grado 2 mas limitación funcional evidente clinicamente",
+					name: "m_musc_colum_punto_ref",
+					inputValue:
+						"Grado 3: Grado 2 mas limitación funcional evidente clinicamente",
+				},
+				{
+					boxLabel: "Grado 4: Dolor en reposo",
+					name: "m_musc_colum_punto_ref",
+					inputValue: "Grado 4: Dolor en reposo",
+				},
+			],
+		});
+		//m_musc_colum_aptitud
+		this.m_musc_colum_aptitud = new Ext.form.RadioGroup({
+			fieldLabel:"<b>VALORACIÓN</b>",
+			itemCls: "x-check-group-alt",
+			columns: 3,
+			items: [
+				{
+					boxLabel: "APTO",
+					name: "m_musc_colum_aptitud",
+					inputValue: "APTO",
+					checked: true,
+				},
+				{
+					boxLabel: "NO APTO",
+					name: "m_musc_colum_aptitud",
+					inputValue: "NO APTO",
+				},
+				{
+					boxLabel: "EN OBSERVACION",
+					name: "m_musc_colum_aptitud",
+					inputValue: "EN OBSERVACION",
+				},
+			],
+		});
+		// this.m_musc_colum_aptitud = new Ext.form.ComboBox({
+		// 	store: new Ext.data.ArrayStore({
+		// 		fields: ["campo", "descripcion"],
+		// 		data: [
+		// 			["APTO", "APTO"],
+		// 			["NO APTO", "NO APTO"],
+		// 			["EN OBSERVACION", "EN OBSERVACION"],
+		// 		],
+		// 	}),
+		// 	displayField: "descripcion",
+		// 	valueField: "campo",
+		// 	fieldLabel: "<b>VALORACIÓN</b>",
+		// 	hiddenName: "m_musc_colum_aptitud",
+		// 	allowBlank: false,
+		// 	typeAhead: true,
+		// 	mode: "local",
+		// 	forceSelection: true,
+		// 	triggerAction: "all",
+		// 	emptyText: "Seleccione...",
+		// 	selectOnFocus: true,
+		// 	anchor: "90%",
+		// 	width: 100,
+		// 	listeners: {
+		// 		afterrender: function (descripcion) {
+		// 			descripcion.setValue("APTO");
+		// 			descripcion.setRawValue("APTO");
+		// 		},
+		// 	},
+		// });
+		//m_musc_colum_desc
+		this.m_musc_colum_desc = new Ext.form.TextArea({
+			name: "m_musc_colum_desc",
+			fieldLabel: "<b>DESCRIPION DE HALLAZGOS</b>",
+			anchor: "95%",
+			value: "SIN HALLAZGOS DE IMPORTANCIA",
+			height: 100,
+		});
+
+		this.cie10Tpl = new Ext.XTemplate(
+			'<tpl for="."><div class="search-item">',
+			'<div class="div-table-col">',
+			"{cie4_id}",
+			"<h3><span><p>{cie4_desc}</p></span></h3>",
+			"</div>",
+			"</div></tpl>"
+		);
+
+		//m_musc_diag_01
+		this.m_musc_diag_01 = new Ext.form.ComboBox({
+			store: this.list_cie10,
+			loadingText: "Searching...",
+			pageSize: 10,
+			tpl: this.cie10Tpl,
+			//            disabled: true,
+			hideTrigger: true,
+			itemSelector: "div.search-item",
+			selectOnFocus: true,
+			minChars: 1,
+			hiddenName: "m_musc_diag_01",
+			displayField: "cie4_desc",
+			valueField: "cie4_desc",
+			typeAhead: false,
+			triggerAction: "all",
+			fieldLabel: "<b>Diagnostico Cie 10</b>",
+			mode: "remote",
+			style: {
+				textTransform: "uppercase",
+			},
+			anchor: "100%",
+		});
+		//m_musc_conclu_01
+		this.m_musc_conclu_01 = new Ext.form.TextArea({
+			name: "m_musc_conclu_01",
+			fieldLabel: "<b>CONCLUSIONES</b>",
+			anchor: "95%",
+			height: 50,
+		});
+		//m_musc_recom_01
+		this.m_musc_recom_01 = new Ext.form.TextArea({
+			name: "m_musc_recom_01",
+			fieldLabel: "<b>RECOMENDACIONES</b>",
+			anchor: "95%",
+			height: 50,
+		});
+		//m_musc_diag_02
+		this.m_musc_diag_02 = new Ext.form.ComboBox({
+			store: this.list_cie10,
+			loadingText: "Searching...",
+			pageSize: 10,
+			tpl: this.cie10Tpl,
+			//            disabled: true,
+			hideTrigger: true,
+			itemSelector: "div.search-item",
+			selectOnFocus: true,
+			minChars: 1,
+			hiddenName: "m_musc_diag_02",
+			displayField: "cie4_desc",
+			valueField: "cie4_desc",
+			typeAhead: false,
+			triggerAction: "all",
+			fieldLabel: "<b>Diagnostico Cie 10</b>",
+			mode: "remote",
+			style: {
+				textTransform: "uppercase",
+			},
+			anchor: "100%",
+		});
+		//m_musc_conclu_02
+		this.m_musc_conclu_02 = new Ext.form.TextArea({
+			name: "m_musc_conclu_02",
+			fieldLabel: "<b>CONCLUSIONES</b>",
+			anchor: "95%",
+			height: 50,
+		});
+		//m_musc_recom_02
+		this.m_musc_recom_02 = new Ext.form.TextArea({
+			name: "m_musc_recom_02",
+			fieldLabel: "<b>RECOMENDACIONES</b>",
+			anchor: "95%",
+			height: 50,
+		});
+		//m_musc_diag_03
+		this.m_musc_diag_03 = new Ext.form.ComboBox({
+			store: this.list_cie10,
+			loadingText: "Searching...",
+			pageSize: 10,
+			tpl: this.cie10Tpl,
+			//            disabled: true,
+			hideTrigger: true,
+			itemSelector: "div.search-item",
+			selectOnFocus: true,
+			minChars: 1,
+			hiddenName: "m_musc_diag_03",
+			displayField: "cie4_desc",
+			valueField: "cie4_desc",
+			typeAhead: false,
+			triggerAction: "all",
+			fieldLabel: "<b>Diagnostico Cie 10</b>",
+			mode: "remote",
+			style: {
+				textTransform: "uppercase",
+			},
+			anchor: "100%",
+		});
+		//m_musc_conclu_03
+		this.m_musc_conclu_03 = new Ext.form.TextArea({
+			name: "m_musc_conclu_03",
+			fieldLabel: "<b>CONCLUSIONES</b>",
+			anchor: "95%",
+			height: 50,
+		});
+		//m_musc_recom_03
+		this.m_musc_recom_03 = new Ext.form.TextArea({
+			name: "m_musc_recom_03",
+			fieldLabel: "<b>RECOMENDACIONES</b>",
+			anchor: "95%",
+			height: 50,
+		});
+
+		//FRM ANEXO 16
+		this.frm = new Ext.FormPanel({
+			region: "center",
+			url: "<[controller]>",
+			monitorValid: true,
+			border: false,
+			layout: "accordion",
+			layoutConfig: {
+				titleCollapse: true,
+				animate: true,
+				hideCollapseTool: true,
+			},
+			items: [
+				{
+					title: "<b>--->  APTITUD DE ESPALDA Y RANGOS ARTICULARES</b>",
+					iconCls: "demo2",
+					layout: "column",
+					border: false,
+					autoScroll: true,
+					bodyStyle: "padding:10px 10px 20px 10px;", //m_med_aptitud
+					labelWidth: 60,
+					items: [
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							labelWidth: 250,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									// layout: "column",
+									title: "CONCLUSIONES PSICOLOGICAS:",
+									items: [
+										{
+											xtype: "compositefield",
+											items: [
+												{
+													xtype: "displayfield",
+													value: "<b>Excelente: 1</b>",
+													width: 115,
+												},
+												{
+													xtype: "displayfield",
+													value: "<b>Promedio: 2</b>",
+													width: 115,
+												},
+												{
+													xtype: "displayfield",
+													value: "<b>Regular: 3</b>",
+													width: 110,
+												},
+												{
+													xtype: "displayfield",
+													value: "<b>Pobre: 4</b>",
+													width: 88,
+												},
+												{
+													xtype: "displayfield",
+													value: "Ptos",
+													width: 25,
+												},
+												{
+													xtype: "displayfield",
+													value: "<center>Observaciones</center>",
+													width: 150,
+												},
+											],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel: "Flexibilidad/Fuerza ABDOMEN",
+											items: [
+												{
+													xtype: "button",
+													iconCls: "flexi_1",
+													handler: function () {
+														mod.medicina.musculo.m_musc_flexi_ptos.setValue(1);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "flexi_2",
+													handler: function () {
+														mod.medicina.musculo.m_musc_flexi_ptos.setValue(2);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "flexi_3",
+													handler: function () {
+														mod.medicina.musculo.m_musc_flexi_ptos.setValue(3);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "flexi_4",
+													handler: function () {
+														mod.medicina.musculo.m_musc_flexi_ptos.setValue(4);
+													},
+												},
+												this.m_musc_flexi_ptos,
+												this.m_musc_flexi_obs,
+											],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel: "CADERA",
+											items: [
+												{
+													xtype: "button",
+													iconCls: "cadera_1",
+													handler: function () {
+														mod.medicina.musculo.m_musc_cadera_ptos.setValue(1);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "cadera_2",
+													handler: function () {
+														mod.medicina.musculo.m_musc_cadera_ptos.setValue(2);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "cadera_3",
+													handler: function () {
+														mod.medicina.musculo.m_musc_cadera_ptos.setValue(3);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "cadera_4",
+													handler: function () {
+														mod.medicina.musculo.m_musc_cadera_ptos.setValue(4);
+													},
+												},
+												this.m_musc_cadera_ptos,
+												this.m_musc_cadera_obs,
+											],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel: "MUSLO",
+											items: [
+												{
+													xtype: "button",
+													iconCls: "muslo_1",
+													handler: function () {
+														mod.medicina.musculo.m_musc_muslo_ptos.setValue(1);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "muslo_2",
+													handler: function () {
+														mod.medicina.musculo.m_musc_muslo_ptos.setValue(2);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "muslo_3",
+													handler: function () {
+														mod.medicina.musculo.m_musc_muslo_ptos.setValue(3);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "muslo_4",
+													handler: function () {
+														mod.medicina.musculo.m_musc_muslo_ptos.setValue(4);
+													},
+												},
+												this.m_musc_muslo_ptos,
+												this.m_musc_muslo_obs,
+											],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel: "ABDOMEN",
+											items: [
+												{
+													xtype: "button",
+													iconCls: "abdom_1",
+													handler: function () {
+														mod.medicina.musculo.m_musc_abdom_ptos.setValue(1);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "abdom_2",
+													handler: function () {
+														mod.medicina.musculo.m_musc_abdom_ptos.setValue(2);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "abdom_3",
+													handler: function () {
+														mod.medicina.musculo.m_musc_abdom_ptos.setValue(3);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "abdom_4",
+													handler: function () {
+														mod.medicina.musculo.m_musc_abdom_ptos.setValue(4);
+													},
+												},
+												this.m_musc_abdom_ptos,
+												this.m_musc_abdom_obs,
+											],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							labelWidth: 250,
+							columnWidth: 0.7,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									// layout: "column",
+									title: "RANGOS ARTICULARES:",
+									items: [
+										{
+											xtype: "compositefield",
+											items: [
+												{
+													xtype: "displayfield",
+													value: "<center><b>Optimo: 1</b></center>",
+													width: 99,
+												},
+												{
+													xtype: "displayfield",
+													value: "<center><b>Limitado: 2</b></center>",
+													width: 105,
+												},
+												{
+													xtype: "displayfield",
+													value: "<center><b>Muy Limitado: 3</b></center>",
+													width: 110,
+												},
+												{
+													xtype: "displayfield",
+													value: "Ptos",
+													width: 25,
+												},
+												{
+													xtype: "displayfield",
+													value: "<center>Dolor contra resistencia</center>",
+													width: 150,
+												},
+											],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel: "Abduccion de hombro (Normal 0º - 180º)",
+											items: [
+												{
+													xtype: "button",
+													iconCls: "abduc_180_1",
+													handler: function () {
+														mod.medicina.musculo.m_musc_abduc_180_ptos.setValue(
+															1
+														);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "abduc_180_2",
+													handler: function () {
+														mod.medicina.musculo.m_musc_abduc_180_ptos.setValue(
+															2
+														);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "abduc_180_3",
+													handler: function () {
+														mod.medicina.musculo.m_musc_abduc_180_ptos.setValue(
+															3
+														);
+													},
+												},
+												this.m_musc_abduc_180_ptos,
+												this.m_musc_abduc_180_dolor,
+											],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel: "Abduccion de hombro (Normal 0º - 80º)",
+											items: [
+												{
+													xtype: "button",
+													iconCls: "abduc_80_1",
+													handler: function () {
+														mod.medicina.musculo.m_musc_abduc_80_ptos.setValue(
+															1
+														);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "abduc_80_2",
+													handler: function () {
+														mod.medicina.musculo.m_musc_abduc_80_ptos.setValue(
+															2
+														);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "abduc_80_3",
+													handler: function () {
+														mod.medicina.musculo.m_musc_abduc_80_ptos.setValue(
+															3
+														);
+													},
+												},
+												this.m_musc_abduc_80_ptos,
+												this.m_musc_abduc_80_dolor,
+											],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel: "Rotación externa (Normal 0º - 90º)",
+											items: [
+												{
+													xtype: "button",
+													iconCls: "rota_exter_1",
+													handler: function () {
+														mod.medicina.musculo.m_musc_rota_exter_ptos.setValue(
+															1
+														);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "rota_exter_2",
+													handler: function () {
+														mod.medicina.musculo.m_musc_rota_exter_ptos.setValue(
+															2
+														);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "rota_exter_3",
+													handler: function () {
+														mod.medicina.musculo.m_musc_rota_exter_ptos.setValue(
+															3
+														);
+													},
+												},
+												this.m_musc_rota_exter_ptos,
+												this.m_musc_rota_exter_dolor,
+											],
+										},
+										{
+											xtype: "compositefield",
+											fieldLabel: "Rotación externa de hombro interna",
+											items: [
+												{
+													xtype: "button",
+													iconCls: "rota_inter_1",
+													handler: function () {
+														mod.medicina.musculo.m_musc_rota_inter_ptos.setValue(
+															1
+														);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "rota_inter_2",
+													handler: function () {
+														mod.medicina.musculo.m_musc_rota_inter_ptos.setValue(
+															2
+														);
+													},
+												},
+												{
+													xtype: "button",
+													iconCls: "rota_inter_3",
+													handler: function () {
+														mod.medicina.musculo.m_musc_rota_inter_ptos.setValue(
+															3
+														);
+													},
+												},
+												this.m_musc_rota_inter_ptos,
+												this.m_musc_rota_inter_dolor,
+											],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.3,
+							labelAlign: "top",
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "Aptitud y Observaciones:",
+									items: [
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_aptitud],
+										},
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_ra_obs],
+										},
+									],
+								},
+							],
+						},
+					],
+				},
+				{
+					title: "<b>--->  VALIDACIÓN - CONCLUSIONES - DIAGNOSTICOS</b>",
+					iconCls: "demo2",
+					layout: "column",
+					border: false,
+					autoScroll: true,
+					bodyStyle: "padding:10px 10px 20px 10px;", //m_med_aptitud
+					labelWidth: 60,
+					items: [
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "COLUMNA VERTEBRAL:",
+									items: [
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:5px 0;width:215px;height:30px;float:left;"></div>\n\
+                                                   <div style="padding:5px 0;width:217px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>DESVIACIONES DEL EJE LATERAL</h3></div>\n\
+                                                   <div style="padding:5px 0;width:217px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>DESVIACIONES DEL EJE ANTERO POSTERIOR</h3></div>\n\
+                                                   <div style="padding:5px 0;width:217px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>APOFISIS ESPINOSAS DOLOROSAS</h3></div>\n\
+                                                   <div style="padding:5px 0;width:217px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>CONTRACTURA MUSCULAR</h3></div>\n\
+                                                   ',
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>COLUMNA VERTEBRAL</h3></div>',
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_cevical_desvia_lateral],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_cevical_desvia_antero],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_cevical_palpa_apofisis],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_cevical_palpa_contractura],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>COLUMNA DORSAL</h3></div>',
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_dorsal_desvia_lateral],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_dorsal_desvia_antero],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_dorsal_palpa_apofisis],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_dorsal_palpa_contractura],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>COLUMNA LUMBAR</h3></div>',
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_lumbar_desvia_lateral],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_lumbar_desvia_antero],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_lumbar_palpa_apofisis],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_lumbar_palpa_contractura],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "MOVILIDAD - DOLOR = EVOLUCION DINAMICA",
+									items: [
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:5px 0;width:215px;height:30px;float:left;"></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>FLEXION</h3></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>EXTENCION</h3></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>LATERALIZACION IZQUIERDA</h3></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>LATERALIZACION DERECHA</h3></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>ROTACION IZQUIERDA</h3></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>ROTACION DERECHA</h3></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>IRRITACION</h3></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>ALT. MASA MUSCULAR</h3></div>\n\
+                                                   ',
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>COLUMNA VERTEBRAL</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_cevical_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_cevical_exten],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_cevical_lat_izq],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_cevical_lat_der],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_cevical_rota_izq],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_cevical_rota_der],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_cevical_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_cevical_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>COLUMNA DORSAL</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_dorsal_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_dorsal_exten],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_dorsal_lat_izq],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_dorsal_lat_der],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_dorsal_rota_izq],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_dorsal_rota_der],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_dorsal_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_dorsal_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>COLUMNA LUMBAR</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_lumbar_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_lumbar_exten],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_lumbar_lat_izq],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_lumbar_lat_der],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_lumbar_rota_izq],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_lumbar_rota_der],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_lumbar_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_col_lumbar_alt_masa],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "MOVILIDAD - DOLOR = EVOLUCION DINAMICA DE ARTICULACIONES",
+									items: [
+										{
+											columnWidth: 0.999,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:5px 0;width:215px;height:30px;float:left;"></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>ABDUCCION</h3></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>ADUCCION</h3></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>FLEXION</h3></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>EXTENCION</h3></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>ROTACION INTERNA</h3></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>ROTACION EXTERNA</h3></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>IRRRITACION</h3></div>\n\
+                                                   <div style="padding:5px 0;width:109px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>ALT. MASA MUSCULAR</h3></div>\n\
+                                                   ',
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>HOMBRO - DERECHO</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_der_abduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_der_aduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_der_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_der_extencion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_der_rota_exter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_der_rota_inter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_der_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_der_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>HOMBRO - IZQUIERDO</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_izq_abduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_izq_aduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_izq_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_izq_extencion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_izq_rota_exter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_izq_rota_inter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_izq_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_hombro_izq_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>CODO - DERECHO</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_der_abduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_der_aduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_der_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_der_extencion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_der_rota_exter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_der_rota_inter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_der_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_der_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>CODO - IZQUIERDO</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_izq_abduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_izq_aduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_izq_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_izq_extencion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_izq_rota_exter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_izq_rota_inter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_izq_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_codo_izq_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>MUÑECA - DERECHO</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_der_abduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_der_aduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_der_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_der_extencion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_der_rota_exter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_der_rota_inter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_der_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_der_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>MUÑECA - IZQUIERDO</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_izq_abduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_izq_aduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_izq_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_izq_extencion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_izq_rota_exter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_izq_rota_inter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_izq_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_muneca_izq_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>MANOS Y MUÑECA - DERECHO</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_der_abduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_der_aduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_der_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_der_extencion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_der_rota_exter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_der_rota_inter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_der_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_der_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>MANOS Y MUÑECA - IZQUIERDO</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_izq_abduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_izq_aduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_izq_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_izq_extencion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_izq_rota_exter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_izq_rota_inter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_izq_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_mano_izq_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>CADERA - DERECHO</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_der_abduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_der_aduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_der_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_der_extencion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_der_rota_exter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_der_rota_inter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_der_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_der_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>CADERA - IZQUIERDO</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_izq_abduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_izq_aduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_izq_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_izq_extencion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_izq_rota_exter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_izq_rota_inter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_izq_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_cadera_izq_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>RODILLA - DERECHO</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_der_abduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_der_aduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_der_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_der_extencion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_der_rota_exter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_der_rota_inter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_der_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_der_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>RODILLA - IZQUIERDO</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_izq_abduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_izq_aduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_izq_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_izq_extencion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_izq_rota_exter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_izq_rota_inter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_izq_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_rodilla_izq_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>TOBILLO - DERECHO</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_der_abduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_der_aduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_der_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_der_extencion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_der_rota_exter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_der_rota_inter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_der_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_der_alt_masa],
+										},
+										{
+											columnWidth: 0.2,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+                                                    <h3>TOBILLO - IZQUIERDO</h3></div>',
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_izq_abduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_izq_aduccion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_izq_flexion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_izq_extencion],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_izq_rota_exter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_izq_rota_inter],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_izq_irradia],
+										},
+										{
+											columnWidth: 0.10,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_tobillo_izq_alt_masa],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "PUNTUACION DE REFERENCIA (SIGNOS Y SINTOMAS):",
+									items: [
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_colum_punto_ref],
+										},
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_colum_aptitud],
+										},
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_colum_desc],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.333,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "DIAGNOSTICO - CONCLUSION - RECOMENDACION:",
+									items: [
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_diag_01],
+										},
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_conclu_01],
+										},
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_recom_01],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.333,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "DIAGNOSTICO - CONCLUSION - RECOMENDACION:",
+									items: [
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_diag_02],
+										},
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_conclu_02],
+										},
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_recom_02],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.333,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "DIAGNOSTICO - CONCLUSION - RECOMENDACION:",
+									items: [
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_diag_03],
+										},
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_conclu_03],
+										},
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_recom_03],
+										},
+									],
+								},
+							],
+						},
+					],
+				},
+			],
+			buttons: [
+				{
+					text: "Guardar",
+					iconCls: "guardar",
+					formBind: true,
+					scope: this,
+					handler: function () {
+						mod.medicina.musculo.win.el.mask("Guardando…", "x-mask-loading");
+						this.frm.getForm().submit({
+							params: {
+								acction:
+									this.record.get("st") >= 1
+										? "update_musculo"
+										: "save_musculo",
+								adm: this.record.get("adm"),
+								id: this.record.get("id"),
+								ex_id: this.record.get("ex_id"),
+							},
+							success: function (form, action) {
+								obj = Ext.util.JSON.decode(action.response.responseText);
+								Ext.MessageBox.alert(
+									"En hora buena",
+									"Se registro correctamente"
+								);
+								mod.medicina.musculo.win.el.unmask();
+								mod.medicina.formatos.st.reload();
+								mod.medicina.musculo.win.close();
+							},
+							failure: function (form, action) {
+								mod.medicina.musculo.win.el.unmask();
+								switch (action.failureType) {
+									case Ext.form.Action.CLIENT_INVALID:
+										Ext.Msg.alert("Failure", "Existen valores Invalidos");
+										break;
+									case Ext.form.Action.CONNECT_FAILURE:
+										Ext.Msg.alert(
+											"Failure",
+											"Error de comunicacion con servidor"
+										);
+										break;
+									case Ext.form.Action.SERVER_INVALID:
+										Ext.Msg.alert("Failure mik", action.result.error);
+										break;
+									default:
+										Ext.Msg.alert("Failure", action.result.error);
+								}
+								mod.medicina.formatos.st.reload();
+								mod.medicina.musculo.win.close();
+							},
+						});
+					},
+				},
+			],
+		});
+		this.win = new Ext.Window({
+			width: 1200,
+			height: 630,
+			border: false,
+			modal: true,
+			title: "EXAMEN MÚSCULO ESQUELÉTICO: ",
 			maximizable: false,
 			resizable: false,
 			draggable: true,
