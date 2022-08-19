@@ -669,6 +669,38 @@ mod.medicina.formatos = {
 									},
 								],
 							}).showAt(event.xy);
+						} else if (record.get("ex_id") == 15) {
+							new Ext.menu.Menu({
+								items: [
+									{
+										text:
+											"Informe Musculo Esqueletico N°: <B>" + record.get("adm") + "<B>",
+										iconCls: "reporte",
+										handler: function () {
+											if (record.get("st") >= 1) {
+												new Ext.Window({
+													title: "Informe Musculo Esqueletico N° " + record.get("adm"),
+													width: 800,
+													height: 600,
+													maximizable: true,
+													modal: true,
+													closeAction: "close",
+													resizable: true,
+													html:
+														"<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_medicina&sys_report=formato_musculo&adm=" +
+														record.get("adm") +
+														"'></iframe>",
+												}).show();
+											} else {
+												Ext.MessageBox.alert(
+													"Observaciones",
+													"El paciente no fue registrado correctamente"
+												);
+											}
+										},
+									},
+								],
+							}).showAt(event.xy);
 						} else if (record.get("ex_id") == 39) {
 							new Ext.menu.Menu({
 								items: [
@@ -8754,37 +8786,37 @@ mod.medicina.musculo = {
 		this.win.show();
 	},
 	cargar_data: function () {
-		// Ext.Ajax.request({
-		// 	waitMsg: "Recuperando Informacion...",
-		// 	waitTitle: "Espere",
-		// 	url: "<[controller]>",
-		// 	params: {
-		// 		acction: "load_musculo",
-		// 		format: "json",
-		// 		adm: mod.medicina.musculo.record.get("adm"),
-		// 		exa: mod.medicina.musculo.record.get("ex_id"),
-		// 	},
-		// 	success: function (response, opts) {
-		// 		var dato = Ext.decode(response.responseText);
-		// 		if (dato.success == true) {
-		// 			mod.medicina.musculo.frm.getForm().loadRecord(dato);
-		// 			// mod.medicina.musculo.m_312_medico_ocupa.setValue(
-		// 			// 	dato.data.m_312_medico_ocupa
-		// 			// );
-		// 			// mod.medicina.musculo.m_312_medico_ocupa.setRawValue(
-		// 			// 	dato.data.m_312_medico_ocupa_nom
-		// 			// );
-		// 			// mod.medicina.musculo.load_medico.load();
-		// 			// mod.medicina.musculo.adm_emp.setValue(dato.data.emp_id);
-		// 			// mod.medicina.musculo.adm_emp.setRawValue(dato.data.empresa);
-		// 			// mod.medicina.musculo.st_empre.load();
-		// 			// mod.medicina.musculo.adm_pac.setValue(dato.data.pac_id);
-		// 			// mod.medicina.musculo.adm_pac.setRawValue(dato.data.adm_pac);
-		// 			// mod.medicina.musculo.desc.setValue(dato.data.pk_desc);
-		// 			// mod.medicina.musculo.tficha.setValue(dato.data.tfi_desc);
-		// 		}
-		// 	},
-		// });
+		Ext.Ajax.request({
+			waitMsg: "Recuperando Informacion...",
+			waitTitle: "Espere",
+			url: "<[controller]>",
+			params: {
+				acction: "load_musculo",
+				format: "json",
+				adm: mod.medicina.musculo.record.get("adm"),
+				exa: mod.medicina.musculo.record.get("ex_id"),
+			},
+			success: function (response, opts) {
+				var dato = Ext.decode(response.responseText);
+				if (dato.success == true) {
+					mod.medicina.musculo.frm.getForm().loadRecord(dato);
+					// mod.medicina.musculo.m_312_medico_ocupa.setValue(
+					// 	dato.data.m_312_medico_ocupa
+					// );
+					// mod.medicina.musculo.m_312_medico_ocupa.setRawValue(
+					// 	dato.data.m_312_medico_ocupa_nom
+					// );
+					// mod.medicina.musculo.load_medico.load();
+					// mod.medicina.musculo.adm_emp.setValue(dato.data.emp_id);
+					// mod.medicina.musculo.adm_emp.setRawValue(dato.data.empresa);
+					// mod.medicina.musculo.st_empre.load();
+					// mod.medicina.musculo.adm_pac.setValue(dato.data.pac_id);
+					// mod.medicina.musculo.adm_pac.setRawValue(dato.data.adm_pac);
+					// mod.medicina.musculo.desc.setValue(dato.data.pk_desc);
+					// mod.medicina.musculo.tficha.setValue(dato.data.tfi_desc);
+				}
+			},
+		});
 	},
 	crea_stores: function () {
 		this.list_cie10 = new Ext.data.JsonStore({
@@ -13663,7 +13695,7 @@ mod.medicina.musculo = {
 		//m_musc_colum_punto_ref
 		this.m_musc_colum_punto_ref = new Ext.form.RadioGroup({
 			fieldLabel:
-				"<b>Segun la evaluacion de capacidad fisica, el medico que suscribe CERTIFICA que el trabajador:</b>",
+				"<b>PUNTUACION DE REFERENCIA (SIGNOS Y SINTOMAS)</b>",
 			itemCls: "x-check-group-alt",
 			columns: 1,
 			items: [
@@ -15618,7 +15650,7 @@ mod.medicina.musculo = {
 								{
 									xtype: "fieldset",
 									layout: "column",
-									title: "PUNTUACION DE REFERENCIA (SIGNOS Y SINTOMAS):",
+									title: "-",
 									items: [
 										{
 											columnWidth: 0.5,

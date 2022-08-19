@@ -4398,8 +4398,7 @@ class model extends core
 
     public function rpt_antecedentes_v1($adm)
     {
-        $q = "SELECT
-    concat(m_antec_cargo,'/',m_antec_suelo,'/',m_antec_empresa,'/',m_antec_fech_ini,' hasta ', m_antec_fech_fin,'/',m_antec_obser) obs_desc
+        $q = "SELECT concat(m_antec_cargo,'/',m_antec_suelo,'/',m_antec_empresa,'/',m_antec_fech_ini,' hasta ', m_antec_fech_fin,'/',m_antec_obser) obs_desc
                 FROM mod_medicina_antece_16v 
                 where m_antec_adm=$adm";
         return $this->sql($q);
@@ -5249,6 +5248,845 @@ class model extends core
             m_312_adm=$adm;
                 ");
         return $sql;
+    }
+
+    //LOAD SAVE UPDATE musculo
+
+    public function load_musculo()
+    {
+        $adm = $_POST['adm'];
+        //        $examen = $_POST['examen'];
+        $query = "SELECT * FROM mod_medicina_musculo where m_musc_adm='$adm';";
+        $q = $this->sql($query);
+        return array('success' => true, 'data' => $q->data[0]);
+    }
+
+    public function save_musculo()
+    {
+
+        $adm = $_POST['adm'];
+        $exa = $_POST['ex_id'];
+
+        $this->begin();
+
+        $params_1 = array();
+        $params_1[':adm'] = $_POST['adm'];
+        $params_1[':sede'] = $this->user->con_sedid;
+        $params_1[':usuario'] = $this->user->us_id;
+        $params_1[':ex_id'] = $_POST['ex_id'];
+
+        $q_1 = "INSERT INTO mod_medicina VALUES
+                (NULL,
+                :adm,
+                :sede,
+                :usuario,
+                now(),
+                null,
+                1,
+                :ex_id);";
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////
+
+        $params_2 = array();
+        $params_2[':adm'] = $_POST['adm'];
+        $params_2[':ex_id'] = $_POST['ex_id'];
+		
+		
+        $params_2[':m_musc_flexi_ptos'] = $_POST['m_musc_flexi_ptos'];
+        $params_2[':m_musc_flexi_obs'] = $_POST['m_musc_flexi_obs'];
+        $params_2[':m_musc_cadera_ptos'] = $_POST['m_musc_cadera_ptos'];
+        $params_2[':m_musc_cadera_obs'] = $_POST['m_musc_cadera_obs'];
+        $params_2[':m_musc_muslo_ptos'] = $_POST['m_musc_muslo_ptos'];
+        $params_2[':m_musc_muslo_obs'] = $_POST['m_musc_muslo_obs'];
+        $params_2[':m_musc_abdom_ptos'] = $_POST['m_musc_abdom_ptos'];
+        $params_2[':m_musc_abdom_obs'] = $_POST['m_musc_abdom_obs'];
+        $params_2[':m_musc_abduc_180_ptos'] = $_POST['m_musc_abduc_180_ptos'];
+        $params_2[':m_musc_abduc_180_dolor'] = $_POST['m_musc_abduc_180_dolor'];
+        $params_2[':m_musc_abduc_80_ptos'] = $_POST['m_musc_abduc_80_ptos'];
+        $params_2[':m_musc_abduc_80_dolor'] = $_POST['m_musc_abduc_80_dolor'];
+        $params_2[':m_musc_rota_exter_ptos'] = $_POST['m_musc_rota_exter_ptos'];
+        $params_2[':m_musc_rota_exter_dolor'] = $_POST['m_musc_rota_exter_dolor'];
+        $params_2[':m_musc_rota_inter_ptos'] = $_POST['m_musc_rota_inter_ptos'];
+        $params_2[':m_musc_rota_inter_dolor'] = $_POST['m_musc_rota_inter_dolor'];
+        $params_2[':m_musc_ra_obs'] = $_POST['m_musc_ra_obs'];
+        $params_2[':m_musc_aptitud'] = $_POST['m_musc_aptitud'];
+        $params_2[':m_musc_col_cevical_desvia_lateral'] = $_POST['m_musc_col_cevical_desvia_lateral'];
+        $params_2[':m_musc_col_cevical_desvia_antero'] = $_POST['m_musc_col_cevical_desvia_antero'];
+        $params_2[':m_musc_col_cevical_palpa_apofisis'] = $_POST['m_musc_col_cevical_palpa_apofisis'];
+        $params_2[':m_musc_col_cevical_palpa_contractura'] = $_POST['m_musc_col_cevical_palpa_contractura'];
+        $params_2[':m_musc_col_dorsal_desvia_lateral'] = $_POST['m_musc_col_dorsal_desvia_lateral'];
+        $params_2[':m_musc_col_dorsal_desvia_antero'] = $_POST['m_musc_col_dorsal_desvia_antero'];
+        $params_2[':m_musc_col_dorsal_palpa_apofisis'] = $_POST['m_musc_col_dorsal_palpa_apofisis'];
+        $params_2[':m_musc_col_dorsal_palpa_contractura'] = $_POST['m_musc_col_dorsal_palpa_contractura'];
+        $params_2[':m_musc_col_lumbar_desvia_lateral'] = $_POST['m_musc_col_lumbar_desvia_lateral'];
+        $params_2[':m_musc_col_lumbar_desvia_antero'] = $_POST['m_musc_col_lumbar_desvia_antero'];
+        $params_2[':m_musc_col_lumbar_palpa_apofisis'] = $_POST['m_musc_col_lumbar_palpa_apofisis'];
+        $params_2[':m_musc_col_lumbar_palpa_contractura'] = $_POST['m_musc_col_lumbar_palpa_contractura'];
+        $params_2[':m_musc_col_cevical_flexion'] = $_POST['m_musc_col_cevical_flexion'];
+        $params_2[':m_musc_col_cevical_exten'] = $_POST['m_musc_col_cevical_exten'];
+        $params_2[':m_musc_col_cevical_lat_izq'] = $_POST['m_musc_col_cevical_lat_izq'];
+        $params_2[':m_musc_col_cevical_lat_der'] = $_POST['m_musc_col_cevical_lat_der'];
+        $params_2[':m_musc_col_cevical_rota_izq'] = $_POST['m_musc_col_cevical_rota_izq'];
+        $params_2[':m_musc_col_cevical_rota_der'] = $_POST['m_musc_col_cevical_rota_der'];
+        $params_2[':m_musc_col_cevical_irradia'] = $_POST['m_musc_col_cevical_irradia'];
+        $params_2[':m_musc_col_cevical_alt_masa'] = $_POST['m_musc_col_cevical_alt_masa'];
+        $params_2[':m_musc_col_dorsal_flexion'] = $_POST['m_musc_col_dorsal_flexion'];
+        $params_2[':m_musc_col_dorsal_exten'] = $_POST['m_musc_col_dorsal_exten'];
+        $params_2[':m_musc_col_dorsal_lat_izq'] = $_POST['m_musc_col_dorsal_lat_izq'];
+        $params_2[':m_musc_col_dorsal_lat_der'] = $_POST['m_musc_col_dorsal_lat_der'];
+        $params_2[':m_musc_col_dorsal_rota_izq'] = $_POST['m_musc_col_dorsal_rota_izq'];
+        $params_2[':m_musc_col_dorsal_rota_der'] = $_POST['m_musc_col_dorsal_rota_der'];
+        $params_2[':m_musc_col_dorsal_irradia'] = $_POST['m_musc_col_dorsal_irradia'];
+        $params_2[':m_musc_col_dorsal_alt_masa'] = $_POST['m_musc_col_dorsal_alt_masa'];
+        $params_2[':m_musc_col_lumbar_flexion'] = $_POST['m_musc_col_lumbar_flexion'];
+        $params_2[':m_musc_col_lumbar_exten'] = $_POST['m_musc_col_lumbar_exten'];
+        $params_2[':m_musc_col_lumbar_lat_izq'] = $_POST['m_musc_col_lumbar_lat_izq'];
+        $params_2[':m_musc_col_lumbar_lat_der'] = $_POST['m_musc_col_lumbar_lat_der'];
+        $params_2[':m_musc_col_lumbar_rota_izq'] = $_POST['m_musc_col_lumbar_rota_izq'];
+        $params_2[':m_musc_col_lumbar_rota_der'] = $_POST['m_musc_col_lumbar_rota_der'];
+        $params_2[':m_musc_col_lumbar_irradia'] = $_POST['m_musc_col_lumbar_irradia'];
+        $params_2[':m_musc_col_lumbar_alt_masa'] = $_POST['m_musc_col_lumbar_alt_masa'];
+        $params_2[':m_musc_hombro_der_abduccion'] = $_POST['m_musc_hombro_der_abduccion'];
+        $params_2[':m_musc_hombro_der_aduccion'] = $_POST['m_musc_hombro_der_aduccion'];
+        $params_2[':m_musc_hombro_der_flexion'] = $_POST['m_musc_hombro_der_flexion'];
+        $params_2[':m_musc_hombro_der_extencion'] = $_POST['m_musc_hombro_der_extencion'];
+        $params_2[':m_musc_hombro_der_rota_exter'] = $_POST['m_musc_hombro_der_rota_exter'];
+        $params_2[':m_musc_hombro_der_rota_inter'] = $_POST['m_musc_hombro_der_rota_inter'];
+        $params_2[':m_musc_hombro_der_irradia'] = $_POST['m_musc_hombro_der_irradia'];
+        $params_2[':m_musc_hombro_der_alt_masa'] = $_POST['m_musc_hombro_der_alt_masa'];
+        $params_2[':m_musc_hombro_izq_abduccion'] = $_POST['m_musc_hombro_izq_abduccion'];
+        $params_2[':m_musc_hombro_izq_aduccion'] = $_POST['m_musc_hombro_izq_aduccion'];
+        $params_2[':m_musc_hombro_izq_flexion'] = $_POST['m_musc_hombro_izq_flexion'];
+        $params_2[':m_musc_hombro_izq_extencion'] = $_POST['m_musc_hombro_izq_extencion'];
+        $params_2[':m_musc_hombro_izq_rota_exter'] = $_POST['m_musc_hombro_izq_rota_exter'];
+        $params_2[':m_musc_hombro_izq_rota_inter'] = $_POST['m_musc_hombro_izq_rota_inter'];
+        $params_2[':m_musc_hombro_izq_irradia'] = $_POST['m_musc_hombro_izq_irradia'];
+        $params_2[':m_musc_hombro_izq_alt_masa'] = $_POST['m_musc_hombro_izq_alt_masa'];
+        $params_2[':m_musc_codo_der_abduccion'] = $_POST['m_musc_codo_der_abduccion'];
+        $params_2[':m_musc_codo_der_aduccion'] = $_POST['m_musc_codo_der_aduccion'];
+        $params_2[':m_musc_codo_der_flexion'] = $_POST['m_musc_codo_der_flexion'];
+        $params_2[':m_musc_codo_der_extencion'] = $_POST['m_musc_codo_der_extencion'];
+        $params_2[':m_musc_codo_der_rota_exter'] = $_POST['m_musc_codo_der_rota_exter'];
+        $params_2[':m_musc_codo_der_rota_inter'] = $_POST['m_musc_codo_der_rota_inter'];
+        $params_2[':m_musc_codo_der_irradia'] = $_POST['m_musc_codo_der_irradia'];
+        $params_2[':m_musc_codo_der_alt_masa'] = $_POST['m_musc_codo_der_alt_masa'];
+        $params_2[':m_musc_codo_izq_abduccion'] = $_POST['m_musc_codo_izq_abduccion'];
+        $params_2[':m_musc_codo_izq_aduccion'] = $_POST['m_musc_codo_izq_aduccion'];
+        $params_2[':m_musc_codo_izq_flexion'] = $_POST['m_musc_codo_izq_flexion'];
+        $params_2[':m_musc_codo_izq_extencion'] = $_POST['m_musc_codo_izq_extencion'];
+        $params_2[':m_musc_codo_izq_rota_exter'] = $_POST['m_musc_codo_izq_rota_exter'];
+        $params_2[':m_musc_codo_izq_rota_inter'] = $_POST['m_musc_codo_izq_rota_inter'];
+        $params_2[':m_musc_codo_izq_irradia'] = $_POST['m_musc_codo_izq_irradia'];
+        $params_2[':m_musc_codo_izq_alt_masa'] = $_POST['m_musc_codo_izq_alt_masa'];
+        $params_2[':m_musc_muneca_der_abduccion'] = $_POST['m_musc_muneca_der_abduccion'];
+        $params_2[':m_musc_muneca_der_aduccion'] = $_POST['m_musc_muneca_der_aduccion'];
+        $params_2[':m_musc_muneca_der_flexion'] = $_POST['m_musc_muneca_der_flexion'];
+        $params_2[':m_musc_muneca_der_extencion'] = $_POST['m_musc_muneca_der_extencion'];
+        $params_2[':m_musc_muneca_der_rota_exter'] = $_POST['m_musc_muneca_der_rota_exter'];
+        $params_2[':m_musc_muneca_der_rota_inter'] = $_POST['m_musc_muneca_der_rota_inter'];
+        $params_2[':m_musc_muneca_der_irradia'] = $_POST['m_musc_muneca_der_irradia'];
+        $params_2[':m_musc_muneca_der_alt_masa'] = $_POST['m_musc_muneca_der_alt_masa'];
+        $params_2[':m_musc_muneca_izq_abduccion'] = $_POST['m_musc_muneca_izq_abduccion'];
+        $params_2[':m_musc_muneca_izq_aduccion'] = $_POST['m_musc_muneca_izq_aduccion'];
+        $params_2[':m_musc_muneca_izq_flexion'] = $_POST['m_musc_muneca_izq_flexion'];
+        $params_2[':m_musc_muneca_izq_extencion'] = $_POST['m_musc_muneca_izq_extencion'];
+        $params_2[':m_musc_muneca_izq_rota_exter'] = $_POST['m_musc_muneca_izq_rota_exter'];
+        $params_2[':m_musc_muneca_izq_rota_inter'] = $_POST['m_musc_muneca_izq_rota_inter'];
+        $params_2[':m_musc_muneca_izq_irradia'] = $_POST['m_musc_muneca_izq_irradia'];
+        $params_2[':m_musc_muneca_izq_alt_masa'] = $_POST['m_musc_muneca_izq_alt_masa'];
+        $params_2[':m_musc_mano_der_abduccion'] = $_POST['m_musc_mano_der_abduccion'];
+        $params_2[':m_musc_mano_der_aduccion'] = $_POST['m_musc_mano_der_aduccion'];
+        $params_2[':m_musc_mano_der_flexion'] = $_POST['m_musc_mano_der_flexion'];
+        $params_2[':m_musc_mano_der_extencion'] = $_POST['m_musc_mano_der_extencion'];
+        $params_2[':m_musc_mano_der_rota_exter'] = $_POST['m_musc_mano_der_rota_exter'];
+        $params_2[':m_musc_mano_der_rota_inter'] = $_POST['m_musc_mano_der_rota_inter'];
+        $params_2[':m_musc_mano_der_irradia'] = $_POST['m_musc_mano_der_irradia'];
+        $params_2[':m_musc_mano_der_alt_masa'] = $_POST['m_musc_mano_der_alt_masa'];
+        $params_2[':m_musc_mano_izq_abduccion'] = $_POST['m_musc_mano_izq_abduccion'];
+        $params_2[':m_musc_mano_izq_aduccion'] = $_POST['m_musc_mano_izq_aduccion'];
+        $params_2[':m_musc_mano_izq_flexion'] = $_POST['m_musc_mano_izq_flexion'];
+        $params_2[':m_musc_mano_izq_extencion'] = $_POST['m_musc_mano_izq_extencion'];
+        $params_2[':m_musc_mano_izq_rota_exter'] = $_POST['m_musc_mano_izq_rota_exter'];
+        $params_2[':m_musc_mano_izq_rota_inter'] = $_POST['m_musc_mano_izq_rota_inter'];
+        $params_2[':m_musc_mano_izq_irradia'] = $_POST['m_musc_mano_izq_irradia'];
+        $params_2[':m_musc_mano_izq_alt_masa'] = $_POST['m_musc_mano_izq_alt_masa'];
+        $params_2[':m_musc_cadera_der_abduccion'] = $_POST['m_musc_cadera_der_abduccion'];
+        $params_2[':m_musc_cadera_der_aduccion'] = $_POST['m_musc_cadera_der_aduccion'];
+        $params_2[':m_musc_cadera_der_flexion'] = $_POST['m_musc_cadera_der_flexion'];
+        $params_2[':m_musc_cadera_der_extencion'] = $_POST['m_musc_cadera_der_extencion'];
+        $params_2[':m_musc_cadera_der_rota_exter'] = $_POST['m_musc_cadera_der_rota_exter'];
+        $params_2[':m_musc_cadera_der_rota_inter'] = $_POST['m_musc_cadera_der_rota_inter'];
+        $params_2[':m_musc_cadera_der_irradia'] = $_POST['m_musc_cadera_der_irradia'];
+        $params_2[':m_musc_cadera_der_alt_masa'] = $_POST['m_musc_cadera_der_alt_masa'];
+        $params_2[':m_musc_cadera_izq_abduccion'] = $_POST['m_musc_cadera_izq_abduccion'];
+        $params_2[':m_musc_cadera_izq_aduccion'] = $_POST['m_musc_cadera_izq_aduccion'];
+        $params_2[':m_musc_cadera_izq_flexion'] = $_POST['m_musc_cadera_izq_flexion'];
+        $params_2[':m_musc_cadera_izq_extencion'] = $_POST['m_musc_cadera_izq_extencion'];
+        $params_2[':m_musc_cadera_izq_rota_exter'] = $_POST['m_musc_cadera_izq_rota_exter'];
+        $params_2[':m_musc_cadera_izq_rota_inter'] = $_POST['m_musc_cadera_izq_rota_inter'];
+        $params_2[':m_musc_cadera_izq_irradia'] = $_POST['m_musc_cadera_izq_irradia'];
+        $params_2[':m_musc_cadera_izq_alt_masa'] = $_POST['m_musc_cadera_izq_alt_masa'];
+        $params_2[':m_musc_rodilla_der_abduccion'] = $_POST['m_musc_rodilla_der_abduccion'];
+        $params_2[':m_musc_rodilla_der_aduccion'] = $_POST['m_musc_rodilla_der_aduccion'];
+        $params_2[':m_musc_rodilla_der_flexion'] = $_POST['m_musc_rodilla_der_flexion'];
+        $params_2[':m_musc_rodilla_der_extencion'] = $_POST['m_musc_rodilla_der_extencion'];
+        $params_2[':m_musc_rodilla_der_rota_exter'] = $_POST['m_musc_rodilla_der_rota_exter'];
+        $params_2[':m_musc_rodilla_der_rota_inter'] = $_POST['m_musc_rodilla_der_rota_inter'];
+        $params_2[':m_musc_rodilla_der_irradia'] = $_POST['m_musc_rodilla_der_irradia'];
+        $params_2[':m_musc_rodilla_der_alt_masa'] = $_POST['m_musc_rodilla_der_alt_masa'];
+        $params_2[':m_musc_rodilla_izq_abduccion'] = $_POST['m_musc_rodilla_izq_abduccion'];
+        $params_2[':m_musc_rodilla_izq_aduccion'] = $_POST['m_musc_rodilla_izq_aduccion'];
+        $params_2[':m_musc_rodilla_izq_flexion'] = $_POST['m_musc_rodilla_izq_flexion'];
+        $params_2[':m_musc_rodilla_izq_extencion'] = $_POST['m_musc_rodilla_izq_extencion'];
+        $params_2[':m_musc_rodilla_izq_rota_exter'] = $_POST['m_musc_rodilla_izq_rota_exter'];
+        $params_2[':m_musc_rodilla_izq_rota_inter'] = $_POST['m_musc_rodilla_izq_rota_inter'];
+        $params_2[':m_musc_rodilla_izq_irradia'] = $_POST['m_musc_rodilla_izq_irradia'];
+        $params_2[':m_musc_rodilla_izq_alt_masa'] = $_POST['m_musc_rodilla_izq_alt_masa'];
+        $params_2[':m_musc_tobillo_der_abduccion'] = $_POST['m_musc_tobillo_der_abduccion'];
+        $params_2[':m_musc_tobillo_der_aduccion'] = $_POST['m_musc_tobillo_der_aduccion'];
+        $params_2[':m_musc_tobillo_der_flexion'] = $_POST['m_musc_tobillo_der_flexion'];
+        $params_2[':m_musc_tobillo_der_extencion'] = $_POST['m_musc_tobillo_der_extencion'];
+        $params_2[':m_musc_tobillo_der_rota_exter'] = $_POST['m_musc_tobillo_der_rota_exter'];
+        $params_2[':m_musc_tobillo_der_rota_inter'] = $_POST['m_musc_tobillo_der_rota_inter'];
+        $params_2[':m_musc_tobillo_der_irradia'] = $_POST['m_musc_tobillo_der_irradia'];
+        $params_2[':m_musc_tobillo_der_alt_masa'] = $_POST['m_musc_tobillo_der_alt_masa'];
+        $params_2[':m_musc_tobillo_izq_abduccion'] = $_POST['m_musc_tobillo_izq_abduccion'];
+        $params_2[':m_musc_tobillo_izq_aduccion'] = $_POST['m_musc_tobillo_izq_aduccion'];
+        $params_2[':m_musc_tobillo_izq_flexion'] = $_POST['m_musc_tobillo_izq_flexion'];
+        $params_2[':m_musc_tobillo_izq_extencion'] = $_POST['m_musc_tobillo_izq_extencion'];
+        $params_2[':m_musc_tobillo_izq_rota_exter'] = $_POST['m_musc_tobillo_izq_rota_exter'];
+        $params_2[':m_musc_tobillo_izq_rota_inter'] = $_POST['m_musc_tobillo_izq_rota_inter'];
+        $params_2[':m_musc_tobillo_izq_irradia'] = $_POST['m_musc_tobillo_izq_irradia'];
+        $params_2[':m_musc_tobillo_izq_alt_masa'] = $_POST['m_musc_tobillo_izq_alt_masa'];
+        $params_2[':m_musc_colum_punto_ref'] = $_POST['m_musc_colum_punto_ref'];
+        $params_2[':m_musc_colum_aptitud'] = $_POST['m_musc_colum_aptitud'];
+        $params_2[':m_musc_colum_desc'] = $_POST['m_musc_colum_desc'];
+        $params_2[':m_musc_diag_01'] = $_POST['m_musc_diag_01'];
+        $params_2[':m_musc_conclu_01'] = $_POST['m_musc_conclu_01'];
+        $params_2[':m_musc_recom_01'] = $_POST['m_musc_recom_01'];
+        $params_2[':m_musc_diag_02'] = $_POST['m_musc_diag_02'];
+        $params_2[':m_musc_conclu_02'] = $_POST['m_musc_conclu_02'];
+        $params_2[':m_musc_recom_02'] = $_POST['m_musc_recom_02'];
+        $params_2[':m_musc_diag_03'] = $_POST['m_musc_diag_03'];
+        $params_2[':m_musc_conclu_03'] = $_POST['m_musc_conclu_03'];
+        $params_2[':m_musc_recom_03'] = $_POST['m_musc_recom_03'];
+
+
+
+        $q_2 = "INSERT INTO mod_medicina_musculo VALUES 
+                (null,
+                :adm,
+                :ex_id,
+                :m_musc_flexi_ptos,
+                :m_musc_flexi_obs,
+                :m_musc_cadera_ptos,
+                :m_musc_cadera_obs,
+                :m_musc_muslo_ptos,
+                :m_musc_muslo_obs,
+                :m_musc_abdom_ptos,
+                :m_musc_abdom_obs,
+                :m_musc_abduc_180_ptos,
+                :m_musc_abduc_180_dolor,
+                :m_musc_abduc_80_ptos,
+                :m_musc_abduc_80_dolor,
+                :m_musc_rota_exter_ptos,
+                :m_musc_rota_exter_dolor,
+                :m_musc_rota_inter_ptos,
+                :m_musc_rota_inter_dolor,
+                :m_musc_ra_obs,
+                :m_musc_aptitud,
+                :m_musc_col_cevical_desvia_lateral,
+                :m_musc_col_cevical_desvia_antero,
+                :m_musc_col_cevical_palpa_apofisis,
+                :m_musc_col_cevical_palpa_contractura,
+                :m_musc_col_dorsal_desvia_lateral,
+                :m_musc_col_dorsal_desvia_antero,
+                :m_musc_col_dorsal_palpa_apofisis,
+                :m_musc_col_dorsal_palpa_contractura,
+                :m_musc_col_lumbar_desvia_lateral,
+                :m_musc_col_lumbar_desvia_antero,
+                :m_musc_col_lumbar_palpa_apofisis,
+                :m_musc_col_lumbar_palpa_contractura,
+                :m_musc_col_cevical_flexion,
+                :m_musc_col_cevical_exten,
+                :m_musc_col_cevical_lat_izq,
+                :m_musc_col_cevical_lat_der,
+                :m_musc_col_cevical_rota_izq,
+                :m_musc_col_cevical_rota_der,
+                :m_musc_col_cevical_irradia,
+                :m_musc_col_cevical_alt_masa,
+                :m_musc_col_dorsal_flexion,
+                :m_musc_col_dorsal_exten,
+                :m_musc_col_dorsal_lat_izq,
+                :m_musc_col_dorsal_lat_der,
+                :m_musc_col_dorsal_rota_izq,
+                :m_musc_col_dorsal_rota_der,
+                :m_musc_col_dorsal_irradia,
+                :m_musc_col_dorsal_alt_masa,
+                :m_musc_col_lumbar_flexion,
+                :m_musc_col_lumbar_exten,
+                :m_musc_col_lumbar_lat_izq,
+                :m_musc_col_lumbar_lat_der,
+                :m_musc_col_lumbar_rota_izq,
+                :m_musc_col_lumbar_rota_der,
+                :m_musc_col_lumbar_irradia,
+                :m_musc_col_lumbar_alt_masa,
+                :m_musc_hombro_der_abduccion,
+                :m_musc_hombro_der_aduccion,
+                :m_musc_hombro_der_flexion,
+                :m_musc_hombro_der_extencion,
+                :m_musc_hombro_der_rota_exter,
+                :m_musc_hombro_der_rota_inter,
+                :m_musc_hombro_der_irradia,
+                :m_musc_hombro_der_alt_masa,
+                :m_musc_hombro_izq_abduccion,
+                :m_musc_hombro_izq_aduccion,
+                :m_musc_hombro_izq_flexion,
+                :m_musc_hombro_izq_extencion,
+                :m_musc_hombro_izq_rota_exter,
+                :m_musc_hombro_izq_rota_inter,
+                :m_musc_hombro_izq_irradia,
+                :m_musc_hombro_izq_alt_masa,
+                :m_musc_codo_der_abduccion,
+                :m_musc_codo_der_aduccion,
+                :m_musc_codo_der_flexion,
+                :m_musc_codo_der_extencion,
+                :m_musc_codo_der_rota_exter,
+                :m_musc_codo_der_rota_inter,
+                :m_musc_codo_der_irradia,
+                :m_musc_codo_der_alt_masa,
+                :m_musc_codo_izq_abduccion,
+                :m_musc_codo_izq_aduccion,
+                :m_musc_codo_izq_flexion,
+                :m_musc_codo_izq_extencion,
+                :m_musc_codo_izq_rota_exter,
+                :m_musc_codo_izq_rota_inter,
+                :m_musc_codo_izq_irradia,
+                :m_musc_codo_izq_alt_masa,
+                :m_musc_muneca_der_abduccion,
+                :m_musc_muneca_der_aduccion,
+                :m_musc_muneca_der_flexion,
+                :m_musc_muneca_der_extencion,
+                :m_musc_muneca_der_rota_exter,
+                :m_musc_muneca_der_rota_inter,
+                :m_musc_muneca_der_irradia,
+                :m_musc_muneca_der_alt_masa,
+                :m_musc_muneca_izq_abduccion,
+                :m_musc_muneca_izq_aduccion,
+                :m_musc_muneca_izq_flexion,
+                :m_musc_muneca_izq_extencion,
+                :m_musc_muneca_izq_rota_exter,
+                :m_musc_muneca_izq_rota_inter,
+                :m_musc_muneca_izq_irradia,
+                :m_musc_muneca_izq_alt_masa,
+                :m_musc_mano_der_abduccion,
+                :m_musc_mano_der_aduccion,
+                :m_musc_mano_der_flexion,
+                :m_musc_mano_der_extencion,
+                :m_musc_mano_der_rota_exter,
+                :m_musc_mano_der_rota_inter,
+                :m_musc_mano_der_irradia,
+                :m_musc_mano_der_alt_masa,
+                :m_musc_mano_izq_abduccion,
+                :m_musc_mano_izq_aduccion,
+                :m_musc_mano_izq_flexion,
+                :m_musc_mano_izq_extencion,
+                :m_musc_mano_izq_rota_exter,
+                :m_musc_mano_izq_rota_inter,
+                :m_musc_mano_izq_irradia,
+                :m_musc_mano_izq_alt_masa,
+                :m_musc_cadera_der_abduccion,
+                :m_musc_cadera_der_aduccion,
+                :m_musc_cadera_der_flexion,
+                :m_musc_cadera_der_extencion,
+                :m_musc_cadera_der_rota_exter,
+                :m_musc_cadera_der_rota_inter,
+                :m_musc_cadera_der_irradia,
+                :m_musc_cadera_der_alt_masa,
+                :m_musc_cadera_izq_abduccion,
+                :m_musc_cadera_izq_aduccion,
+                :m_musc_cadera_izq_flexion,
+                :m_musc_cadera_izq_extencion,
+                :m_musc_cadera_izq_rota_exter,
+                :m_musc_cadera_izq_rota_inter,
+                :m_musc_cadera_izq_irradia,
+                :m_musc_cadera_izq_alt_masa,
+                :m_musc_rodilla_der_abduccion,
+                :m_musc_rodilla_der_aduccion,
+                :m_musc_rodilla_der_flexion,
+                :m_musc_rodilla_der_extencion,
+                :m_musc_rodilla_der_rota_exter,
+                :m_musc_rodilla_der_rota_inter,
+                :m_musc_rodilla_der_irradia,
+                :m_musc_rodilla_der_alt_masa,
+                :m_musc_rodilla_izq_abduccion,
+                :m_musc_rodilla_izq_aduccion,
+                :m_musc_rodilla_izq_flexion,
+                :m_musc_rodilla_izq_extencion,
+                :m_musc_rodilla_izq_rota_exter,
+                :m_musc_rodilla_izq_rota_inter,
+                :m_musc_rodilla_izq_irradia,
+                :m_musc_rodilla_izq_alt_masa,
+                :m_musc_tobillo_der_abduccion,
+                :m_musc_tobillo_der_aduccion,
+                :m_musc_tobillo_der_flexion,
+                :m_musc_tobillo_der_extencion,
+                :m_musc_tobillo_der_rota_exter,
+                :m_musc_tobillo_der_rota_inter,
+                :m_musc_tobillo_der_irradia,
+                :m_musc_tobillo_der_alt_masa,
+                :m_musc_tobillo_izq_abduccion,
+                :m_musc_tobillo_izq_aduccion,
+                :m_musc_tobillo_izq_flexion,
+                :m_musc_tobillo_izq_extencion,
+                :m_musc_tobillo_izq_rota_exter,
+                :m_musc_tobillo_izq_rota_inter,
+                :m_musc_tobillo_izq_irradia,
+                :m_musc_tobillo_izq_alt_masa,
+                :m_musc_colum_punto_ref,
+                :m_musc_colum_aptitud,
+                :m_musc_colum_desc,
+                :m_musc_diag_01,
+                :m_musc_conclu_01,
+                :m_musc_recom_01,
+                :m_musc_diag_02,
+                :m_musc_conclu_02,
+                :m_musc_recom_02,
+                :m_musc_diag_03,
+                :m_musc_conclu_03,
+                :m_musc_recom_03
+				);";
+
+        $verifica = $this->sql("SELECT m_medicina_adm, concat(usu_nombres,' ',usu_appat,' ',usu_apmat) usuario 
+				FROM mod_medicina inner join sys_usuario on usu_id=m_medicina_usu 
+				where m_medicina_adm='$adm' and m_medicina_examen='$exa';");
+        if ($verifica->total > 0) {
+            $this->rollback();
+            return array('success' => false, "error" => 'Paciente ya fue registrado por ' . $verifica->data[0]->usuario);
+        } else {
+            $sql_1 = $this->sql($q_1, $params_1);
+            if ($sql_1->success) {
+                $sql_2 = $this->sql($q_2, $params_2);
+                if ($sql_2->success) {
+                    $this->commit();
+                    return $sql_2;
+                } else {
+                    $this->rollback();
+                    return array('success' => false, 'error' => 'Problemas con el registro.');
+                }
+            } else {
+                $this->rollback();
+                return array('success' => false, 'error' => 'Problemas con el registro.');
+            }
+        }
+    }
+
+    public function update_musculo()
+    {
+        $this->begin();
+
+        $params_1 = array();
+        $params_1[':usuario'] = $this->user->us_id;
+        $params_1[':id'] = $_POST['id'];
+        $params_1[':adm'] = $_POST['adm'];
+        $params_1[':ex_id'] = $_POST['ex_id'];
+        $q_1 = 'Update mod_medicina set
+                    m_medicina_usu=:usuario,
+					m_medicina_fech_update=now()
+                where
+                m_medicina_id=:id and m_medicina_adm=:adm and m_medicina_examen=:ex_id;';
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////
+
+        $params_2 = array();
+        $params_2[':adm'] = $_POST['adm'];
+		
+        
+        $params_2[':m_musc_flexi_ptos'] = $_POST['m_musc_flexi_ptos'];
+        $params_2[':m_musc_flexi_obs'] = $_POST['m_musc_flexi_obs'];
+        $params_2[':m_musc_cadera_ptos'] = $_POST['m_musc_cadera_ptos'];
+        $params_2[':m_musc_cadera_obs'] = $_POST['m_musc_cadera_obs'];
+        $params_2[':m_musc_muslo_ptos'] = $_POST['m_musc_muslo_ptos'];
+        $params_2[':m_musc_muslo_obs'] = $_POST['m_musc_muslo_obs'];
+        $params_2[':m_musc_abdom_ptos'] = $_POST['m_musc_abdom_ptos'];
+        $params_2[':m_musc_abdom_obs'] = $_POST['m_musc_abdom_obs'];
+        $params_2[':m_musc_abduc_180_ptos'] = $_POST['m_musc_abduc_180_ptos'];
+        $params_2[':m_musc_abduc_180_dolor'] = $_POST['m_musc_abduc_180_dolor'];
+        $params_2[':m_musc_abduc_80_ptos'] = $_POST['m_musc_abduc_80_ptos'];
+        $params_2[':m_musc_abduc_80_dolor'] = $_POST['m_musc_abduc_80_dolor'];
+        $params_2[':m_musc_rota_exter_ptos'] = $_POST['m_musc_rota_exter_ptos'];
+        $params_2[':m_musc_rota_exter_dolor'] = $_POST['m_musc_rota_exter_dolor'];
+        $params_2[':m_musc_rota_inter_ptos'] = $_POST['m_musc_rota_inter_ptos'];
+        $params_2[':m_musc_rota_inter_dolor'] = $_POST['m_musc_rota_inter_dolor'];
+        $params_2[':m_musc_ra_obs'] = $_POST['m_musc_ra_obs'];
+        $params_2[':m_musc_aptitud'] = $_POST['m_musc_aptitud'];
+        $params_2[':m_musc_col_cevical_desvia_lateral'] = $_POST['m_musc_col_cevical_desvia_lateral'];
+        $params_2[':m_musc_col_cevical_desvia_antero'] = $_POST['m_musc_col_cevical_desvia_antero'];
+        $params_2[':m_musc_col_cevical_palpa_apofisis'] = $_POST['m_musc_col_cevical_palpa_apofisis'];
+        $params_2[':m_musc_col_cevical_palpa_contractura'] = $_POST['m_musc_col_cevical_palpa_contractura'];
+        $params_2[':m_musc_col_dorsal_desvia_lateral'] = $_POST['m_musc_col_dorsal_desvia_lateral'];
+        $params_2[':m_musc_col_dorsal_desvia_antero'] = $_POST['m_musc_col_dorsal_desvia_antero'];
+        $params_2[':m_musc_col_dorsal_palpa_apofisis'] = $_POST['m_musc_col_dorsal_palpa_apofisis'];
+        $params_2[':m_musc_col_dorsal_palpa_contractura'] = $_POST['m_musc_col_dorsal_palpa_contractura'];
+        $params_2[':m_musc_col_lumbar_desvia_lateral'] = $_POST['m_musc_col_lumbar_desvia_lateral'];
+        $params_2[':m_musc_col_lumbar_desvia_antero'] = $_POST['m_musc_col_lumbar_desvia_antero'];
+        $params_2[':m_musc_col_lumbar_palpa_apofisis'] = $_POST['m_musc_col_lumbar_palpa_apofisis'];
+        $params_2[':m_musc_col_lumbar_palpa_contractura'] = $_POST['m_musc_col_lumbar_palpa_contractura'];
+        $params_2[':m_musc_col_cevical_flexion'] = $_POST['m_musc_col_cevical_flexion'];
+        $params_2[':m_musc_col_cevical_exten'] = $_POST['m_musc_col_cevical_exten'];
+        $params_2[':m_musc_col_cevical_lat_izq'] = $_POST['m_musc_col_cevical_lat_izq'];
+        $params_2[':m_musc_col_cevical_lat_der'] = $_POST['m_musc_col_cevical_lat_der'];
+        $params_2[':m_musc_col_cevical_rota_izq'] = $_POST['m_musc_col_cevical_rota_izq'];
+        $params_2[':m_musc_col_cevical_rota_der'] = $_POST['m_musc_col_cevical_rota_der'];
+        $params_2[':m_musc_col_cevical_irradia'] = $_POST['m_musc_col_cevical_irradia'];
+        $params_2[':m_musc_col_cevical_alt_masa'] = $_POST['m_musc_col_cevical_alt_masa'];
+        $params_2[':m_musc_col_dorsal_flexion'] = $_POST['m_musc_col_dorsal_flexion'];
+        $params_2[':m_musc_col_dorsal_exten'] = $_POST['m_musc_col_dorsal_exten'];
+        $params_2[':m_musc_col_dorsal_lat_izq'] = $_POST['m_musc_col_dorsal_lat_izq'];
+        $params_2[':m_musc_col_dorsal_lat_der'] = $_POST['m_musc_col_dorsal_lat_der'];
+        $params_2[':m_musc_col_dorsal_rota_izq'] = $_POST['m_musc_col_dorsal_rota_izq'];
+        $params_2[':m_musc_col_dorsal_rota_der'] = $_POST['m_musc_col_dorsal_rota_der'];
+        $params_2[':m_musc_col_dorsal_irradia'] = $_POST['m_musc_col_dorsal_irradia'];
+        $params_2[':m_musc_col_dorsal_alt_masa'] = $_POST['m_musc_col_dorsal_alt_masa'];
+        $params_2[':m_musc_col_lumbar_flexion'] = $_POST['m_musc_col_lumbar_flexion'];
+        $params_2[':m_musc_col_lumbar_exten'] = $_POST['m_musc_col_lumbar_exten'];
+        $params_2[':m_musc_col_lumbar_lat_izq'] = $_POST['m_musc_col_lumbar_lat_izq'];
+        $params_2[':m_musc_col_lumbar_lat_der'] = $_POST['m_musc_col_lumbar_lat_der'];
+        $params_2[':m_musc_col_lumbar_rota_izq'] = $_POST['m_musc_col_lumbar_rota_izq'];
+        $params_2[':m_musc_col_lumbar_rota_der'] = $_POST['m_musc_col_lumbar_rota_der'];
+        $params_2[':m_musc_col_lumbar_irradia'] = $_POST['m_musc_col_lumbar_irradia'];
+        $params_2[':m_musc_col_lumbar_alt_masa'] = $_POST['m_musc_col_lumbar_alt_masa'];
+        $params_2[':m_musc_hombro_der_abduccion'] = $_POST['m_musc_hombro_der_abduccion'];
+        $params_2[':m_musc_hombro_der_aduccion'] = $_POST['m_musc_hombro_der_aduccion'];
+        $params_2[':m_musc_hombro_der_flexion'] = $_POST['m_musc_hombro_der_flexion'];
+        $params_2[':m_musc_hombro_der_extencion'] = $_POST['m_musc_hombro_der_extencion'];
+        $params_2[':m_musc_hombro_der_rota_exter'] = $_POST['m_musc_hombro_der_rota_exter'];
+        $params_2[':m_musc_hombro_der_rota_inter'] = $_POST['m_musc_hombro_der_rota_inter'];
+        $params_2[':m_musc_hombro_der_irradia'] = $_POST['m_musc_hombro_der_irradia'];
+        $params_2[':m_musc_hombro_der_alt_masa'] = $_POST['m_musc_hombro_der_alt_masa'];
+        $params_2[':m_musc_hombro_izq_abduccion'] = $_POST['m_musc_hombro_izq_abduccion'];
+        $params_2[':m_musc_hombro_izq_aduccion'] = $_POST['m_musc_hombro_izq_aduccion'];
+        $params_2[':m_musc_hombro_izq_flexion'] = $_POST['m_musc_hombro_izq_flexion'];
+        $params_2[':m_musc_hombro_izq_extencion'] = $_POST['m_musc_hombro_izq_extencion'];
+        $params_2[':m_musc_hombro_izq_rota_exter'] = $_POST['m_musc_hombro_izq_rota_exter'];
+        $params_2[':m_musc_hombro_izq_rota_inter'] = $_POST['m_musc_hombro_izq_rota_inter'];
+        $params_2[':m_musc_hombro_izq_irradia'] = $_POST['m_musc_hombro_izq_irradia'];
+        $params_2[':m_musc_hombro_izq_alt_masa'] = $_POST['m_musc_hombro_izq_alt_masa'];
+        $params_2[':m_musc_codo_der_abduccion'] = $_POST['m_musc_codo_der_abduccion'];
+        $params_2[':m_musc_codo_der_aduccion'] = $_POST['m_musc_codo_der_aduccion'];
+        $params_2[':m_musc_codo_der_flexion'] = $_POST['m_musc_codo_der_flexion'];
+        $params_2[':m_musc_codo_der_extencion'] = $_POST['m_musc_codo_der_extencion'];
+        $params_2[':m_musc_codo_der_rota_exter'] = $_POST['m_musc_codo_der_rota_exter'];
+        $params_2[':m_musc_codo_der_rota_inter'] = $_POST['m_musc_codo_der_rota_inter'];
+        $params_2[':m_musc_codo_der_irradia'] = $_POST['m_musc_codo_der_irradia'];
+        $params_2[':m_musc_codo_der_alt_masa'] = $_POST['m_musc_codo_der_alt_masa'];
+        $params_2[':m_musc_codo_izq_abduccion'] = $_POST['m_musc_codo_izq_abduccion'];
+        $params_2[':m_musc_codo_izq_aduccion'] = $_POST['m_musc_codo_izq_aduccion'];
+        $params_2[':m_musc_codo_izq_flexion'] = $_POST['m_musc_codo_izq_flexion'];
+        $params_2[':m_musc_codo_izq_extencion'] = $_POST['m_musc_codo_izq_extencion'];
+        $params_2[':m_musc_codo_izq_rota_exter'] = $_POST['m_musc_codo_izq_rota_exter'];
+        $params_2[':m_musc_codo_izq_rota_inter'] = $_POST['m_musc_codo_izq_rota_inter'];
+        $params_2[':m_musc_codo_izq_irradia'] = $_POST['m_musc_codo_izq_irradia'];
+        $params_2[':m_musc_codo_izq_alt_masa'] = $_POST['m_musc_codo_izq_alt_masa'];
+        $params_2[':m_musc_muneca_der_abduccion'] = $_POST['m_musc_muneca_der_abduccion'];
+        $params_2[':m_musc_muneca_der_aduccion'] = $_POST['m_musc_muneca_der_aduccion'];
+        $params_2[':m_musc_muneca_der_flexion'] = $_POST['m_musc_muneca_der_flexion'];
+        $params_2[':m_musc_muneca_der_extencion'] = $_POST['m_musc_muneca_der_extencion'];
+        $params_2[':m_musc_muneca_der_rota_exter'] = $_POST['m_musc_muneca_der_rota_exter'];
+        $params_2[':m_musc_muneca_der_rota_inter'] = $_POST['m_musc_muneca_der_rota_inter'];
+        $params_2[':m_musc_muneca_der_irradia'] = $_POST['m_musc_muneca_der_irradia'];
+        $params_2[':m_musc_muneca_der_alt_masa'] = $_POST['m_musc_muneca_der_alt_masa'];
+        $params_2[':m_musc_muneca_izq_abduccion'] = $_POST['m_musc_muneca_izq_abduccion'];
+        $params_2[':m_musc_muneca_izq_aduccion'] = $_POST['m_musc_muneca_izq_aduccion'];
+        $params_2[':m_musc_muneca_izq_flexion'] = $_POST['m_musc_muneca_izq_flexion'];
+        $params_2[':m_musc_muneca_izq_extencion'] = $_POST['m_musc_muneca_izq_extencion'];
+        $params_2[':m_musc_muneca_izq_rota_exter'] = $_POST['m_musc_muneca_izq_rota_exter'];
+        $params_2[':m_musc_muneca_izq_rota_inter'] = $_POST['m_musc_muneca_izq_rota_inter'];
+        $params_2[':m_musc_muneca_izq_irradia'] = $_POST['m_musc_muneca_izq_irradia'];
+        $params_2[':m_musc_muneca_izq_alt_masa'] = $_POST['m_musc_muneca_izq_alt_masa'];
+        $params_2[':m_musc_mano_der_abduccion'] = $_POST['m_musc_mano_der_abduccion'];
+        $params_2[':m_musc_mano_der_aduccion'] = $_POST['m_musc_mano_der_aduccion'];
+        $params_2[':m_musc_mano_der_flexion'] = $_POST['m_musc_mano_der_flexion'];
+        $params_2[':m_musc_mano_der_extencion'] = $_POST['m_musc_mano_der_extencion'];
+        $params_2[':m_musc_mano_der_rota_exter'] = $_POST['m_musc_mano_der_rota_exter'];
+        $params_2[':m_musc_mano_der_rota_inter'] = $_POST['m_musc_mano_der_rota_inter'];
+        $params_2[':m_musc_mano_der_irradia'] = $_POST['m_musc_mano_der_irradia'];
+        $params_2[':m_musc_mano_der_alt_masa'] = $_POST['m_musc_mano_der_alt_masa'];
+        $params_2[':m_musc_mano_izq_abduccion'] = $_POST['m_musc_mano_izq_abduccion'];
+        $params_2[':m_musc_mano_izq_aduccion'] = $_POST['m_musc_mano_izq_aduccion'];
+        $params_2[':m_musc_mano_izq_flexion'] = $_POST['m_musc_mano_izq_flexion'];
+        $params_2[':m_musc_mano_izq_extencion'] = $_POST['m_musc_mano_izq_extencion'];
+        $params_2[':m_musc_mano_izq_rota_exter'] = $_POST['m_musc_mano_izq_rota_exter'];
+        $params_2[':m_musc_mano_izq_rota_inter'] = $_POST['m_musc_mano_izq_rota_inter'];
+        $params_2[':m_musc_mano_izq_irradia'] = $_POST['m_musc_mano_izq_irradia'];
+        $params_2[':m_musc_mano_izq_alt_masa'] = $_POST['m_musc_mano_izq_alt_masa'];
+        $params_2[':m_musc_cadera_der_abduccion'] = $_POST['m_musc_cadera_der_abduccion'];
+        $params_2[':m_musc_cadera_der_aduccion'] = $_POST['m_musc_cadera_der_aduccion'];
+        $params_2[':m_musc_cadera_der_flexion'] = $_POST['m_musc_cadera_der_flexion'];
+        $params_2[':m_musc_cadera_der_extencion'] = $_POST['m_musc_cadera_der_extencion'];
+        $params_2[':m_musc_cadera_der_rota_exter'] = $_POST['m_musc_cadera_der_rota_exter'];
+        $params_2[':m_musc_cadera_der_rota_inter'] = $_POST['m_musc_cadera_der_rota_inter'];
+        $params_2[':m_musc_cadera_der_irradia'] = $_POST['m_musc_cadera_der_irradia'];
+        $params_2[':m_musc_cadera_der_alt_masa'] = $_POST['m_musc_cadera_der_alt_masa'];
+        $params_2[':m_musc_cadera_izq_abduccion'] = $_POST['m_musc_cadera_izq_abduccion'];
+        $params_2[':m_musc_cadera_izq_aduccion'] = $_POST['m_musc_cadera_izq_aduccion'];
+        $params_2[':m_musc_cadera_izq_flexion'] = $_POST['m_musc_cadera_izq_flexion'];
+        $params_2[':m_musc_cadera_izq_extencion'] = $_POST['m_musc_cadera_izq_extencion'];
+        $params_2[':m_musc_cadera_izq_rota_exter'] = $_POST['m_musc_cadera_izq_rota_exter'];
+        $params_2[':m_musc_cadera_izq_rota_inter'] = $_POST['m_musc_cadera_izq_rota_inter'];
+        $params_2[':m_musc_cadera_izq_irradia'] = $_POST['m_musc_cadera_izq_irradia'];
+        $params_2[':m_musc_cadera_izq_alt_masa'] = $_POST['m_musc_cadera_izq_alt_masa'];
+        $params_2[':m_musc_rodilla_der_abduccion'] = $_POST['m_musc_rodilla_der_abduccion'];
+        $params_2[':m_musc_rodilla_der_aduccion'] = $_POST['m_musc_rodilla_der_aduccion'];
+        $params_2[':m_musc_rodilla_der_flexion'] = $_POST['m_musc_rodilla_der_flexion'];
+        $params_2[':m_musc_rodilla_der_extencion'] = $_POST['m_musc_rodilla_der_extencion'];
+        $params_2[':m_musc_rodilla_der_rota_exter'] = $_POST['m_musc_rodilla_der_rota_exter'];
+        $params_2[':m_musc_rodilla_der_rota_inter'] = $_POST['m_musc_rodilla_der_rota_inter'];
+        $params_2[':m_musc_rodilla_der_irradia'] = $_POST['m_musc_rodilla_der_irradia'];
+        $params_2[':m_musc_rodilla_der_alt_masa'] = $_POST['m_musc_rodilla_der_alt_masa'];
+        $params_2[':m_musc_rodilla_izq_abduccion'] = $_POST['m_musc_rodilla_izq_abduccion'];
+        $params_2[':m_musc_rodilla_izq_aduccion'] = $_POST['m_musc_rodilla_izq_aduccion'];
+        $params_2[':m_musc_rodilla_izq_flexion'] = $_POST['m_musc_rodilla_izq_flexion'];
+        $params_2[':m_musc_rodilla_izq_extencion'] = $_POST['m_musc_rodilla_izq_extencion'];
+        $params_2[':m_musc_rodilla_izq_rota_exter'] = $_POST['m_musc_rodilla_izq_rota_exter'];
+        $params_2[':m_musc_rodilla_izq_rota_inter'] = $_POST['m_musc_rodilla_izq_rota_inter'];
+        $params_2[':m_musc_rodilla_izq_irradia'] = $_POST['m_musc_rodilla_izq_irradia'];
+        $params_2[':m_musc_rodilla_izq_alt_masa'] = $_POST['m_musc_rodilla_izq_alt_masa'];
+        $params_2[':m_musc_tobillo_der_abduccion'] = $_POST['m_musc_tobillo_der_abduccion'];
+        $params_2[':m_musc_tobillo_der_aduccion'] = $_POST['m_musc_tobillo_der_aduccion'];
+        $params_2[':m_musc_tobillo_der_flexion'] = $_POST['m_musc_tobillo_der_flexion'];
+        $params_2[':m_musc_tobillo_der_extencion'] = $_POST['m_musc_tobillo_der_extencion'];
+        $params_2[':m_musc_tobillo_der_rota_exter'] = $_POST['m_musc_tobillo_der_rota_exter'];
+        $params_2[':m_musc_tobillo_der_rota_inter'] = $_POST['m_musc_tobillo_der_rota_inter'];
+        $params_2[':m_musc_tobillo_der_irradia'] = $_POST['m_musc_tobillo_der_irradia'];
+        $params_2[':m_musc_tobillo_der_alt_masa'] = $_POST['m_musc_tobillo_der_alt_masa'];
+        $params_2[':m_musc_tobillo_izq_abduccion'] = $_POST['m_musc_tobillo_izq_abduccion'];
+        $params_2[':m_musc_tobillo_izq_aduccion'] = $_POST['m_musc_tobillo_izq_aduccion'];
+        $params_2[':m_musc_tobillo_izq_flexion'] = $_POST['m_musc_tobillo_izq_flexion'];
+        $params_2[':m_musc_tobillo_izq_extencion'] = $_POST['m_musc_tobillo_izq_extencion'];
+        $params_2[':m_musc_tobillo_izq_rota_exter'] = $_POST['m_musc_tobillo_izq_rota_exter'];
+        $params_2[':m_musc_tobillo_izq_rota_inter'] = $_POST['m_musc_tobillo_izq_rota_inter'];
+        $params_2[':m_musc_tobillo_izq_irradia'] = $_POST['m_musc_tobillo_izq_irradia'];
+        $params_2[':m_musc_tobillo_izq_alt_masa'] = $_POST['m_musc_tobillo_izq_alt_masa'];
+        $params_2[':m_musc_colum_punto_ref'] = $_POST['m_musc_colum_punto_ref'];
+        $params_2[':m_musc_colum_aptitud'] = $_POST['m_musc_colum_aptitud'];
+        $params_2[':m_musc_colum_desc'] = $_POST['m_musc_colum_desc'];
+        $params_2[':m_musc_diag_01'] = $_POST['m_musc_diag_01'];
+        $params_2[':m_musc_conclu_01'] = $_POST['m_musc_conclu_01'];
+        $params_2[':m_musc_recom_01'] = $_POST['m_musc_recom_01'];
+        $params_2[':m_musc_diag_02'] = $_POST['m_musc_diag_02'];
+        $params_2[':m_musc_conclu_02'] = $_POST['m_musc_conclu_02'];
+        $params_2[':m_musc_recom_02'] = $_POST['m_musc_recom_02'];
+        $params_2[':m_musc_diag_03'] = $_POST['m_musc_diag_03'];
+        $params_2[':m_musc_conclu_03'] = $_POST['m_musc_conclu_03'];
+        $params_2[':m_musc_recom_03'] = $_POST['m_musc_recom_03'];
+
+        $q_2 = 'Update mod_medicina_musculo set
+                    m_musc_flexi_ptos=:m_musc_flexi_ptos,
+                    m_musc_flexi_obs=:m_musc_flexi_obs,
+                    m_musc_cadera_ptos=:m_musc_cadera_ptos,
+                    m_musc_cadera_obs=:m_musc_cadera_obs,
+                    m_musc_muslo_ptos=:m_musc_muslo_ptos,
+                    m_musc_muslo_obs=:m_musc_muslo_obs,
+                    m_musc_abdom_ptos=:m_musc_abdom_ptos,
+                    m_musc_abdom_obs=:m_musc_abdom_obs,
+                    m_musc_abduc_180_ptos=:m_musc_abduc_180_ptos,
+                    m_musc_abduc_180_dolor=:m_musc_abduc_180_dolor,
+                    m_musc_abduc_80_ptos=:m_musc_abduc_80_ptos,
+                    m_musc_abduc_80_dolor=:m_musc_abduc_80_dolor,
+                    m_musc_rota_exter_ptos=:m_musc_rota_exter_ptos,
+                    m_musc_rota_exter_dolor=:m_musc_rota_exter_dolor,
+                    m_musc_rota_inter_ptos=:m_musc_rota_inter_ptos,
+                    m_musc_rota_inter_dolor=:m_musc_rota_inter_dolor,
+                    m_musc_ra_obs=:m_musc_ra_obs,
+                    m_musc_aptitud=:m_musc_aptitud,
+                    m_musc_col_cevical_desvia_lateral=:m_musc_col_cevical_desvia_lateral,
+                    m_musc_col_cevical_desvia_antero=:m_musc_col_cevical_desvia_antero,
+                    m_musc_col_cevical_palpa_apofisis=:m_musc_col_cevical_palpa_apofisis,
+                    m_musc_col_cevical_palpa_contractura=:m_musc_col_cevical_palpa_contractura,
+                    m_musc_col_dorsal_desvia_lateral=:m_musc_col_dorsal_desvia_lateral,
+                    m_musc_col_dorsal_desvia_antero=:m_musc_col_dorsal_desvia_antero,
+                    m_musc_col_dorsal_palpa_apofisis=:m_musc_col_dorsal_palpa_apofisis,
+                    m_musc_col_dorsal_palpa_contractura=:m_musc_col_dorsal_palpa_contractura,
+                    m_musc_col_lumbar_desvia_lateral=:m_musc_col_lumbar_desvia_lateral,
+                    m_musc_col_lumbar_desvia_antero=:m_musc_col_lumbar_desvia_antero,
+                    m_musc_col_lumbar_palpa_apofisis=:m_musc_col_lumbar_palpa_apofisis,
+                    m_musc_col_lumbar_palpa_contractura=:m_musc_col_lumbar_palpa_contractura,
+                    m_musc_col_cevical_flexion=:m_musc_col_cevical_flexion,
+                    m_musc_col_cevical_exten=:m_musc_col_cevical_exten,
+                    m_musc_col_cevical_lat_izq=:m_musc_col_cevical_lat_izq,
+                    m_musc_col_cevical_lat_der=:m_musc_col_cevical_lat_der,
+                    m_musc_col_cevical_rota_izq=:m_musc_col_cevical_rota_izq,
+                    m_musc_col_cevical_rota_der=:m_musc_col_cevical_rota_der,
+                    m_musc_col_cevical_irradia=:m_musc_col_cevical_irradia,
+                    m_musc_col_cevical_alt_masa=:m_musc_col_cevical_alt_masa,
+                    m_musc_col_dorsal_flexion=:m_musc_col_dorsal_flexion,
+                    m_musc_col_dorsal_exten=:m_musc_col_dorsal_exten,
+                    m_musc_col_dorsal_lat_izq=:m_musc_col_dorsal_lat_izq,
+                    m_musc_col_dorsal_lat_der=:m_musc_col_dorsal_lat_der,
+                    m_musc_col_dorsal_rota_izq=:m_musc_col_dorsal_rota_izq,
+                    m_musc_col_dorsal_rota_der=:m_musc_col_dorsal_rota_der,
+                    m_musc_col_dorsal_irradia=:m_musc_col_dorsal_irradia,
+                    m_musc_col_dorsal_alt_masa=:m_musc_col_dorsal_alt_masa,
+                    m_musc_col_lumbar_flexion=:m_musc_col_lumbar_flexion,
+                    m_musc_col_lumbar_exten=:m_musc_col_lumbar_exten,
+                    m_musc_col_lumbar_lat_izq=:m_musc_col_lumbar_lat_izq,
+                    m_musc_col_lumbar_lat_der=:m_musc_col_lumbar_lat_der,
+                    m_musc_col_lumbar_rota_izq=:m_musc_col_lumbar_rota_izq,
+                    m_musc_col_lumbar_rota_der=:m_musc_col_lumbar_rota_der,
+                    m_musc_col_lumbar_irradia=:m_musc_col_lumbar_irradia,
+                    m_musc_col_lumbar_alt_masa=:m_musc_col_lumbar_alt_masa,
+                    m_musc_hombro_der_abduccion=:m_musc_hombro_der_abduccion,
+                    m_musc_hombro_der_aduccion=:m_musc_hombro_der_aduccion,
+                    m_musc_hombro_der_flexion=:m_musc_hombro_der_flexion,
+                    m_musc_hombro_der_extencion=:m_musc_hombro_der_extencion,
+                    m_musc_hombro_der_rota_exter=:m_musc_hombro_der_rota_exter,
+                    m_musc_hombro_der_rota_inter=:m_musc_hombro_der_rota_inter,
+                    m_musc_hombro_der_irradia=:m_musc_hombro_der_irradia,
+                    m_musc_hombro_der_alt_masa=:m_musc_hombro_der_alt_masa,
+                    m_musc_hombro_izq_abduccion=:m_musc_hombro_izq_abduccion,
+                    m_musc_hombro_izq_aduccion=:m_musc_hombro_izq_aduccion,
+                    m_musc_hombro_izq_flexion=:m_musc_hombro_izq_flexion,
+                    m_musc_hombro_izq_extencion=:m_musc_hombro_izq_extencion,
+                    m_musc_hombro_izq_rota_exter=:m_musc_hombro_izq_rota_exter,
+                    m_musc_hombro_izq_rota_inter=:m_musc_hombro_izq_rota_inter,
+                    m_musc_hombro_izq_irradia=:m_musc_hombro_izq_irradia,
+                    m_musc_hombro_izq_alt_masa=:m_musc_hombro_izq_alt_masa,
+                    m_musc_codo_der_abduccion=:m_musc_codo_der_abduccion,
+                    m_musc_codo_der_aduccion=:m_musc_codo_der_aduccion,
+                    m_musc_codo_der_flexion=:m_musc_codo_der_flexion,
+                    m_musc_codo_der_extencion=:m_musc_codo_der_extencion,
+                    m_musc_codo_der_rota_exter=:m_musc_codo_der_rota_exter,
+                    m_musc_codo_der_rota_inter=:m_musc_codo_der_rota_inter,
+                    m_musc_codo_der_irradia=:m_musc_codo_der_irradia,
+                    m_musc_codo_der_alt_masa=:m_musc_codo_der_alt_masa,
+                    m_musc_codo_izq_abduccion=:m_musc_codo_izq_abduccion,
+                    m_musc_codo_izq_aduccion=:m_musc_codo_izq_aduccion,
+                    m_musc_codo_izq_flexion=:m_musc_codo_izq_flexion,
+                    m_musc_codo_izq_extencion=:m_musc_codo_izq_extencion,
+                    m_musc_codo_izq_rota_exter=:m_musc_codo_izq_rota_exter,
+                    m_musc_codo_izq_rota_inter=:m_musc_codo_izq_rota_inter,
+                    m_musc_codo_izq_irradia=:m_musc_codo_izq_irradia,
+                    m_musc_codo_izq_alt_masa=:m_musc_codo_izq_alt_masa,
+                    m_musc_muneca_der_abduccion=:m_musc_muneca_der_abduccion,
+                    m_musc_muneca_der_aduccion=:m_musc_muneca_der_aduccion,
+                    m_musc_muneca_der_flexion=:m_musc_muneca_der_flexion,
+                    m_musc_muneca_der_extencion=:m_musc_muneca_der_extencion,
+                    m_musc_muneca_der_rota_exter=:m_musc_muneca_der_rota_exter,
+                    m_musc_muneca_der_rota_inter=:m_musc_muneca_der_rota_inter,
+                    m_musc_muneca_der_irradia=:m_musc_muneca_der_irradia,
+                    m_musc_muneca_der_alt_masa=:m_musc_muneca_der_alt_masa,
+                    m_musc_muneca_izq_abduccion=:m_musc_muneca_izq_abduccion,
+                    m_musc_muneca_izq_aduccion=:m_musc_muneca_izq_aduccion,
+                    m_musc_muneca_izq_flexion=:m_musc_muneca_izq_flexion,
+                    m_musc_muneca_izq_extencion=:m_musc_muneca_izq_extencion,
+                    m_musc_muneca_izq_rota_exter=:m_musc_muneca_izq_rota_exter,
+                    m_musc_muneca_izq_rota_inter=:m_musc_muneca_izq_rota_inter,
+                    m_musc_muneca_izq_irradia=:m_musc_muneca_izq_irradia,
+                    m_musc_muneca_izq_alt_masa=:m_musc_muneca_izq_alt_masa,
+                    m_musc_mano_der_abduccion=:m_musc_mano_der_abduccion,
+                    m_musc_mano_der_aduccion=:m_musc_mano_der_aduccion,
+                    m_musc_mano_der_flexion=:m_musc_mano_der_flexion,
+                    m_musc_mano_der_extencion=:m_musc_mano_der_extencion,
+                    m_musc_mano_der_rota_exter=:m_musc_mano_der_rota_exter,
+                    m_musc_mano_der_rota_inter=:m_musc_mano_der_rota_inter,
+                    m_musc_mano_der_irradia=:m_musc_mano_der_irradia,
+                    m_musc_mano_der_alt_masa=:m_musc_mano_der_alt_masa,
+                    m_musc_mano_izq_abduccion=:m_musc_mano_izq_abduccion,
+                    m_musc_mano_izq_aduccion=:m_musc_mano_izq_aduccion,
+                    m_musc_mano_izq_flexion=:m_musc_mano_izq_flexion,
+                    m_musc_mano_izq_extencion=:m_musc_mano_izq_extencion,
+                    m_musc_mano_izq_rota_exter=:m_musc_mano_izq_rota_exter,
+                    m_musc_mano_izq_rota_inter=:m_musc_mano_izq_rota_inter,
+                    m_musc_mano_izq_irradia=:m_musc_mano_izq_irradia,
+                    m_musc_mano_izq_alt_masa=:m_musc_mano_izq_alt_masa,
+                    m_musc_cadera_der_abduccion=:m_musc_cadera_der_abduccion,
+                    m_musc_cadera_der_aduccion=:m_musc_cadera_der_aduccion,
+                    m_musc_cadera_der_flexion=:m_musc_cadera_der_flexion,
+                    m_musc_cadera_der_extencion=:m_musc_cadera_der_extencion,
+                    m_musc_cadera_der_rota_exter=:m_musc_cadera_der_rota_exter,
+                    m_musc_cadera_der_rota_inter=:m_musc_cadera_der_rota_inter,
+                    m_musc_cadera_der_irradia=:m_musc_cadera_der_irradia,
+                    m_musc_cadera_der_alt_masa=:m_musc_cadera_der_alt_masa,
+                    m_musc_cadera_izq_abduccion=:m_musc_cadera_izq_abduccion,
+                    m_musc_cadera_izq_aduccion=:m_musc_cadera_izq_aduccion,
+                    m_musc_cadera_izq_flexion=:m_musc_cadera_izq_flexion,
+                    m_musc_cadera_izq_extencion=:m_musc_cadera_izq_extencion,
+                    m_musc_cadera_izq_rota_exter=:m_musc_cadera_izq_rota_exter,
+                    m_musc_cadera_izq_rota_inter=:m_musc_cadera_izq_rota_inter,
+                    m_musc_cadera_izq_irradia=:m_musc_cadera_izq_irradia,
+                    m_musc_cadera_izq_alt_masa=:m_musc_cadera_izq_alt_masa,
+                    m_musc_rodilla_der_abduccion=:m_musc_rodilla_der_abduccion,
+                    m_musc_rodilla_der_aduccion=:m_musc_rodilla_der_aduccion,
+                    m_musc_rodilla_der_flexion=:m_musc_rodilla_der_flexion,
+                    m_musc_rodilla_der_extencion=:m_musc_rodilla_der_extencion,
+                    m_musc_rodilla_der_rota_exter=:m_musc_rodilla_der_rota_exter,
+                    m_musc_rodilla_der_rota_inter=:m_musc_rodilla_der_rota_inter,
+                    m_musc_rodilla_der_irradia=:m_musc_rodilla_der_irradia,
+                    m_musc_rodilla_der_alt_masa=:m_musc_rodilla_der_alt_masa,
+                    m_musc_rodilla_izq_abduccion=:m_musc_rodilla_izq_abduccion,
+                    m_musc_rodilla_izq_aduccion=:m_musc_rodilla_izq_aduccion,
+                    m_musc_rodilla_izq_flexion=:m_musc_rodilla_izq_flexion,
+                    m_musc_rodilla_izq_extencion=:m_musc_rodilla_izq_extencion,
+                    m_musc_rodilla_izq_rota_exter=:m_musc_rodilla_izq_rota_exter,
+                    m_musc_rodilla_izq_rota_inter=:m_musc_rodilla_izq_rota_inter,
+                    m_musc_rodilla_izq_irradia=:m_musc_rodilla_izq_irradia,
+                    m_musc_rodilla_izq_alt_masa=:m_musc_rodilla_izq_alt_masa,
+                    m_musc_tobillo_der_abduccion=:m_musc_tobillo_der_abduccion,
+                    m_musc_tobillo_der_aduccion=:m_musc_tobillo_der_aduccion,
+                    m_musc_tobillo_der_flexion=:m_musc_tobillo_der_flexion,
+                    m_musc_tobillo_der_extencion=:m_musc_tobillo_der_extencion,
+                    m_musc_tobillo_der_rota_exter=:m_musc_tobillo_der_rota_exter,
+                    m_musc_tobillo_der_rota_inter=:m_musc_tobillo_der_rota_inter,
+                    m_musc_tobillo_der_irradia=:m_musc_tobillo_der_irradia,
+                    m_musc_tobillo_der_alt_masa=:m_musc_tobillo_der_alt_masa,
+                    m_musc_tobillo_izq_abduccion=:m_musc_tobillo_izq_abduccion,
+                    m_musc_tobillo_izq_aduccion=:m_musc_tobillo_izq_aduccion,
+                    m_musc_tobillo_izq_flexion=:m_musc_tobillo_izq_flexion,
+                    m_musc_tobillo_izq_extencion=:m_musc_tobillo_izq_extencion,
+                    m_musc_tobillo_izq_rota_exter=:m_musc_tobillo_izq_rota_exter,
+                    m_musc_tobillo_izq_rota_inter=:m_musc_tobillo_izq_rota_inter,
+                    m_musc_tobillo_izq_irradia=:m_musc_tobillo_izq_irradia,
+                    m_musc_tobillo_izq_alt_masa=:m_musc_tobillo_izq_alt_masa,
+                    m_musc_colum_punto_ref=:m_musc_colum_punto_ref,
+                    m_musc_colum_aptitud=:m_musc_colum_aptitud,
+                    m_musc_colum_desc=:m_musc_colum_desc,
+                    m_musc_diag_01=:m_musc_diag_01,
+                    m_musc_conclu_01=:m_musc_conclu_01,
+                    m_musc_recom_01=:m_musc_recom_01,
+                    m_musc_diag_02=:m_musc_diag_02,
+                    m_musc_conclu_02=:m_musc_conclu_02,
+                    m_musc_recom_02=:m_musc_recom_02,
+                    m_musc_diag_03=:m_musc_diag_03,
+                    m_musc_conclu_03=:m_musc_conclu_03,
+                    m_musc_recom_03=:m_musc_recom_03        
+                where
+                m_musc_adm=:adm;';
+
+        $sql_2 = $this->sql($q_2, $params_2);
+        if ($sql_2->success) {
+            $sql_1 = $this->sql($q_1, $params_1);
+            if ($sql_1->success && $sql_1->total == 1) {
+                $this->commit();
+                return $sql_1;
+            } else {
+                $this->rollback();
+                return array('success' => false, 'error' => 'Problemas con el registro.');
+            }
+        } else {
+            $this->rollback();
+            return array('success' => false, 'error' => 'Problemas con el registro.');
+        }
+    }
+
+    public function carga_musculo_pdf($adm)
+    {
+        $query = "SELECT *
+            FROM mod_medicina_musculo
+            where m_musc_adm='$adm';";
+        return $this->sql($query);
     }
 }
 
