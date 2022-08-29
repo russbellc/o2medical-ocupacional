@@ -77,13 +77,16 @@ $pdf->AddPage('P', 'A4');
 $pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
 // $pdf->Image('images/formato/contactos_o2.jpg', 148, 5, 50, '', 'JPEG');
 
+if ($audio->data[0]->medico_firma == '1') {
+  $pdf->Image('images/firma/'.$audio->data[0]->medico_cmp.'.jpg', 140, 235, 50, '', 'JPG');
+}
 
 
 
 $h = 4;
 $titulo = 7;
 $texto = 7;
-$salto = 1;
+$salto = 0;
 $pdf->SetFont('helvetica', 'B', 13);
 $pdf->Ln(6);
 $pdf->Cell(180, $h, 'FICHA AUDIOMETRIA', 0, 1, 'C', 0);

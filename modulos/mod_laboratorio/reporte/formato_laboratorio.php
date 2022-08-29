@@ -1,14 +1,16 @@
 <?php
 
-class MYPDF extends TCPDF {
+class MYPDF extends TCPDF
+{
 
     public $user;
 
-    public function Header() {
-        
+    public function Header()
+    {
     }
 
-    function zerofill($entero, $largo) {
+    function zerofill($entero, $largo)
+    {
         $entero = (int) $entero;
         $largo = (int) $largo;
         $relleno = '';
@@ -19,13 +21,13 @@ class MYPDF extends TCPDF {
         return $relleno . $entero;
     }
 
-    public function Footer() {
+    public function Footer()
+    {
         $this->SetY(-15);
         $this->SetFont('helvetica', 'I', 8);
         $this->Cell(0, 10, $this->user->sed_desc, 0, false, 'L', 0, '', 0, false, 'T', 'M');
         $this->Cell(0, 10, 'Pagina - ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, false, 'R', 0, '', 0, false, 'T', 'M');
     }
-
 }
 
 $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -40,8 +42,8 @@ $pdf->SetKeywords('');
 
 // Contenido de la cabecera
 // Fuente de la cabecera y el pie de página
-$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+$pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
 // Márgenes
 $pdf->SetMargins(PDF_MARGIN_LEFT, 5, PDF_MARGIN_RIGHT, 2);
@@ -70,16 +72,25 @@ $exa_drogas = $model->carga_exa_drogas_pdf($_REQUEST['adm']);
   -----------------variables declaradas------------------
   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
 
-
+// 
 
 $pdf->AddPage('P', 'A4');
+
+//$pdf->Image('images/bambas.png', 16, 7, 20, '', 'PNG');
+// $pdf->ImageSVG('images/logo_pdf.svg', 10, 7, 46, '', $link = '', '', 'T');
+//CLINICA O2
+$pdf->Image('images/formato/logo_o2.jpg', 10, 5, 55, '', 'JPEG');
+// 
+
+if ($paciente->data[0]->medico_firma == '1') {
+    $pdf->Image('images/firma/' . $paciente->data[0]->medico_cmp . '.jpg', 140, 235, 50, '', 'JPG');
+}
+
+
 $h = 3.5;
 $titulo = 7;
 $texto = 7;
 $salto = 2;
-$pdf->SetFont('helvetica', 'B', 7);
-//$pdf->Image('images/bambas.png', 16, 7, 20, '', 'PNG');
-$pdf->ImageSVG('images/logo_pdf.svg', 10, 7, 46, '', $link = '', '', 'T');
 
 $pdf->SetFont('helvetica', 'B', 13);
 $pdf->Ln(6);

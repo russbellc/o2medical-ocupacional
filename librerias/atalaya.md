@@ -1,30 +1,29 @@
 # Nadie perdona como Jehová
 
 ## __Pregunta 01:__
-1. ¿Qué verdad dijo el rey Salomón en Eclesiastés 7:20?
+1. ¿Qué promesa les hace Jehová a los pecadores que se arrepienten?
    
-   [Eclesiastés 7:20](#) Porque en la tierra no hay nadie justo que siempre haga el bien y nunca peque.
-> pues este texto nos muestra que somos imperfectos y cometemos errores no hay nadie perfecto. Pues todos hemos nacido con esta marca de la imperfeccion y es por ello que todos necesitamos el perdon de Jehova y de los demas.
-
+   [Sal. 86:5](#) Y es que tú, oh, Jehová, eres bueno y estás dispuesto a perdonar; tu amor leal por todos los que te llaman es inmenso.
+> Jehová esta dispuesto a perdonar porque somos su pueblo su ovejitas. Tal como menciona Isaías 1:18 si nuestros pecados fueran como escarlata, quedaremos blancos como la nieve.
 
 ## __Pregunta 02:__
-2. ¿Cómo nos sentimos cuando un buen amigo nos perdona?
+2. ¿Qué debemos hacer si queremos estar en paz con los demás?
    
-> Pues en primer lugar nuestra conciencia esta tranquila y no cargamos el peso de la culpa de nuestro error y en segundo lugar buscamos la paz entre hermanos y amigos.
+> Debemos perdonarnos unos a otros aunque tengamos una razon para quejarnos de otros. pues Jehová nos perdono prime ro y nosotros tambien debemos perdonar a los demas.
 
 
 ## __Pregunta 03:__
- 3. ¿De qué hablaremos en este artículo?
+ 3. ¿Qué analizaremos en este artículo?
 
-> a veces hacemos cosas que no le gustan a Jehova entonces:
->   - ¿Porque podemos estar seguros de que Jehova quiere perdonarnos?
->   - ¿Porque el perdon de Jehova es distinto al de los seres humanos?
->   - Y ¿A quienes perdona Jehova?
+> cómo nosotros, aunque somos imperfectos, podemos seguir el ejemplo de Jehová al perdonar a los demás.
+>   - ¿Qué pecados debemos informar a los ancianos?
+>   - ¿Por qué quiere Jehová que nos perdonemos unos a otros?
+>   - ¿Y qué podemos aprender de algunos hermanos que sufrieron mucho por culpa de los pecados de otras personas?
 
-## JEHOVÁ ESTÁ DISPUESTO A PERDONAR
+## CUANDO UN CRISTIANO COMETE UN PECADO GRAVE
 
 ## __Pregunta 04:__
-4. ¿Por qué podemos estar seguros de que Jehová está dispuesto a perdonar?
+4. 4. a) ¿Qué debe hacer un cristiano que ha cometido un pecado grave? b) ¿Qué responsabilidad tienen los ancianos?
 
 > Pues en su palabra encontramos la respuesta cuando el mismo se expreso de si mismo y de su personalidad al mensionar que es un Dios misericordioso y compasivo, paciente y lleno de amor leal y verdad, que demuestra amor leal a miles, `que perdona errores, ofensas y pecados`”
 

@@ -46,7 +46,7 @@ $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
 $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
 // Márgenes
-$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT);
+$pdf->SetMargins(PDF_MARGIN_LEFT, 15, PDF_MARGIN_RIGHT);
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
@@ -58,17 +58,25 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 
 
--
-// Añadir página
-        $pdf->AddPage();
-$pdf->ImageSVG('images/logo_pdf.svg', 8, 6, 47, '', $link = '', '', 'T');
 $pac_rpt = $model->rpt_pac($_REQUEST['adm']);
 $oftalmo = $model->rpt_oftalmo($_REQUEST['adm']);
 $rpt_diag = $model->rpt_diag($_REQUEST['adm']);
 $rpt_reco = $model->rpt_reco($_REQUEST['adm']);
 
+// Añadir página
+        $pdf->AddPage();
+// $pdf->ImageSVG('images/logo_pdf.svg', 8, 6, 47, '', $link = '', '', 'T');
+
+$pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
+
+
+if ($oftalmo->data[0]->medico_firma == '1') {
+    $pdf->Image('images/firma/'.$oftalmo->data[0]->medico_cmp.'.jpg', 140, 235, 50, '', 'JPG');
+  }
+
+
 $pdf->SetFont('helvetica', 'BU', 15);
-$pdf->Cell(0, 0, 'EVALUACIÓN OFTALMOLÓGICA ', 0, 1, 'C');
+$pdf->Cell(0, 0, 'FICHA OFTALMOLÓGICA ', 0, 1, 'C');
 $pdf->Ln(5);
 $h = 5;
 
@@ -146,7 +154,7 @@ $pdf->MultiCell(115, $h * 2, $oftalmo->data[0]->m_oft_oftalmo_anamnesis, 1, 'L',
 $pdf->Cell(5, $h, '', 0, 0, 'C');
 $pdf->SetFont('helvetica', 'B', 7);
 $pdf->Cell(60, $h * 7, '', 1, 0, 'C');
-$pdf->ImageSVG('images/oftalmo/anexo.svg', 137.5, 69, 55, '', $link = '', '', 'T');
+$pdf->ImageSVG('images/oftalmo/anexo.svg', 137.5, 75, 55, '', $link = '', '', 'T');
 $pdf->ln(12);
 
 
@@ -189,7 +197,7 @@ $pdf->Cell(115, $h, 'AGUDEZA VISUAL:', 1, 0, 'L', 1);
 $pdf->Cell(5, $h, '', 0, 0, 'C');
 $pdf->Cell(60, $h, 'MOTILIDAD OCULAR', 1, 1, 'C', 1);
 $pdf->SetFont('helvetica', '', 7);
-$pdf->ImageSVG('images/oftalmo/motilidad.svg', 137.5, 109.5, 53, '', $link = '', '', 'T');
+$pdf->ImageSVG('images/oftalmo/motilidad.svg', 137.5, 114.5, 55, '', $link = '', '', 'T');
 
 
 $pdf->SetFont('helvetica', 'B', 7);
@@ -256,7 +264,7 @@ $pdf->ln(2);
 
 $pdf->SetFont('helvetica', 'B', 7);
 $pdf->Cell(180, $h, 'PRUEBA ESTEROPSIA - VISION DE PROFUNDIDAD - (TEST DE LA MOSCA - TEST DE CIRCULO)', 1, 1, 'C', 1);
-$pdf->Cell(115, $h * 11, "-".$pdf->Image('images/oftalmo/estereopsis2.jpg', '', '', 100, '', ''), 1, 0, 'L', 0);
+$pdf->Cell(115, $h * 11, "   ".$pdf->Image('images/oftalmo/estereopsis2.jpg', '', '', 110, '', ''), 1, 0, 'L', 0);
 $pdf->Cell(65, $h, 'PRUEBA DE ESTEREOPSIS(%)', 1, 1, 'C', 0);
 $pdf->SetFont('helvetica', '', 7);
 

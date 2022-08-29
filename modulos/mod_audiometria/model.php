@@ -334,6 +334,7 @@ class model extends core
         $params_2[':m_a_audio_diag_osteo_oi'] = $_POST['m_a_audio_diag_osteo_oi'];
         $params_2[':m_a_audio_kclokhoff'] = $_POST['m_a_audio_kclokhoff'];
         $params_2[':m_a_audio_comentarios'] = $_POST['m_a_audio_comentarios'];
+        $params_2[':m_a_audio_medico'] = $_POST['m_a_audio_medico'];
 
 
 
@@ -430,7 +431,9 @@ class model extends core
                 :m_a_audio_diag_osteo_od,
                 :m_a_audio_diag_osteo_oi,
                 :m_a_audio_kclokhoff,
-                :m_a_audio_comentarios);";
+                :m_a_audio_comentarios,
+                :m_a_audio_medico
+                );";
 
         $verifica = $this->sql("SELECT 
 		m_audio_adm, concat(usu_nombres,' ',usu_appat,' ',usu_apmat) usuario 
@@ -601,6 +604,7 @@ class model extends core
         $params_2[':m_a_audio_diag_osteo_oi'] = $_POST['m_a_audio_diag_osteo_oi'];
         $params_2[':m_a_audio_kclokhoff'] = $_POST['m_a_audio_kclokhoff'];
         $params_2[':m_a_audio_comentarios'] = $_POST['m_a_audio_comentarios'];
+        $params_2[':m_a_audio_medico'] = $_POST['m_a_audio_medico'];
 
         $q_2 = 'Update mod_audio_audio set
                     m_a_audio_ocupacion=:m_a_audio_ocupacion,
@@ -690,7 +694,8 @@ class model extends core
                     m_a_audio_diag_osteo_od=:m_a_audio_diag_osteo_od,
                     m_a_audio_diag_osteo_oi=:m_a_audio_diag_osteo_oi,
                     m_a_audio_kclokhoff=:m_a_audio_kclokhoff,
-                    m_a_audio_comentarios=:m_a_audio_comentarios
+                    m_a_audio_comentarios=:m_a_audio_comentarios,
+                    m_a_audio_medico=:m_a_audio_medico
                 where
                 m_a_audio_adm=:adm;';
 
@@ -834,10 +839,39 @@ class model extends core
 
     public function mod_audio_audio_report($adm)
     {
-        $sql = $this->sql("SELECT *
+        $sql = $this->sql("SELECT mod_audio_audio.*
+        , medico_cmp, medico_firma
         FROM mod_audio_audio
+            left join medico on medico_id=m_a_audio_medico
         where m_a_audio_adm=$adm;");
         return $sql;
+    }
+
+    public function load_audio_medico()
+    {
+        $adm = $_POST['adm'];
+        $st = $_POST['st'];
+        $usuario = $this->user->us_id;
+        $medico = "";
+        if ($st < '1') {
+            $medico = ",(SELECT medico_id FROM medico where medico_usu='$usuario') m_a_audio_medico";
+        }
+        $query = "SELECT
+            adm_id
+            $medico
+            FROM admision
+            where adm_id=$adm
+            group by adm_id order by adm_id;";
+        $q = $this->sql($query);
+        return array('success' => true, 'data' => $q->data[0]);
+    }
+
+    public function load_medico()
+    {
+        $sede = $this->user->con_sedid;
+        return $this->sql("SELECT medico_id, concat(medico_apepat,' ',medico_apemat,', ',medico_nombre)as nombre
+        FROM medico
+        where medico_sede=$sede and medico_st=1 and medico_tipo = 'OTORRINOLARINGOLOGIA';");
     }
 }
 

@@ -1076,6 +1076,7 @@ class model extends core {
             ,m.dep_desc depa_naci,l.prov_desc prov_naci,k.dis_desc dist_naci
             ,concat(m_ubigeo.dep_desc,'-' ,l_ubigeo.prov_desc,'-' ,k_ubigeo.dis_desc) ubica_ubigeo
             ,m_ubigeo.dep_desc depa_ubigeo,l_ubigeo.prov_desc prov_ubigeo,k_ubigeo.dis_desc dist_ubigeo
+            , (SELECT medico_cmp FROM medico where medico_tipo = 'LABORATORIO') medico_cmp, (SELECT medico_firma FROM medico where medico_tipo = 'LABORATORIO') medico_firma
             FROM admision
             inner join paciente on pac_id=adm_pac
             inner join pack on pk_id=adm_ruta

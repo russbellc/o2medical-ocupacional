@@ -321,6 +321,7 @@ mod.audio.formatos = {
 					if (record.get("ex_id") == 2) {
 						//examen psicologia
 						mod.audio.audio_audio.init(record);
+						mod.audio.audio_audio.llena_medico(record.get("adm"));
 					} else {
 						mod.audio.audio_pred.init(record); //
 					}
@@ -687,10 +688,27 @@ mod.audio.audio_audio = {
 		this.record = r;
 		this.crea_stores();
 		this.crea_controles();
+		this.load_medico.load();
 		if (this.record.get("st") >= 1) {
 			this.cargar_data();
 		}
 		this.win.show();
+	},
+	llena_medico: function (adm) {
+		this.frm.getForm().load({
+			waitMsg: "Recuperando Informacion...",
+			waitTitle: "Espere",
+			params: {
+				acction: "load_audio_medico",
+				format: "json",
+				adm: adm,
+				st: this.record.get("st"),
+			},
+			scope: this,
+			success: function (frm, action) {
+				r = action.result.data;
+			},
+		});
 	},
 	crea_audiograma_oseo: function (Tname = "", Tvalue = "") {
 		let m_a_audio_oseo_125_od = parseInt(
@@ -1030,6 +1048,14 @@ mod.audio.audio_audio = {
 			},
 			fields: ["m_a_audio_kclokhoff"],
 			root: "data",
+		});
+		this.load_medico = new Ext.data.JsonStore({
+			remoteSort: true,
+			url: "<[controller]>",
+			baseParams: { acction: "load_medico", format: "json" },
+			root: "data",
+			totalProperty: "total",
+			fields: ["medico_id", "nombre"],
 		});
 	},
 	crea_controles: function () {
@@ -2795,6 +2821,22 @@ mod.audio.audio_audio = {
 			anchor: "95%",
 		});
 
+		this.m_a_audio_medico = new Ext.form.ComboBox({
+			typeAhead: true,
+			triggerAction: "all",
+			lazyRender: true,
+			allowBlank: false,
+			mode: "local",
+			store: this.load_medico,
+			forceSelection: true,
+			hiddenName: "m_a_audio_medico",
+			fieldLabel: "<b>MÉDICO EVALUADOR</b>",
+			name: "m_a_audio_medico",
+			valueField: "medico_id",
+			displayField: "nombre",
+			anchor: "90%",
+		});
+
 		this.grafico_od = new Ext.Panel({
 			anchor: "95%",
 			border: false,
@@ -2866,12 +2908,20 @@ mod.audio.audio_audio = {
 											items: [this.m_a_audio_horas_expo],
 										},
 										{
-											columnWidth: 0.999,
+											columnWidth: 0.5,
 											border: false,
 											layout: "form",
 											labelWidth: 310,
-											//labelAlign: 'top',
+											labelAlign: "top",
 											items: [this.m_a_audio_ruido_laboral],
+										},
+										{
+											columnWidth: 0.5,
+											border: false,
+											layout: "form",
+											labelWidth: 310,
+											labelAlign: "top",
+											items: [this.m_a_audio_medico],
 										},
 									],
 								},

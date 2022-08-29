@@ -80,7 +80,13 @@ $pdf->AddPage('P', 'A4');
 
 //CLINICA O2
 $pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
-// $pdf->Image('images/formato/contactos_o2.jpg', 148, 5, 50, '', 'JPEG');
+
+
+if ($psico_examen->data[0]->medico_firma == '1') {
+  $pdf->Image('images/firma/'.$psico_examen->data[0]->medico_cmp.'.jpg', 140,198, 50, '', 'JPG');
+}
+
+
 $h = 4;
 $titulo = 7;
 $texto = 7;
@@ -518,6 +524,11 @@ $pdf->AddPage('P', 'A4');
 
 //CLINICA O2
 $pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
+
+
+if ($psico_examen->data[0]->medico_firma == '1') {
+  $pdf->Image('images/firma/'.$psico_examen->data[0]->medico_cmp.'.jpg', 140, 235, 50, '', 'JPG');
+}
 // $pdf->Image('images/formato/contactos_o2.jpg', 148, 5, 50, '', 'JPEG');
 
 $pdf->Ln(6);

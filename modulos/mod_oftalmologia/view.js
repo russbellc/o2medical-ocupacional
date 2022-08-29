@@ -279,6 +279,7 @@ mod.oftalmo.formatos = {
                     var record = grid.getStore().getAt(rowIndex);//
                     if (record.get('ex_id') == 11) {//examen psicologia
                         mod.oftalmo.oftalmo_oftalmo.init(record);
+                        mod.oftalmo.oftalmo_oftalmo.llena_medico(record.get("adm"));
                     } else {
                         mod.oftalmo.oftalmo_pred.init(record);//
                     }
@@ -608,6 +609,7 @@ mod.oftalmo.oftalmo_oftalmo = {
         this.crea_controles();
         this.list_diag.load();
         this.list_reco.load();
+		this.load_medico.load();
         if (this.record.get('st') >= 1) {
             this.cargar_data();
         }
@@ -631,6 +633,22 @@ mod.oftalmo.oftalmo_oftalmo = {
             }
         });
     },
+	llena_medico: function (adm) {
+		this.frm.getForm().load({
+			waitMsg: "Recuperando Informacion...",
+			waitTitle: "Espere",
+			params: {
+				acction: "load_oftalmo_medico",
+				format: "json",
+				adm: adm,
+				st: this.record.get("st"),
+			},
+			scope: this,
+			success: function (frm, action) {
+				r = action.result.data;
+			},
+		});
+	},
     crea_stores: function () {
 
         this.list_diag = new Ext.data.JsonStore({
@@ -663,6 +681,14 @@ mod.oftalmo.oftalmo_oftalmo = {
                 }
             }
         });
+		this.load_medico = new Ext.data.JsonStore({
+			remoteSort: true,
+			url: "<[controller]>",
+			baseParams: { acction: "load_medico", format: "json" },
+			root: "data",
+			totalProperty: "total",
+			fields: ["medico_id", "nombre"],
+		});
     },
     crea_controles: function () {
 
@@ -684,7 +710,7 @@ mod.oftalmo.oftalmo_oftalmo = {
             fieldLabel: '<b>ANAMNESIS Y ANTECEDENTES</b>',
             anchor: '98%',
             value: 'NINGUNA',
-            height: 60
+            height: 130
         });
         //m_oft_oftalmo_patologia
         this.m_oft_oftalmo_patologia = new Ext.form.TextField({
@@ -1668,6 +1694,23 @@ mod.oftalmo.oftalmo_oftalmo = {
                 }
             ]
         });
+        
+
+		this.m_oft_oftalmo_medico = new Ext.form.ComboBox({
+			typeAhead: true,
+			triggerAction: "all",
+			lazyRender: true,
+			allowBlank: false,
+			mode: "local",
+			store: this.load_medico,
+			forceSelection: true,
+			hiddenName: "m_oft_oftalmo_medico",
+			fieldLabel: "<b>MÉDICO EVALUADOR</b>",
+			name: "m_oft_oftalmo_medico",
+			valueField: "medico_id",
+			displayField: "nombre",
+			anchor: "90%",
+		});
 
 
         this.frm = new Ext.FormPanel({
@@ -1699,23 +1742,29 @@ mod.oftalmo.oftalmo_oftalmo = {
                                     xtype: 'fieldset', layout: 'column',
 //                                    title: 'ANAMNESIS Y ANTECEDENTES',
                                     items: [{
-                                            columnWidth: .40,
+                                            columnWidth: .50,
+                                            border: false,
+                                            layout: 'form',
+                                            labelAlign: 'top',
+                                            items: [this.m_oft_oftalmo_anamnesis]
+                                        }, {
+                                            columnWidth: .50,
                                             border: false,
                                             layout: 'form',
                                             labelAlign: 'top',
                                             items: [this.m_oft_oftalmo_correctores]
                                         }, {
-                                            columnWidth: .30,
+                                            columnWidth: .50,
                                             border: false,
                                             layout: 'form',
                                             labelAlign: 'top',
                                             items: [this.m_oft_oftalmo_patologia]
                                         }, {
-                                            columnWidth: .30,
+                                            columnWidth: .50,
                                             border: false,
                                             layout: 'form',
                                             labelAlign: 'top',
-                                            items: [this.m_oft_oftalmo_anamnesis]
+                                            items: [this.m_oft_oftalmo_medico]
                                         }]
                                 }]
                         }, {

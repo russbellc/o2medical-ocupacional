@@ -554,6 +554,31 @@ mod.medicina.formatos = {
 			emptyMsg: "No Existe Registros",
 			plugins: new Ext.ux.ProgressBarPager(),
 		});
+		
+		this.tbar = new Ext.Toolbar({
+			items: [
+				{
+					text: "<b>Certificado Médico</b>",
+					iconCls: "reporte",
+					handler: function () {
+						new Ext.Window({
+							title:
+								"Nuevo Anexo 16 Informe N° " + mod.medicina.formatos.record.get("adm"),
+							width: 800,
+							height: 600,
+							maximizable: true,
+							modal: true,
+							closeAction: "close",
+							resizable: true,
+							html:
+								"<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_medicina&sys_report=certificado312&adm=" +
+								mod.medicina.formatos.record.get("adm") +
+								"'></iframe>",
+						}).show();
+					},
+				},
+			],
+		});
 		this.dt_grid = new Ext.grid.GridPanel({
 			store: this.st,
 			region: "west",
@@ -563,8 +588,9 @@ mod.medicina.formatos = {
 			plugins: new Ext.ux.PanelResizer({
 				minHeight: 100,
 			}),
+			tbar: this.tbar,
 			bbar: this.paginador,
-			height: 263,
+			height: 300,
 			listeners: {
 				rowdblclick: function (grid, rowIndex, e) {
 					e.stopEvent();
@@ -573,6 +599,7 @@ mod.medicina.formatos = {
 						//NUEVO EXAMEN DE MEDICINA ANEXO 16
 						mod.medicina.nuevoAnexo16.init(record);
 					} else if (record.get("ex_id") == 19) {
+						//
 						//EXAMEN DE MEDICINA ANEXO 312
 						mod.medicina.anexo312.init(record);
 						mod.medicina.anexo312.llena_conclusiones(record.get("adm"));
@@ -588,8 +615,13 @@ mod.medicina.formatos = {
 					} else if (record.get("ex_id") == 15) {
 						//EXAMEN MUSCULO ESQUELETICO
 						mod.medicina.musculo.init(record);
+						mod.medicina.musculo.llena_medico(record.get("adm"));
+					} else if (record.get("ex_id") == 17) {//
+						//EXAMEN TRABAJO EN ALTURA MAYOR A 1.8MTS 
+						mod.medicina.altura.init(record);
+						mod.medicina.altura.llena_datos(record.get("adm"));
 					} else if (record.get("ex_id") == 42) {
-						//EXAMEN ANEXO 16A - PERFIL VISITA
+						//EXAMEN ANEXO 16A - PERFIL VISITA - BAMBAS
 						mod.medicina.anexo_16a.init(record);
 					} else if (record.get("ex_id") == 60) {
 						//EXAMEN MENEJO
@@ -674,12 +706,16 @@ mod.medicina.formatos = {
 								items: [
 									{
 										text:
-											"Informe Musculo Esqueletico N°: <B>" + record.get("adm") + "<B>",
+											"Informe Musculo Esqueletico N°: <B>" +
+											record.get("adm") +
+											"<B>",
 										iconCls: "reporte",
 										handler: function () {
 											if (record.get("st") >= 1) {
 												new Ext.Window({
-													title: "Informe Musculo Esqueletico N° " + record.get("adm"),
+													title:
+														"Informe Musculo Esqueletico N° " +
+														record.get("adm"),
 													width: 800,
 													height: 600,
 													maximizable: true,
@@ -688,6 +724,42 @@ mod.medicina.formatos = {
 													resizable: true,
 													html:
 														"<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_medicina&sys_report=formato_musculo&adm=" +
+														record.get("adm") +
+														"'></iframe>",
+												}).show();
+											} else {
+												Ext.MessageBox.alert(
+													"Observaciones",
+													"El paciente no fue registrado correctamente"
+												);
+											}
+										},
+									},
+								],
+							}).showAt(event.xy);
+						} else if (record.get("ex_id") == 17) {
+							new Ext.menu.Menu({
+								items: [
+									{
+										text:
+											"Informe Trabajo en alturas N°: <B>" +
+											record.get("adm") +
+											"<B>",
+										iconCls: "reporte",
+										handler: function () {//
+											if (record.get("st") >= 1) {
+												new Ext.Window({
+													title:
+														"Informe Trabajo en alturas estructurales 1.8 metros N° " +
+														record.get("adm"),
+													width: 800,
+													height: 600,
+													maximizable: true,
+													modal: true,
+													closeAction: "close",
+													resizable: true,
+													html:
+														"<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_medicina&sys_report=formato_altura18mts&adm=" +
 														record.get("adm") +
 														"'></iframe>",
 												}).show();
@@ -893,11 +965,6 @@ mod.medicina.formatos = {
 					},
 				},
 				{
-					header: "Ex-id",
-					dataIndex: "ex_id",
-					width: 50,
-				},
-				{
 					id: "cuest_desc",
 					header: "EXAMENES",
 					dataIndex: "ex_desc",
@@ -939,7 +1006,7 @@ mod.medicina.formatos = {
 				},
 				{
 					columnWidth: 0.25,
-					//                    border: false,
+					                   border: false,
 					layout: "form",
 					items: [
 						new Ext.Panel({
@@ -1025,7 +1092,7 @@ mod.medicina.formatos = {
 				},
 				{
 					columnWidth: 0.55,
-					border: false,
+					border: true,
 					layout: "form",
 					items: [this.dt_grid],
 				},
@@ -1033,7 +1100,7 @@ mod.medicina.formatos = {
 		});
 		this.win = new Ext.Window({
 			width: 1000,
-			height: 300,
+			height: 340,
 			modal: true,
 			title: "EXAMEN DE MÉDICINA: " + this.record.get("nombre"),
 			border: false,
@@ -8771,6 +8838,1751 @@ mod.medicina.anexo312 = {
 	},
 };
 
+//MEDICINA ALTURA MAYOR A 1.80 Mts
+mod.medicina.altura = {
+	win: null,
+	frm: null,
+	record: null,
+	init: function (r) {
+		this.record = r;
+		this.crea_stores();
+		this.crea_controles();
+		this.load_medico.load();
+		this.load_medico_auditor.load();
+		if (this.record.get("st") >= 1) {
+			this.cargar_data();
+		}
+		this.win.show();
+	},
+	llena_datos: function (adm) {
+		this.frm.getForm().load({
+			waitMsg: "Recuperando Informacion...",
+			waitTitle: "Espere",
+			params: {
+				acction: "load_datos_altura",
+				format: "json",
+				adm: adm,
+				st: this.record.get("st"),
+			},
+			scope: this,
+			success: function (frm, action) {
+				r = action.result.data;
+			},
+		});
+	},
+	cargar_data: function () {
+		Ext.Ajax.request({
+			waitMsg: "Recuperando Informacion...",
+			waitTitle: "Espere",
+			url: "<[controller]>",
+			params: {
+				acction: "load_altura",
+				format: "json",
+				adm: mod.medicina.altura.record.get("adm"),
+				exa: mod.medicina.altura.record.get("ex_id"),
+			},
+			success: function (response, opts) {
+				var dato = Ext.decode(response.responseText);
+				if (dato.success == true) {
+					mod.medicina.altura.frm.getForm().loadRecord(dato);
+					// mod.medicina.altura.m_312_medico_ocupa.setValue(
+					// 	dato.data.m_312_medico_ocupa
+					// );
+					// mod.medicina.altura.m_312_medico_ocupa.setRawValue(
+					// 	dato.data.m_312_medico_ocupa_nom
+					// );
+					// mod.medicina.altura.load_medico.load();
+					// mod.medicina.altura.adm_emp.setValue(dato.data.emp_id);
+					// mod.medicina.altura.adm_emp.setRawValue(dato.data.empresa);
+					// mod.medicina.altura.st_empre.load();
+					// mod.medicina.altura.adm_pac.setValue(dato.data.pac_id);
+					// mod.medicina.altura.adm_pac.setRawValue(dato.data.adm_pac);
+					// mod.medicina.altura.desc.setValue(dato.data.pk_desc);
+					// mod.medicina.altura.tficha.setValue(dato.data.tfi_desc);
+				}
+			},
+		});
+	},
+	crea_stores: function () {
+		this.load_medico = new Ext.data.JsonStore({
+			remoteSort: true,
+			url: "<[controller]>",
+			baseParams: { acction: "load_medico", format: "json" },
+			root: "data",
+			totalProperty: "total",
+			fields: ["medico_id", "nombre"],
+		});
+		this.load_medico_auditor = new Ext.data.JsonStore({
+			remoteSort: true,
+			url: "<[controller]>",
+			baseParams: { acction: "load_medico_auditor", format: "json" },
+			root: "data",
+			totalProperty: "total",
+			fields: ["medico_id", "nombre"],
+		});
+	},
+	crea_controles: function () {
+		//m_altura_ante_lab_experiencia
+		this.m_altura_ante_lab_experiencia = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Experiencia en altura estructural anteriormente?</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_lab_experiencia",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_lab_experiencia",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_lab_problem
+		this.m_altura_ante_lab_problem = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Ha tenido problemas con su salud en trabajos de altura?</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_lab_problem",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_lab_problem",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_conv_epilep
+		this.m_altura_ante_pato_conv_epilep = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Convulciones, epilepsia</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_conv_epilep",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_conv_epilep",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_conv_epilep_desc
+		this.m_altura_ante_pato_conv_epilep_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_conv_epilep_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_migra
+		this.m_altura_ante_pato_migra = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Cefales, migrañas</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_migra",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_migra",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_migra_desc
+		this.m_altura_ante_pato_migra_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_migra_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_mareo
+		this.m_altura_ante_pato_mareo = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Mareos, vertigos</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_mareo",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_mareo",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_mareo_desc
+		this.m_altura_ante_pato_mareo_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_mareo_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_tec
+		this.m_altura_ante_pato_tec = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Tec moderado - severo</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_tec",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_tec",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_tec_desc
+		this.m_altura_ante_pato_tec_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_tec_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_insomnio
+		this.m_altura_ante_pato_insomnio = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Insomnio</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_insomnio",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_insomnio",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_insomnio_desc
+		this.m_altura_ante_pato_insomnio_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_insomnio_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_enf_psiq
+		this.m_altura_ante_pato_enf_psiq = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Enfermedades psiquiatricas</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_enf_psiq",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_enf_psiq",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_enf_psiq_desc
+		this.m_altura_ante_pato_enf_psiq_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_enf_psiq_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_enf_cardio
+		this.m_altura_ante_pato_enf_cardio = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Enfermedades Cardiovasculares</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_enf_cardio",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_enf_cardio",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_enf_cardio_desc
+		this.m_altura_ante_pato_enf_cardio_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_enf_cardio_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_enf_ocular
+		this.m_altura_ante_pato_enf_ocular = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Enfermedades Oculares</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_enf_ocular",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_enf_ocular",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_enf_ocular_desc
+		this.m_altura_ante_pato_enf_ocular_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_enf_ocular_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_hipoacusia
+		this.m_altura_ante_pato_hipoacusia = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Hipoacusia severa</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_hipoacusia",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_hipoacusia",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_hipoacusia_desc
+		this.m_altura_ante_pato_hipoacusia_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_hipoacusia_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_diabetes
+		this.m_altura_ante_pato_diabetes = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Diabetes no controlada</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_diabetes",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_diabetes",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_diabetes_desc
+		this.m_altura_ante_pato_diabetes_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_diabetes_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_hta
+		this.m_altura_ante_pato_hta = new Ext.form.RadioGroup({
+			fieldLabel: "<b>HTA no controlada</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_hta",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_hta",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_hta_desc
+		this.m_altura_ante_pato_hta_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_hta_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_acrof
+		this.m_altura_ante_pato_acrof = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Acrofobia/Agorofobia</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_acrof",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_acrof",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_acrof_desc
+		this.m_altura_ante_pato_acrof_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_acrof_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_asma
+		this.m_altura_ante_pato_asma = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Asma bronquial n/c</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_asma",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_asma",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_asma_desc
+		this.m_altura_ante_pato_asma_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_asma_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_epoc
+		this.m_altura_ante_pato_epoc = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Epoc</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_epoc",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_epoc",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_epoc_desc
+		this.m_altura_ante_pato_epoc_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_epoc_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_med_psico
+		this.m_altura_ante_pato_med_psico = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Medicamentos psicotropicos</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_med_psico",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_med_psico",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_med_psico_desc
+		this.m_altura_ante_pato_med_psico_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_med_psico_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_cons_droga
+		this.m_altura_ante_pato_cons_droga = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Consumo de drogas</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_cons_droga",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_cons_droga",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_cons_droga_desc
+		this.m_altura_ante_pato_cons_droga_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_cons_droga_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_alcohol
+		this.m_altura_ante_pato_alcohol = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Alcoholismo</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_alcohol",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_alcohol",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_alcohol_desc
+		this.m_altura_ante_pato_alcohol_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_alcohol_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_ante_pato_otros
+		this.m_altura_ante_pato_otros = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Otros declarados</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Si",
+					name: "m_altura_ante_pato_otros",
+					inputValue: "Si",
+				},
+				{
+					boxLabel: "No",
+					name: "m_altura_ante_pato_otros",
+					inputValue: "No",
+					checked: true,
+				},
+			],
+		});
+		// m_altura_ante_pato_otros_desc
+		this.m_altura_ante_pato_otros_desc = new Ext.form.TextArea({
+			name: "m_altura_ante_pato_otros_desc",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_exa_fis_estereos
+		this.m_altura_exa_fis_estereos = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Vision estereoscópica</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Normal",
+					name: "m_altura_exa_fis_estereos",
+					inputValue: "Normal",
+					checked: true,
+				},
+				{
+					boxLabel: "Anormal",
+					name: "m_altura_exa_fis_estereos",
+					inputValue: "Anormal",
+				},
+			],
+		});
+		// m_altura_exa_fis_sustenta
+		this.m_altura_exa_fis_sustenta = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Sustentación en un pie por 15 Seg</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Normal",
+					name: "m_altura_exa_fis_sustenta",
+					inputValue: "Normal",
+					checked: true,
+				},
+				{
+					boxLabel: "Anormal",
+					name: "m_altura_exa_fis_sustenta",
+					inputValue: "Anormal",
+				},
+			],
+		});
+		// m_altura_exa_fis_sobre_3m
+		this.m_altura_exa_fis_sobre_3m = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Caminar libre sobre recta 3m (Sin desvio)</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Normal",
+					name: "m_altura_exa_fis_sobre_3m",
+					inputValue: "Normal",
+					checked: true,
+				},
+				{
+					boxLabel: "Anormal",
+					name: "m_altura_exa_fis_sobre_3m",
+					inputValue: "Anormal",
+				},
+			],
+		});
+		// m_altura_exa_fis_ojo_3m
+		this.m_altura_exa_fis_ojo_3m = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Caminar libre ojos vendados 3m (Sin desvio)</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Normal",
+					name: "m_altura_exa_fis_ojo_3m",
+					inputValue: "Normal",
+					checked: true,
+				},
+				{
+					boxLabel: "Anormal",
+					name: "m_altura_exa_fis_ojo_3m",
+					inputValue: "Anormal",
+				},
+			],
+		});
+		// m_altura_exa_fis_punta_talon
+		this.m_altura_exa_fis_punta_talon = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Caminar libre ojos vendados punta-talon 3m (Sin desvio)</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Normal",
+					name: "m_altura_exa_fis_punta_talon",
+					inputValue: "Normal",
+					checked: true,
+				},
+				{
+					boxLabel: "Anormal",
+					name: "m_altura_exa_fis_punta_talon",
+					inputValue: "Anormal",
+				},
+			],
+		});
+		// m_altura_exa_fis_lim_fuerza
+		this.m_altura_exa_fis_lim_fuerza = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Limitación en fuerza o movilidad de extremidades</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Normal",
+					name: "m_altura_exa_fis_lim_fuerza",
+					inputValue: "Normal",
+					checked: true,
+				},
+				{
+					boxLabel: "Anormal",
+					name: "m_altura_exa_fis_lim_fuerza",
+					inputValue: "Anormal",
+				},
+			],
+		});
+		// m_altura_exa_fis_diadococinesis
+		this.m_altura_exa_fis_diadococinesis = new Ext.form.RadioGroup({
+			fieldLabel: "<b>Diadococinesis</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "Normal",
+					name: "m_altura_exa_fis_diadococinesis",
+					inputValue: "Normal",
+					checked: true,
+				},
+				{
+					boxLabel: "Anormal",
+					name: "m_altura_exa_fis_diadococinesis",
+					inputValue: "Anormal",
+				},
+			],
+		});
+		// m_altura_exa_fis_obs
+		this.m_altura_exa_fis_obs = new Ext.form.TextArea({
+			name: "m_altura_exa_fis_obs",
+			fieldLabel: "<b>Observaciones</b>",
+			anchor: "95%",
+			// disabled: true,
+			value: "-",
+			height: 33,
+		});
+		// m_altura_aptitud
+		this.m_altura_aptitud = new Ext.form.RadioGroup({
+			fieldLabel: "<b>APTITUD</b>",
+			//            itemCls: 'x-check-group-alt',
+			//            columns: 1,
+			items: [
+				{
+					boxLabel: "APTO",
+					name: "m_altura_aptitud",
+					inputValue: "APTO",
+					checked: true,
+				},
+				{
+					boxLabel: "NO APTO",
+					name: "m_altura_aptitud",
+					inputValue: "NO APTO",
+				},
+				{
+					boxLabel: "OBSERVADO",
+					name: "m_altura_aptitud",
+					inputValue: "OBSERVADO",
+				},
+			],
+		});
+		// m_altura_conclu
+		this.m_altura_conclu = new Ext.form.TextArea({
+			name: "m_altura_conclu",
+			fieldLabel: "<b>Conclusiones</b>",
+			anchor: "100%",
+			// disabled: true,
+			value: "APTO PARA TRABAJOS EN ALTURA ESTRUCTURAL SOBRE 1.8 MTS",
+			height: 100,
+		});
+		// m_altura_recom
+		this.m_altura_recom = new Ext.form.TextArea({
+			name: "m_altura_recom",
+			fieldLabel: "<b>Recomendaciones</b>",
+			anchor: "100%",
+			// disabled: true,
+			value: "1. El trabajo en altura debe tener inicio progresivo \n"+
+			"2. No realizar trabajos en altura fisica bajo los efectos de antidepresivos, ansiolíticos, sedantes e hipnóticos \n"+
+			"3. Cumplir estrictamente con el checklist realizado por el area de seguridad \n"+
+			"4. Control anual ",
+			height: 100,
+		});
+		// m_altura_medico_ocupa
+		this.m_altura_medico_ocupa = new Ext.form.ComboBox({
+			typeAhead: true,
+			triggerAction: "all",
+			lazyRender: true,
+			allowBlank: false,
+			mode: "local",
+			store: this.load_medico,
+			forceSelection: true,
+			hiddenName: "m_altura_medico_ocupa",
+			fieldLabel: "<b>MÉDICO EVALUADOR</b>",
+			name: "m_altura_medico_ocupa",
+			valueField: "medico_id",
+			displayField: "nombre",
+			anchor: "93%",
+		});
+
+		///////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////
+
+		
+        this.m_oft_oftalmo_sincorrec_vlejos_od = new Ext.form.TextField({
+            // fieldLabel: '<b>OI</b>',
+            name: 'm_oft_oftalmo_sincorrec_vlejos_od',
+            value: '-',
+			readOnly: true,
+            anchor: '89%'
+        });
+        this.m_oft_oftalmo_sincorrec_vlejos_oi = new Ext.form.TextField({
+            // fieldLabel: '<b>OI</b>',
+            name: 'm_oft_oftalmo_sincorrec_vlejos_oi',
+            value: '-',
+			readOnly: true,
+            anchor: '89%'
+        });
+        this.m_oft_oftalmo_sincorrec_vcerca_od = new Ext.form.TextField({
+            // fieldLabel: '<b>OI</b>',
+            name: 'm_oft_oftalmo_sincorrec_vcerca_od',
+            value: '-',
+			readOnly: true,
+            anchor: '89%'
+        });
+        this.m_oft_oftalmo_sincorrec_vcerca_oi = new Ext.form.TextField({
+            // fieldLabel: '<b>OI</b>',
+            name: 'm_oft_oftalmo_sincorrec_vcerca_oi',
+            value: '-',
+			readOnly: true,
+            anchor: '89%'
+        });
+        this.m_oft_oftalmo_concorrec_vlejos_od = new Ext.form.TextField({
+            // fieldLabel: '<b>OI</b>',
+            name: 'm_oft_oftalmo_concorrec_vlejos_od',
+            value: '-',
+			readOnly: true,
+            anchor: '89%'
+        });
+        this.m_oft_oftalmo_concorrec_vlejos_oi = new Ext.form.TextField({
+            // fieldLabel: '<b>OI</b>',
+            name: 'm_oft_oftalmo_concorrec_vlejos_oi',
+            value: '-',
+			readOnly: true,
+            anchor: '89%'
+        });
+        this.m_oft_oftalmo_concorrec_vcerca_od = new Ext.form.TextField({
+            // fieldLabel: '<b>OI</b>',
+            name: 'm_oft_oftalmo_concorrec_vcerca_od',
+            value: '-',
+			readOnly: true,
+            anchor: '89%'
+        });
+        this.m_oft_oftalmo_concorrec_vcerca_oi = new Ext.form.TextField({
+            // fieldLabel: '<b>OI</b>',
+            name: 'm_oft_oftalmo_concorrec_vcerca_oi',
+            value: '-',
+			readOnly: true,
+            anchor: '89%'
+        });
+        this.m_oft_oftalmo_esteropsia_od = new Ext.form.TextField({
+            fieldLabel: '<b>OD</b>',
+            name: 'm_oft_oftalmo_esteropsia_od',
+            value: '-',
+			readOnly: true,
+            anchor: '95%'
+        });
+        this.m_oft_oftalmo_esteropsia_oi = new Ext.form.TextField({
+            fieldLabel: '<b>OI</b>',
+            name: 'm_oft_oftalmo_esteropsia_oi',
+            value: '-',
+			readOnly: true,
+            anchor: '95%'
+        });
+        this.m_oft_oftalmo_esteropsia = new Ext.form.TextField({
+            fieldLabel: '<b>ESTEREOPSIS(%)</b>',
+            name: 'm_oft_oftalmo_esteropsia',
+            value: '-',
+			readOnly: true,
+            anchor: '95%'
+        });
+        this.m_oft_oftalmo_ishihara = new Ext.form.TextField({
+            fieldLabel: '<b>TEST DE ISHIHARA</b>',
+            name: 'm_oft_oftalmo_ishihara',
+            value: '-',
+			readOnly: true,
+            anchor: '95%'
+        });
+
+		
+        this.lab_glucosa = new Ext.form.TextField({
+            fieldLabel: '<b>GLUCOSA</b>',
+            name: 'lab_glucosa',
+            value: '-',
+			readOnly: true,
+            anchor: '95%'
+        });
+        this.m_lab_p_lipido_colesterol_hdl = new Ext.form.TextField({
+            fieldLabel: '<b>COLESTEROL HDL</b>',
+            name: 'm_lab_p_lipido_colesterol_hdl',
+            value: '-',
+			readOnly: true,
+            anchor: '95%'
+        });
+        this.m_lab_p_lipido_colesterol_ldl = new Ext.form.TextField({
+            fieldLabel: '<b>COLESTEROL LDL</b>',
+            name: 'm_lab_p_lipido_colesterol_ldl',
+            value: '-',
+			readOnly: true,
+            anchor: '95%'
+        });
+        this.m_lab_p_lipido_colesterol_total = new Ext.form.TextField({
+            fieldLabel: '<b>COLESTEROL TOTAL</b>',
+            name: 'm_lab_p_lipido_colesterol_total',
+            value: '-',
+			readOnly: true,
+            anchor: '95%'
+        });
+        this.m_lab_p_lipido_trigliceridos = new Ext.form.TextField({
+            fieldLabel: '<b>TRIGLICERIDOS</b>',
+            name: 'm_lab_p_lipido_trigliceridos',
+            value: '-',
+			readOnly: true,
+            anchor: '95%'
+        });
+
+		//FRM ANEXO 16
+		this.frm = new Ext.FormPanel({
+			region: "center",
+			url: "<[controller]>",
+			monitorValid: true,
+			border: false,
+			layout: "accordion",
+			layoutConfig: {
+				titleCollapse: true,
+				animate: true,
+				hideCollapseTool: true,
+			},
+			items: [
+				{
+					title:
+						"<b>--->  EXAMEN TRABAJOS EN ALTURA ESTRUCTURAL MAYOR A 1.8 METROS</b>",
+					iconCls: "demo2",
+					layout: "column",
+					border: false,
+					autoScroll: true,
+					bodyStyle: "padding:10px 10px 20px 10px;",
+					labelWidth: 60,
+					items: [
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "ANTECEDENTE LABORAL EN ALTURA MAYOR DE 1.8 METROS:",
+									items: [
+										{
+											columnWidth: 0.50,
+											border: false,
+											layout: "form",
+											labelWidth: 310,
+											// labelAlign: "top",
+											items: [this.m_altura_ante_lab_experiencia],
+										},
+										{
+											columnWidth: 0.50,
+											border: false,
+											layout: "form",
+											labelWidth: 310,
+											// labelAlign: "top",
+											items: [this.m_altura_ante_lab_problem],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "Antecedentes patologicos:",
+									items: [
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_conv_epilep],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_conv_epilep_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_migra],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_migra_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_mareo],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_mareo_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_tec],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_tec_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_insomnio],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_insomnio_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_enf_psiq],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_enf_psiq_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_enf_cardio],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_enf_cardio_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_enf_ocular],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_enf_ocular_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_hipoacusia],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_hipoacusia_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_diabetes],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_diabetes_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_hta],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_hta_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_acrof],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_acrof_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_asma],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_asma_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_epoc],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_epoc_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_med_psico],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_med_psico_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_cons_droga],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_cons_droga_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_alcohol],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_alcohol_desc],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_otros],
+										},
+										{
+											columnWidth: 0.30,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_ante_pato_otros_desc],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "OFTALMOLOGIA:",
+									items: [
+										{
+											xtype: 'panel', border: false,
+											columnWidth: .30,
+											bodyStyle: 'padding:2px 22px 0px 5px;',
+											items: [{
+													xtype: 'fieldset', layout: 'column',
+													title: 'SIN CORREGIR',
+													items: [
+														{
+															columnWidth: .999,
+															border: false,
+															layout: 'form',
+															html: '<div style="padding:5px 0;width:105px;height:30px;float:left;"></div>\n\
+																   <div style="padding:5px 0;width:82px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>Ojo Der.</h3></div>\n\
+																   <div style="padding:5px 0;width:82px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>Ojo Izq.</h3></div>\n\
+																   '
+														}, {
+															columnWidth: .40,
+															border: false,
+															layout: 'form',
+															html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+																	<h3>Vision Lejos:</h3></div>'
+														}, {
+															columnWidth: .30,
+															border: false,
+															layout: 'form',
+															labelAlign: 'top',
+															items: [this.m_oft_oftalmo_sincorrec_vlejos_od]
+														}, {
+															columnWidth: .30,
+															border: false,
+															layout: 'form',
+															labelAlign: 'top',
+															items: [this.m_oft_oftalmo_sincorrec_vlejos_oi]
+														}, {
+															columnWidth: .40,
+															border: false,
+															layout: 'form',
+															html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+																	<h3>Vision Cerca:</h3></div>'
+														}, {
+															columnWidth: .30,
+															border: false,
+															layout: 'form',
+															labelAlign: 'top',
+															items: [this.m_oft_oftalmo_sincorrec_vcerca_od]
+														}, {
+															columnWidth: .30,
+															border: false,
+															layout: 'form',
+															labelAlign: 'top',
+															items: [this.m_oft_oftalmo_sincorrec_vcerca_oi]
+														}
+													]
+												}]
+										},
+										{
+											xtype: 'panel', border: false,
+											columnWidth: .30,
+											bodyStyle: 'padding:2px 22px 0px 5px;',
+											items: [{
+													xtype: 'fieldset', layout: 'column',
+													title: 'CORREGIDA',
+													items: [
+														{
+															columnWidth: .999,
+															border: false,
+															layout: 'form',
+															html: '<div style="padding:5px 0;width:105px;height:30px;float:left;"></div>\n\
+																   <div style="padding:5px 0;width:82px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>Ojo Der.</h3></div>\n\
+																   <div style="padding:5px 0;width:82px;height:30px;border: 1px solid #267ED7;text-align:center;float:left;"><h3>Ojo Izq.</h3></div>\n\
+																   '
+														}, {
+															columnWidth: .40,
+															border: false,
+															layout: 'form',
+															html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+																	<h3>Vision Lejos:</h3></div>'
+														}, {
+															columnWidth: .30,
+															border: false,
+															layout: 'form',
+															labelAlign: 'top',
+															items: [this.m_oft_oftalmo_concorrec_vlejos_od]
+														}, {
+															columnWidth: .30,
+															border: false,
+															layout: 'form',
+															labelAlign: 'top',
+															items: [this.m_oft_oftalmo_concorrec_vlejos_oi]
+														}, {
+															columnWidth: .40,
+															border: false,
+															layout: 'form',
+															html: '<div style="padding:16px 0;text-align:center;height:14px;border: 1px solid #267ED7;margin:0 10px;">\n\
+																	<h3>Vision Cerca:</h3></div>'
+														}, {
+															columnWidth: .30,
+															border: false,
+															layout: 'form',
+															labelAlign: 'top',
+															items: [this.m_oft_oftalmo_concorrec_vcerca_od]
+														}, {
+															columnWidth: .30,
+															border: false,
+															layout: 'form',
+															labelAlign: 'top',
+															items: [this.m_oft_oftalmo_concorrec_vcerca_oi]
+														},
+													]
+												}]
+										},{
+											xtype: "panel",
+											border: false,
+											columnWidth: 0.40,
+											bodyStyle: "padding:2px 22px 0px 5px;",
+											items: [
+												{
+													xtype: "fieldset",
+													layout: "column",
+													title: "PRUEBA DE ESTEROPSIA:",
+													items: [
+														{
+															columnWidth: 0.30,
+															border: false,
+															layout: "form",
+															labelAlign: "top",
+															items: [this.m_oft_oftalmo_esteropsia_od],
+														},
+														{
+															columnWidth: 0.30,
+															border: false,
+															layout: "form",
+															labelAlign: "top",
+															items: [this.m_oft_oftalmo_esteropsia_oi],
+														},
+														{
+															columnWidth: 0.40,
+															border: false,
+															layout: "form",
+															labelAlign: "top",
+															items: [this.m_oft_oftalmo_esteropsia],
+														},
+													],
+												},
+											],
+										},{
+											xtype: "panel",
+											border: false,
+											columnWidth: 0.40,
+											bodyStyle: "padding:2px 22px 0px 5px;",
+											items: [
+												{
+													xtype: "fieldset",
+													layout: "column",
+													title: "TEST DE ISHIHARA:",
+													items: [
+														{
+															columnWidth: 1,
+															border: false,
+															layout: "form",
+															labelAlign: "top",
+															items: [this.m_oft_oftalmo_ishihara],
+														},
+													],
+												},
+											],
+										}, 
+										{
+											columnWidth: 0.50,
+											border: false,
+											layout: "form",
+											labelWidth: 310,
+											labelAlign: "top",
+											// items: [this.m_altura_ante_lab_problem],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "LABORATORIO:",
+									items: [
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.lab_glucosa],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_lab_p_lipido_colesterol_hdl],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_lab_p_lipido_colesterol_ldl],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_lab_p_lipido_colesterol_total],
+										},
+										{
+											columnWidth: 0.20,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_lab_p_lipido_trigliceridos],
+										},
+									],
+								},
+							],
+						},
+						
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 1,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "EXAMEN FISICO:",
+									items: [
+										{
+											columnWidth: 0.50,
+											border: false,
+											layout: "form",
+											labelWidth: 370,
+											// labelAlign: "top",
+											items: [this.m_altura_exa_fis_estereos],
+										},
+										{
+											columnWidth: 0.50,
+											border: false,
+											layout: "form",
+											labelWidth: 370,
+											// labelAlign: "top",
+											items: [this.m_altura_exa_fis_sustenta],
+										},
+										{
+											columnWidth: 0.50,
+											border: false,
+											layout: "form",
+											labelWidth: 370,
+											// labelAlign: "top",
+											items: [this.m_altura_exa_fis_sobre_3m],
+										},
+										{
+											columnWidth: 0.50,
+											border: false,
+											layout: "form",
+											labelWidth: 370,
+											// labelAlign: "top",
+											items: [this.m_altura_exa_fis_ojo_3m],
+										},
+										{
+											columnWidth: 0.50,
+											border: false,
+											layout: "form",
+											labelWidth: 370,
+											// labelAlign: "top",
+											items: [this.m_altura_exa_fis_punta_talon],
+										},
+										{
+											columnWidth: 0.50,
+											border: false,
+											layout: "form",
+											labelWidth: 370,
+											// labelAlign: "top",
+											items: [this.m_altura_exa_fis_lim_fuerza],
+										},
+										{
+											columnWidth: 0.50,
+											border: false,
+											layout: "form",
+											labelWidth: 370,
+											// labelAlign: "top",
+											items: [this.m_altura_exa_fis_diadococinesis],
+										},
+										{
+											columnWidth: 0.50,
+											border: false,
+											layout: "form",
+											labelWidth: 90,
+											// labelAlign: "top",
+											items: [this.m_altura_exa_fis_obs],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.30,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "APTITUD:",
+									items: [
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_aptitud],
+										},
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_medico_ocupa],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.30,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "",
+									items: [
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_conclu],
+										},
+									],
+								},
+							],
+						},
+						{
+							xtype: "panel",
+							border: false,
+							columnWidth: 0.39,
+							bodyStyle: "padding:2px 22px 0px 5px;",
+							items: [
+								{
+									xtype: "fieldset",
+									layout: "column",
+									title: "",
+									items: [
+										{
+											columnWidth: 1,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_altura_recom],
+										},
+									],
+								},
+							],
+						},
+					],
+				},
+			],
+			buttons: [
+				{
+					text: "Guardar",
+					iconCls: "guardar",
+					formBind: true,
+					scope: this,
+					handler: function () {
+						mod.medicina.altura.win.el.mask("Guardando…", "x-mask-loading");
+						this.frm.getForm().submit({
+							params: {
+								acction:
+									this.record.get("st") >= 1 ? "update_altura" : "save_altura",
+								adm: this.record.get("adm"),
+								id: this.record.get("id"),
+								ex_id: this.record.get("ex_id"),
+							},
+							success: function (form, action) {
+								obj = Ext.util.JSON.decode(action.response.responseText);
+								Ext.MessageBox.alert(
+									"En hora buena",
+									"Se registro correctamente"
+								);
+								mod.medicina.altura.win.el.unmask();
+								mod.medicina.formatos.st.reload();
+								mod.medicina.altura.win.close();
+							},
+							failure: function (form, action) {
+								mod.medicina.altura.win.el.unmask();
+								switch (action.failureType) {
+									case Ext.form.Action.CLIENT_INVALID:
+										Ext.Msg.alert("Failure", "Existen valores Invalidos");
+										break;
+									case Ext.form.Action.CONNECT_FAILURE:
+										Ext.Msg.alert(
+											"Failure",
+											"Error de comunicacion con servidor"
+										);
+										break;
+									case Ext.form.Action.SERVER_INVALID:
+										Ext.Msg.alert("Failure mik", action.result.error);
+										break;
+									default:
+										Ext.Msg.alert("Failure", action.result.error);
+								}
+								mod.medicina.formatos.st.reload();
+								mod.medicina.altura.win.close();
+							},
+						});
+					},
+				},
+			],
+		});
+		this.win = new Ext.Window({
+			width: 1200,
+			height: 630,
+			border: false,
+			modal: true,
+			title: "EXAMEN TRABAJOS EN ALTURA ESTRUCTURAL MAYOR A 1.8 METROS: ",
+			maximizable: false,
+			resizable: false,
+			draggable: true,
+			closable: true,
+			layout: "border",
+			items: [this.frm],
+		});
+	},
+};
 //MEDICINA musculo
 mod.medicina.musculo = {
 	win: null,
@@ -8780,10 +10592,27 @@ mod.medicina.musculo = {
 		this.record = r;
 		this.crea_stores();
 		this.crea_controles();
+		this.load_medico.load();
 		if (this.record.get("st") >= 1) {
 			this.cargar_data();
 		}
 		this.win.show();
+	},
+	llena_medico: function (adm) {
+		this.frm.getForm().load({
+			waitMsg: "Recuperando Informacion...",
+			waitTitle: "Espere",
+			params: {
+				acction: "load_musculo_medico",
+				format: "json",
+				adm: adm,
+				st: this.record.get("st"),
+			},
+			scope: this,
+			success: function (frm, action) {
+				r = action.result.data;
+			},
+		});
 	},
 	cargar_data: function () {
 		Ext.Ajax.request({
@@ -8827,6 +10656,14 @@ mod.medicina.musculo = {
 			},
 			fields: ["cie4_id", "cie4_cie3id", "cie4_desc"],
 			root: "data",
+		});
+		this.load_medico = new Ext.data.JsonStore({
+			remoteSort: true,
+			url: "<[controller]>",
+			baseParams: { acction: "load_medico", format: "json" },
+			root: "data",
+			totalProperty: "total",
+			fields: ["medico_id", "nombre"],
 		});
 	},
 	crea_controles: function () {
@@ -13694,8 +15531,7 @@ mod.medicina.musculo = {
 		});
 		//m_musc_colum_punto_ref
 		this.m_musc_colum_punto_ref = new Ext.form.RadioGroup({
-			fieldLabel:
-				"<b>PUNTUACION DE REFERENCIA (SIGNOS Y SINTOMAS)</b>",
+			fieldLabel: "<b>PUNTUACION DE REFERENCIA (SIGNOS Y SINTOMAS)</b>",
 			itemCls: "x-check-group-alt",
 			columns: 1,
 			items: [
@@ -13731,7 +15567,7 @@ mod.medicina.musculo = {
 		});
 		//m_musc_colum_aptitud
 		this.m_musc_colum_aptitud = new Ext.form.RadioGroup({
-			fieldLabel:"<b>VALORACIÓN</b>",
+			fieldLabel: "<b>VALORACIÓN</b>",
 			itemCls: "x-check-group-alt",
 			columns: 3,
 			items: [
@@ -13910,6 +15746,23 @@ mod.medicina.musculo = {
 			fieldLabel: "<b>RECOMENDACIONES</b>",
 			anchor: "95%",
 			height: 50,
+		});
+
+		// m_musc_medico
+		this.m_musc_medico = new Ext.form.ComboBox({
+			typeAhead: true,
+			triggerAction: "all",
+			lazyRender: true,
+			allowBlank: false,
+			mode: "local",
+			store: this.load_medico,
+			forceSelection: true,
+			hiddenName: "m_musc_medico",
+			fieldLabel: "<b>MÉDICO EVALUADOR</b>",
+			name: "m_musc_medico",
+			valueField: "medico_id",
+			displayField: "nombre",
+			anchor: "90%",
 		});
 
 		//FRM ANEXO 16
@@ -14527,56 +16380,56 @@ mod.medicina.musculo = {
                                                     <h3>COLUMNA VERTEBRAL</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_cevical_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_cevical_exten],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_cevical_lat_izq],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_cevical_lat_der],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_cevical_rota_izq],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_cevical_rota_der],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_cevical_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -14591,56 +16444,56 @@ mod.medicina.musculo = {
                                                     <h3>COLUMNA DORSAL</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_dorsal_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_dorsal_exten],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_dorsal_lat_izq],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_dorsal_lat_der],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_dorsal_rota_izq],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_dorsal_rota_der],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_dorsal_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -14655,56 +16508,56 @@ mod.medicina.musculo = {
                                                     <h3>COLUMNA LUMBAR</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_lumbar_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_lumbar_exten],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_lumbar_lat_izq],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_lumbar_lat_der],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_lumbar_rota_izq],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_lumbar_rota_der],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_col_lumbar_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -14723,7 +16576,8 @@ mod.medicina.musculo = {
 								{
 									xtype: "fieldset",
 									layout: "column",
-									title: "MOVILIDAD - DOLOR = EVOLUCION DINAMICA DE ARTICULACIONES",
+									title:
+										"MOVILIDAD - DOLOR = EVOLUCION DINAMICA DE ARTICULACIONES",
 									items: [
 										{
 											columnWidth: 0.999,
@@ -14750,56 +16604,56 @@ mod.medicina.musculo = {
                                                     <h3>HOMBRO - DERECHO</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_hombro_der_abduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_hombro_der_aduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_hombro_der_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_hombro_der_extencion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_hombro_der_rota_exter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_hombro_der_rota_inter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_hombro_der_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -14814,56 +16668,56 @@ mod.medicina.musculo = {
                                                     <h3>HOMBRO - IZQUIERDO</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_hombro_izq_abduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_hombro_izq_aduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_hombro_izq_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_hombro_izq_extencion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_hombro_izq_rota_exter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_hombro_izq_rota_inter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_hombro_izq_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -14878,56 +16732,56 @@ mod.medicina.musculo = {
                                                     <h3>CODO - DERECHO</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_codo_der_abduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_codo_der_aduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_codo_der_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_codo_der_extencion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_codo_der_rota_exter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_codo_der_rota_inter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_codo_der_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -14942,56 +16796,56 @@ mod.medicina.musculo = {
                                                     <h3>CODO - IZQUIERDO</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_codo_izq_abduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_codo_izq_aduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_codo_izq_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_codo_izq_extencion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_codo_izq_rota_exter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_codo_izq_rota_inter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_codo_izq_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -15006,56 +16860,56 @@ mod.medicina.musculo = {
                                                     <h3>MUÑECA - DERECHO</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_muneca_der_abduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_muneca_der_aduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_muneca_der_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_muneca_der_extencion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_muneca_der_rota_exter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_muneca_der_rota_inter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_muneca_der_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -15070,56 +16924,56 @@ mod.medicina.musculo = {
                                                     <h3>MUÑECA - IZQUIERDO</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_muneca_izq_abduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_muneca_izq_aduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_muneca_izq_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_muneca_izq_extencion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_muneca_izq_rota_exter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_muneca_izq_rota_inter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_muneca_izq_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -15134,56 +16988,56 @@ mod.medicina.musculo = {
                                                     <h3>MANOS Y MUÑECA - DERECHO</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_mano_der_abduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_mano_der_aduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_mano_der_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_mano_der_extencion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_mano_der_rota_exter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_mano_der_rota_inter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_mano_der_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -15198,56 +17052,56 @@ mod.medicina.musculo = {
                                                     <h3>MANOS Y MUÑECA - IZQUIERDO</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_mano_izq_abduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_mano_izq_aduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_mano_izq_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_mano_izq_extencion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_mano_izq_rota_exter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_mano_izq_rota_inter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_mano_izq_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -15262,56 +17116,56 @@ mod.medicina.musculo = {
                                                     <h3>CADERA - DERECHO</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_cadera_der_abduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_cadera_der_aduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_cadera_der_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_cadera_der_extencion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_cadera_der_rota_exter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_cadera_der_rota_inter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_cadera_der_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -15326,56 +17180,56 @@ mod.medicina.musculo = {
                                                     <h3>CADERA - IZQUIERDO</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_cadera_izq_abduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_cadera_izq_aduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_cadera_izq_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_cadera_izq_extencion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_cadera_izq_rota_exter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_cadera_izq_rota_inter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_cadera_izq_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -15390,56 +17244,56 @@ mod.medicina.musculo = {
                                                     <h3>RODILLA - DERECHO</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_rodilla_der_abduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_rodilla_der_aduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_rodilla_der_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_rodilla_der_extencion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_rodilla_der_rota_exter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_rodilla_der_rota_inter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_rodilla_der_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -15454,56 +17308,56 @@ mod.medicina.musculo = {
                                                     <h3>RODILLA - IZQUIERDO</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_rodilla_izq_abduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_rodilla_izq_aduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_rodilla_izq_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_rodilla_izq_extencion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_rodilla_izq_rota_exter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_rodilla_izq_rota_inter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_rodilla_izq_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -15518,56 +17372,56 @@ mod.medicina.musculo = {
                                                     <h3>TOBILLO - DERECHO</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_tobillo_der_abduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_tobillo_der_aduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_tobillo_der_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_tobillo_der_extencion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_tobillo_der_rota_exter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_tobillo_der_rota_inter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_tobillo_der_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -15582,56 +17436,56 @@ mod.medicina.musculo = {
                                                     <h3>TOBILLO - IZQUIERDO</h3></div>',
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_tobillo_izq_abduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_tobillo_izq_aduccion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_tobillo_izq_flexion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_tobillo_izq_extencion],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_tobillo_izq_rota_exter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_tobillo_izq_rota_inter],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_tobillo_izq_irradia],
 										},
 										{
-											columnWidth: 0.10,
+											columnWidth: 0.1,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
@@ -15653,21 +17507,28 @@ mod.medicina.musculo = {
 									title: "-",
 									items: [
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.4,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_colum_punto_ref],
 										},
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.35,
 											border: false,
 											layout: "form",
 											labelAlign: "top",
 											items: [this.m_musc_colum_aptitud],
 										},
 										{
-											columnWidth: 0.5,
+											columnWidth: 0.25,
+											border: false,
+											layout: "form",
+											labelAlign: "top",
+											items: [this.m_musc_medico],
+										},
+										{
+											columnWidth: 0.6,
 											border: false,
 											layout: "form",
 											labelAlign: "top",

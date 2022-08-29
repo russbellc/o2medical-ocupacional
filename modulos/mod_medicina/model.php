@@ -1616,7 +1616,8 @@ class model extends core
         }
     }
 
-    public function mod_medicina_antece($adm) {
+    public function mod_medicina_antece($adm)
+    {
         $sql = "SELECT
             m_antec_id, m_antec_adm, m_antec_exa,
             m_antec_fech_ini, m_antec_fech_fin, m_antec_suelo,
@@ -1652,6 +1653,7 @@ class model extends core
             ,m.dep_desc depa_naci,l.prov_desc prov_naci,k.dis_desc dist_naci
             ,concat(m_ubigeo.dep_desc,'-' ,l_ubigeo.prov_desc,'-' ,k_ubigeo.dis_desc) ubica_ubigeo
             ,m_ubigeo.dep_desc depa_ubigeo,l_ubigeo.prov_desc prov_ubigeo,k_ubigeo.dis_desc dist_ubigeo
+            ,(SELECT m_lab_exam_resultado FROM mod_laboratorio_exam where m_lab_exam_adm=$adm and m_lab_exam_examen=22) sangre
             FROM admision
             inner join paciente on pac_id=adm_pac
             inner join pack on pk_id=adm_ruta
@@ -4581,7 +4583,7 @@ class model extends core
     public function busca_medico($medico_id)
     {
         $sede = $this->user->con_sedid;
-        return $this->sql("SELECT medico_cmp, concat(medico_apepat,' ',medico_apemat,', ',medico_nombre)as nombres
+        return $this->sql("SELECT medico_cmp, concat(medico_apepat,' ',medico_apemat,', ',medico_nombre)as nombres,medico_firma
         FROM medico where medico_id=$medico_id;");
     }
 
@@ -5243,7 +5245,10 @@ class model extends core
 
     public function mod_medicina_312($adm)
     {
-        $sql = $this->sql("SELECT * FROM mod_medicina_312
+        $sql = $this->sql("SELECT mod_medicina_312.*,concat(medico_apepat,' ', medico_apemat,', ',medico_nombre) medico , medico_cmp, medico_firma
+        
+        FROM mod_medicina_312
+            left join medico on medico_id=m_312_medico_ocupa
             where
             m_312_adm=$adm;
                 ");
@@ -5251,6 +5256,25 @@ class model extends core
     }
 
     //LOAD SAVE UPDATE musculo
+
+    public function load_musculo_medico()
+    {
+        $adm = $_POST['adm'];
+        $st = $_POST['st'];
+        $usuario = $this->user->us_id;
+        $medico = "";
+        if ($st < '1') {
+            $medico = ",(SELECT medico_id FROM medico where medico_usu='$usuario') m_musc_medico";
+        }
+        $query = "SELECT
+            adm_id
+            $medico
+            FROM admision
+            where adm_id=$adm
+            group by adm_id order by adm_id;";
+        $q = $this->sql($query);
+        return array('success' => true, 'data' => $q->data[0]);
+    }
 
     public function load_musculo()
     {
@@ -5291,8 +5315,8 @@ class model extends core
         $params_2 = array();
         $params_2[':adm'] = $_POST['adm'];
         $params_2[':ex_id'] = $_POST['ex_id'];
-		
-		
+
+
         $params_2[':m_musc_flexi_ptos'] = $_POST['m_musc_flexi_ptos'];
         $params_2[':m_musc_flexi_obs'] = $_POST['m_musc_flexi_obs'];
         $params_2[':m_musc_cadera_ptos'] = $_POST['m_musc_cadera_ptos'];
@@ -5471,6 +5495,7 @@ class model extends core
         $params_2[':m_musc_diag_03'] = $_POST['m_musc_diag_03'];
         $params_2[':m_musc_conclu_03'] = $_POST['m_musc_conclu_03'];
         $params_2[':m_musc_recom_03'] = $_POST['m_musc_recom_03'];
+        $params_2[':m_musc_medico'] = $_POST['m_musc_medico'];
 
 
 
@@ -5655,7 +5680,8 @@ class model extends core
                 :m_musc_recom_02,
                 :m_musc_diag_03,
                 :m_musc_conclu_03,
-                :m_musc_recom_03
+                :m_musc_recom_03,
+                :m_musc_medico
 				);";
 
         $verifica = $this->sql("SELECT m_medicina_adm, concat(usu_nombres,' ',usu_appat,' ',usu_apmat) usuario 
@@ -5702,8 +5728,8 @@ class model extends core
 
         $params_2 = array();
         $params_2[':adm'] = $_POST['adm'];
-		
-        
+
+
         $params_2[':m_musc_flexi_ptos'] = $_POST['m_musc_flexi_ptos'];
         $params_2[':m_musc_flexi_obs'] = $_POST['m_musc_flexi_obs'];
         $params_2[':m_musc_cadera_ptos'] = $_POST['m_musc_cadera_ptos'];
@@ -5882,6 +5908,7 @@ class model extends core
         $params_2[':m_musc_diag_03'] = $_POST['m_musc_diag_03'];
         $params_2[':m_musc_conclu_03'] = $_POST['m_musc_conclu_03'];
         $params_2[':m_musc_recom_03'] = $_POST['m_musc_recom_03'];
+        $params_2[':m_musc_medico'] = $_POST['m_musc_medico'];
 
         $q_2 = 'Update mod_medicina_musculo set
                     m_musc_flexi_ptos=:m_musc_flexi_ptos,
@@ -6061,7 +6088,8 @@ class model extends core
                     m_musc_recom_02=:m_musc_recom_02,
                     m_musc_diag_03=:m_musc_diag_03,
                     m_musc_conclu_03=:m_musc_conclu_03,
-                    m_musc_recom_03=:m_musc_recom_03        
+                    m_musc_recom_03=:m_musc_recom_03,     
+                    m_musc_medico=:m_musc_medico      
                 where
                 m_musc_adm=:adm;';
 
@@ -6083,10 +6111,391 @@ class model extends core
 
     public function carga_musculo_pdf($adm)
     {
-        $query = "SELECT *
+        $query = "SELECT mod_medicina_musculo.*, medico_cmp, medico_firma
             FROM mod_medicina_musculo
+            left join medico on medico_id=m_musc_medico
             where m_musc_adm='$adm';";
         return $this->sql($query);
+    }
+
+    //LOAD SAVE UPDATE ALTURA
+
+
+    public function load_altura()
+    {
+        $adm = $_POST['adm'];
+        //        $examen = $_POST['examen'];
+        $query = "SELECT * FROM mod_medicina_altura where m_altura_adm='$adm';";
+        $q = $this->sql($query);
+        return array('success' => true, 'data' => $q->data[0]);
+    }
+
+    public function save_altura()
+    {
+
+        $adm = $_POST['adm'];
+        $exa = $_POST['ex_id'];
+
+        $this->begin();
+
+        $params_1 = array();
+        $params_1[':adm'] = $_POST['adm'];
+        $params_1[':sede'] = $this->user->con_sedid;
+        $params_1[':usuario'] = $this->user->us_id;
+        $params_1[':ex_id'] = $_POST['ex_id'];
+
+        $q_1 = "INSERT INTO mod_medicina VALUES
+                (NULL,
+                :adm,
+                :sede,
+                :usuario,
+                now(),
+                null,
+                1,
+                :ex_id);";
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////
+
+        $params_2 = array();
+        $params_2[':adm'] = $_POST['adm'];
+        $params_2[':ex_id'] = $_POST['ex_id'];
+
+
+        $params_2[':m_altura_ante_lab_experiencia'] = $_POST['m_altura_ante_lab_experiencia'];
+        $params_2[':m_altura_ante_lab_problem'] = $_POST['m_altura_ante_lab_problem'];
+        $params_2[':m_altura_ante_pato_conv_epilep'] = $_POST['m_altura_ante_pato_conv_epilep'];
+        $params_2[':m_altura_ante_pato_conv_epilep_desc'] = $_POST['m_altura_ante_pato_conv_epilep_desc'];
+        $params_2[':m_altura_ante_pato_migra'] = $_POST['m_altura_ante_pato_migra'];
+        $params_2[':m_altura_ante_pato_migra_desc'] = $_POST['m_altura_ante_pato_migra_desc'];
+        $params_2[':m_altura_ante_pato_mareo'] = $_POST['m_altura_ante_pato_mareo'];
+        $params_2[':m_altura_ante_pato_mareo_desc'] = $_POST['m_altura_ante_pato_mareo_desc'];
+        $params_2[':m_altura_ante_pato_tec'] = $_POST['m_altura_ante_pato_tec'];
+        $params_2[':m_altura_ante_pato_tec_desc'] = $_POST['m_altura_ante_pato_tec_desc'];
+        $params_2[':m_altura_ante_pato_insomnio'] = $_POST['m_altura_ante_pato_insomnio'];
+        $params_2[':m_altura_ante_pato_insomnio_desc'] = $_POST['m_altura_ante_pato_insomnio_desc'];
+        $params_2[':m_altura_ante_pato_enf_psiq'] = $_POST['m_altura_ante_pato_enf_psiq'];
+        $params_2[':m_altura_ante_pato_enf_psiq_desc'] = $_POST['m_altura_ante_pato_enf_psiq_desc'];
+        $params_2[':m_altura_ante_pato_enf_cardio'] = $_POST['m_altura_ante_pato_enf_cardio'];
+        $params_2[':m_altura_ante_pato_enf_cardio_desc'] = $_POST['m_altura_ante_pato_enf_cardio_desc'];
+        $params_2[':m_altura_ante_pato_enf_ocular'] = $_POST['m_altura_ante_pato_enf_ocular'];
+        $params_2[':m_altura_ante_pato_enf_ocular_desc'] = $_POST['m_altura_ante_pato_enf_ocular_desc'];
+        $params_2[':m_altura_ante_pato_hipoacusia'] = $_POST['m_altura_ante_pato_hipoacusia'];
+        $params_2[':m_altura_ante_pato_hipoacusia_desc'] = $_POST['m_altura_ante_pato_hipoacusia_desc'];
+        $params_2[':m_altura_ante_pato_diabetes'] = $_POST['m_altura_ante_pato_diabetes'];
+        $params_2[':m_altura_ante_pato_diabetes_desc'] = $_POST['m_altura_ante_pato_diabetes_desc'];
+        $params_2[':m_altura_ante_pato_hta'] = $_POST['m_altura_ante_pato_hta'];
+        $params_2[':m_altura_ante_pato_hta_desc'] = $_POST['m_altura_ante_pato_hta_desc'];
+        $params_2[':m_altura_ante_pato_acrof'] = $_POST['m_altura_ante_pato_acrof'];
+        $params_2[':m_altura_ante_pato_acrof_desc'] = $_POST['m_altura_ante_pato_acrof_desc'];
+        $params_2[':m_altura_ante_pato_asma'] = $_POST['m_altura_ante_pato_asma'];
+        $params_2[':m_altura_ante_pato_asma_desc'] = $_POST['m_altura_ante_pato_asma_desc'];
+        $params_2[':m_altura_ante_pato_epoc'] = $_POST['m_altura_ante_pato_epoc'];
+        $params_2[':m_altura_ante_pato_epoc_desc'] = $_POST['m_altura_ante_pato_epoc_desc'];
+        $params_2[':m_altura_ante_pato_med_psico'] = $_POST['m_altura_ante_pato_med_psico'];
+        $params_2[':m_altura_ante_pato_med_psico_desc'] = $_POST['m_altura_ante_pato_med_psico_desc'];
+        $params_2[':m_altura_ante_pato_cons_droga'] = $_POST['m_altura_ante_pato_cons_droga'];
+        $params_2[':m_altura_ante_pato_cons_droga_desc'] = $_POST['m_altura_ante_pato_cons_droga_desc'];
+        $params_2[':m_altura_ante_pato_alcohol'] = $_POST['m_altura_ante_pato_alcohol'];
+        $params_2[':m_altura_ante_pato_alcohol_desc'] = $_POST['m_altura_ante_pato_alcohol_desc'];
+        $params_2[':m_altura_ante_pato_otros'] = $_POST['m_altura_ante_pato_otros'];
+        $params_2[':m_altura_ante_pato_otros_desc'] = $_POST['m_altura_ante_pato_otros_desc'];
+        $params_2[':m_altura_exa_fis_estereos'] = $_POST['m_altura_exa_fis_estereos'];
+        $params_2[':m_altura_exa_fis_sustenta'] = $_POST['m_altura_exa_fis_sustenta'];
+        $params_2[':m_altura_exa_fis_sobre_3m'] = $_POST['m_altura_exa_fis_sobre_3m'];
+        $params_2[':m_altura_exa_fis_ojo_3m'] = $_POST['m_altura_exa_fis_ojo_3m'];
+        $params_2[':m_altura_exa_fis_punta_talon'] = $_POST['m_altura_exa_fis_punta_talon'];
+        $params_2[':m_altura_exa_fis_lim_fuerza'] = $_POST['m_altura_exa_fis_lim_fuerza'];
+        $params_2[':m_altura_exa_fis_diadococinesis'] = $_POST['m_altura_exa_fis_diadococinesis'];
+        $params_2[':m_altura_exa_fis_obs'] = $_POST['m_altura_exa_fis_obs'];
+        $params_2[':m_altura_aptitud'] = $_POST['m_altura_aptitud'];
+        $params_2[':m_altura_conclu'] = $_POST['m_altura_conclu'];
+        $params_2[':m_altura_recom'] = $_POST['m_altura_recom'];
+        $params_2[':m_altura_medico_ocupa'] = $_POST['m_altura_medico_ocupa'];
+
+        $q_2 = "INSERT INTO mod_medicina_altura VALUES 
+                (null,
+                :adm,
+                :ex_id,
+                :m_altura_ante_lab_experiencia,
+                :m_altura_ante_lab_problem,
+                :m_altura_ante_pato_conv_epilep,
+                :m_altura_ante_pato_conv_epilep_desc,
+                :m_altura_ante_pato_migra,
+                :m_altura_ante_pato_migra_desc,
+                :m_altura_ante_pato_mareo,
+                :m_altura_ante_pato_mareo_desc,
+                :m_altura_ante_pato_tec,
+                :m_altura_ante_pato_tec_desc,
+                :m_altura_ante_pato_insomnio,
+                :m_altura_ante_pato_insomnio_desc,
+                :m_altura_ante_pato_enf_psiq,
+                :m_altura_ante_pato_enf_psiq_desc,
+                :m_altura_ante_pato_enf_cardio,
+                :m_altura_ante_pato_enf_cardio_desc,
+                :m_altura_ante_pato_enf_ocular,
+                :m_altura_ante_pato_enf_ocular_desc,
+                :m_altura_ante_pato_hipoacusia,
+                :m_altura_ante_pato_hipoacusia_desc,
+                :m_altura_ante_pato_diabetes,
+                :m_altura_ante_pato_diabetes_desc,
+                :m_altura_ante_pato_hta,
+                :m_altura_ante_pato_hta_desc,
+                :m_altura_ante_pato_acrof,
+                :m_altura_ante_pato_acrof_desc,
+                :m_altura_ante_pato_asma,
+                :m_altura_ante_pato_asma_desc,
+                :m_altura_ante_pato_epoc,
+                :m_altura_ante_pato_epoc_desc,
+                :m_altura_ante_pato_med_psico,
+                :m_altura_ante_pato_med_psico_desc,
+                :m_altura_ante_pato_cons_droga,
+                :m_altura_ante_pato_cons_droga_desc,
+                :m_altura_ante_pato_alcohol,
+                :m_altura_ante_pato_alcohol_desc,
+                :m_altura_ante_pato_otros,
+                :m_altura_ante_pato_otros_desc,
+                :m_altura_exa_fis_estereos,
+                :m_altura_exa_fis_sustenta,
+                :m_altura_exa_fis_sobre_3m,
+                :m_altura_exa_fis_ojo_3m,
+                :m_altura_exa_fis_punta_talon,
+                :m_altura_exa_fis_lim_fuerza,
+                :m_altura_exa_fis_diadococinesis,
+                :m_altura_exa_fis_obs,
+                :m_altura_aptitud,
+                :m_altura_conclu,
+                :m_altura_recom,
+                :m_altura_medico_ocupa
+				);";
+
+        $verifica = $this->sql("SELECT m_medicina_adm, concat(usu_nombres,' ',usu_appat,' ',usu_apmat) usuario 
+				FROM mod_medicina inner join sys_usuario on usu_id=m_medicina_usu 
+				where m_medicina_adm='$adm' and m_medicina_examen='$exa';");
+        if ($verifica->total > 0) {
+            $this->rollback();
+            return array('success' => false, "error" => 'Paciente ya fue registrado por ' . $verifica->data[0]->usuario);
+        } else {
+            $sql_1 = $this->sql($q_1, $params_1);
+            if ($sql_1->success) {
+                $sql_2 = $this->sql($q_2, $params_2);
+                if ($sql_2->success) {
+                    $this->commit();
+                    return $sql_2;
+                } else {
+                    $this->rollback();
+                    return array('success' => false, 'error' => 'Problemas con el registro.');
+                }
+            } else {
+                $this->rollback();
+                return array('success' => false, 'error' => 'Problemas con el registro.');
+            }
+        }
+    }
+
+    public function update_altura()
+    {
+        $this->begin();
+
+        $params_1 = array();
+        $params_1[':usuario'] = $this->user->us_id;
+        $params_1[':id'] = $_POST['id'];
+        $params_1[':adm'] = $_POST['adm'];
+        $params_1[':ex_id'] = $_POST['ex_id'];
+        $q_1 = 'Update mod_medicina set
+                    m_medicina_usu=:usuario,
+					m_medicina_fech_update=now()
+                where
+                m_medicina_id=:id and m_medicina_adm=:adm and m_medicina_examen=:ex_id;';
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////
+
+        $params_2 = array();
+        $params_2[':adm'] = $_POST['adm'];
+
+
+        $params_2[':m_altura_ante_lab_experiencia'] = $_POST['m_altura_ante_lab_experiencia'];
+        $params_2[':m_altura_ante_lab_problem'] = $_POST['m_altura_ante_lab_problem'];
+        $params_2[':m_altura_ante_pato_conv_epilep'] = $_POST['m_altura_ante_pato_conv_epilep'];
+        $params_2[':m_altura_ante_pato_conv_epilep_desc'] = $_POST['m_altura_ante_pato_conv_epilep_desc'];
+        $params_2[':m_altura_ante_pato_migra'] = $_POST['m_altura_ante_pato_migra'];
+        $params_2[':m_altura_ante_pato_migra_desc'] = $_POST['m_altura_ante_pato_migra_desc'];
+        $params_2[':m_altura_ante_pato_mareo'] = $_POST['m_altura_ante_pato_mareo'];
+        $params_2[':m_altura_ante_pato_mareo_desc'] = $_POST['m_altura_ante_pato_mareo_desc'];
+        $params_2[':m_altura_ante_pato_tec'] = $_POST['m_altura_ante_pato_tec'];
+        $params_2[':m_altura_ante_pato_tec_desc'] = $_POST['m_altura_ante_pato_tec_desc'];
+        $params_2[':m_altura_ante_pato_insomnio'] = $_POST['m_altura_ante_pato_insomnio'];
+        $params_2[':m_altura_ante_pato_insomnio_desc'] = $_POST['m_altura_ante_pato_insomnio_desc'];
+        $params_2[':m_altura_ante_pato_enf_psiq'] = $_POST['m_altura_ante_pato_enf_psiq'];
+        $params_2[':m_altura_ante_pato_enf_psiq_desc'] = $_POST['m_altura_ante_pato_enf_psiq_desc'];
+        $params_2[':m_altura_ante_pato_enf_cardio'] = $_POST['m_altura_ante_pato_enf_cardio'];
+        $params_2[':m_altura_ante_pato_enf_cardio_desc'] = $_POST['m_altura_ante_pato_enf_cardio_desc'];
+        $params_2[':m_altura_ante_pato_enf_ocular'] = $_POST['m_altura_ante_pato_enf_ocular'];
+        $params_2[':m_altura_ante_pato_enf_ocular_desc'] = $_POST['m_altura_ante_pato_enf_ocular_desc'];
+        $params_2[':m_altura_ante_pato_hipoacusia'] = $_POST['m_altura_ante_pato_hipoacusia'];
+        $params_2[':m_altura_ante_pato_hipoacusia_desc'] = $_POST['m_altura_ante_pato_hipoacusia_desc'];
+        $params_2[':m_altura_ante_pato_diabetes'] = $_POST['m_altura_ante_pato_diabetes'];
+        $params_2[':m_altura_ante_pato_diabetes_desc'] = $_POST['m_altura_ante_pato_diabetes_desc'];
+        $params_2[':m_altura_ante_pato_hta'] = $_POST['m_altura_ante_pato_hta'];
+        $params_2[':m_altura_ante_pato_hta_desc'] = $_POST['m_altura_ante_pato_hta_desc'];
+        $params_2[':m_altura_ante_pato_acrof'] = $_POST['m_altura_ante_pato_acrof'];
+        $params_2[':m_altura_ante_pato_acrof_desc'] = $_POST['m_altura_ante_pato_acrof_desc'];
+        $params_2[':m_altura_ante_pato_asma'] = $_POST['m_altura_ante_pato_asma'];
+        $params_2[':m_altura_ante_pato_asma_desc'] = $_POST['m_altura_ante_pato_asma_desc'];
+        $params_2[':m_altura_ante_pato_epoc'] = $_POST['m_altura_ante_pato_epoc'];
+        $params_2[':m_altura_ante_pato_epoc_desc'] = $_POST['m_altura_ante_pato_epoc_desc'];
+        $params_2[':m_altura_ante_pato_med_psico'] = $_POST['m_altura_ante_pato_med_psico'];
+        $params_2[':m_altura_ante_pato_med_psico_desc'] = $_POST['m_altura_ante_pato_med_psico_desc'];
+        $params_2[':m_altura_ante_pato_cons_droga'] = $_POST['m_altura_ante_pato_cons_droga'];
+        $params_2[':m_altura_ante_pato_cons_droga_desc'] = $_POST['m_altura_ante_pato_cons_droga_desc'];
+        $params_2[':m_altura_ante_pato_alcohol'] = $_POST['m_altura_ante_pato_alcohol'];
+        $params_2[':m_altura_ante_pato_alcohol_desc'] = $_POST['m_altura_ante_pato_alcohol_desc'];
+        $params_2[':m_altura_ante_pato_otros'] = $_POST['m_altura_ante_pato_otros'];
+        $params_2[':m_altura_ante_pato_otros_desc'] = $_POST['m_altura_ante_pato_otros_desc'];
+        $params_2[':m_altura_exa_fis_estereos'] = $_POST['m_altura_exa_fis_estereos'];
+        $params_2[':m_altura_exa_fis_sustenta'] = $_POST['m_altura_exa_fis_sustenta'];
+        $params_2[':m_altura_exa_fis_sobre_3m'] = $_POST['m_altura_exa_fis_sobre_3m'];
+        $params_2[':m_altura_exa_fis_ojo_3m'] = $_POST['m_altura_exa_fis_ojo_3m'];
+        $params_2[':m_altura_exa_fis_punta_talon'] = $_POST['m_altura_exa_fis_punta_talon'];
+        $params_2[':m_altura_exa_fis_lim_fuerza'] = $_POST['m_altura_exa_fis_lim_fuerza'];
+        $params_2[':m_altura_exa_fis_diadococinesis'] = $_POST['m_altura_exa_fis_diadococinesis'];
+        $params_2[':m_altura_exa_fis_obs'] = $_POST['m_altura_exa_fis_obs'];
+        $params_2[':m_altura_aptitud'] = $_POST['m_altura_aptitud'];
+        $params_2[':m_altura_conclu'] = $_POST['m_altura_conclu'];
+        $params_2[':m_altura_recom'] = $_POST['m_altura_recom'];
+        $params_2[':m_altura_medico_ocupa'] = $_POST['m_altura_medico_ocupa'];
+
+        $q_2 = 'Update mod_medicina_altura set
+                    m_altura_ante_lab_experiencia=:m_altura_ante_lab_experiencia,
+                    m_altura_ante_lab_problem=:m_altura_ante_lab_problem,
+                    m_altura_ante_pato_conv_epilep=:m_altura_ante_pato_conv_epilep,
+                    m_altura_ante_pato_conv_epilep_desc=:m_altura_ante_pato_conv_epilep_desc,
+                    m_altura_ante_pato_migra=:m_altura_ante_pato_migra,
+                    m_altura_ante_pato_migra_desc=:m_altura_ante_pato_migra_desc,
+                    m_altura_ante_pato_mareo=:m_altura_ante_pato_mareo,
+                    m_altura_ante_pato_mareo_desc=:m_altura_ante_pato_mareo_desc,
+                    m_altura_ante_pato_tec=:m_altura_ante_pato_tec,
+                    m_altura_ante_pato_tec_desc=:m_altura_ante_pato_tec_desc,
+                    m_altura_ante_pato_insomnio=:m_altura_ante_pato_insomnio,
+                    m_altura_ante_pato_insomnio_desc=:m_altura_ante_pato_insomnio_desc,
+                    m_altura_ante_pato_enf_psiq=:m_altura_ante_pato_enf_psiq,
+                    m_altura_ante_pato_enf_psiq_desc=:m_altura_ante_pato_enf_psiq_desc,
+                    m_altura_ante_pato_enf_cardio=:m_altura_ante_pato_enf_cardio,
+                    m_altura_ante_pato_enf_cardio_desc=:m_altura_ante_pato_enf_cardio_desc,
+                    m_altura_ante_pato_enf_ocular=:m_altura_ante_pato_enf_ocular,
+                    m_altura_ante_pato_enf_ocular_desc=:m_altura_ante_pato_enf_ocular_desc,
+                    m_altura_ante_pato_hipoacusia=:m_altura_ante_pato_hipoacusia,
+                    m_altura_ante_pato_hipoacusia_desc=:m_altura_ante_pato_hipoacusia_desc,
+                    m_altura_ante_pato_diabetes=:m_altura_ante_pato_diabetes,
+                    m_altura_ante_pato_diabetes_desc=:m_altura_ante_pato_diabetes_desc,
+                    m_altura_ante_pato_hta=:m_altura_ante_pato_hta,
+                    m_altura_ante_pato_hta_desc=:m_altura_ante_pato_hta_desc,
+                    m_altura_ante_pato_acrof=:m_altura_ante_pato_acrof,
+                    m_altura_ante_pato_acrof_desc=:m_altura_ante_pato_acrof_desc,
+                    m_altura_ante_pato_asma=:m_altura_ante_pato_asma,
+                    m_altura_ante_pato_asma_desc=:m_altura_ante_pato_asma_desc,
+                    m_altura_ante_pato_epoc=:m_altura_ante_pato_epoc,
+                    m_altura_ante_pato_epoc_desc=:m_altura_ante_pato_epoc_desc,
+                    m_altura_ante_pato_med_psico=:m_altura_ante_pato_med_psico,
+                    m_altura_ante_pato_med_psico_desc=:m_altura_ante_pato_med_psico_desc,
+                    m_altura_ante_pato_cons_droga=:m_altura_ante_pato_cons_droga,
+                    m_altura_ante_pato_cons_droga_desc=:m_altura_ante_pato_cons_droga_desc,
+                    m_altura_ante_pato_alcohol=:m_altura_ante_pato_alcohol,
+                    m_altura_ante_pato_alcohol_desc=:m_altura_ante_pato_alcohol_desc,
+                    m_altura_ante_pato_otros=:m_altura_ante_pato_otros,
+                    m_altura_ante_pato_otros_desc=:m_altura_ante_pato_otros_desc,
+                    m_altura_exa_fis_estereos=:m_altura_exa_fis_estereos,
+                    m_altura_exa_fis_sustenta=:m_altura_exa_fis_sustenta,
+                    m_altura_exa_fis_sobre_3m=:m_altura_exa_fis_sobre_3m,
+                    m_altura_exa_fis_ojo_3m=:m_altura_exa_fis_ojo_3m,
+                    m_altura_exa_fis_punta_talon=:m_altura_exa_fis_punta_talon,
+                    m_altura_exa_fis_lim_fuerza=:m_altura_exa_fis_lim_fuerza,
+                    m_altura_exa_fis_diadococinesis=:m_altura_exa_fis_diadococinesis,
+                    m_altura_exa_fis_obs=:m_altura_exa_fis_obs,
+                    m_altura_aptitud=:m_altura_aptitud,
+                    m_altura_conclu=:m_altura_conclu,
+                    m_altura_recom=:m_altura_recom,
+                    m_altura_medico_ocupa=:m_altura_medico_ocupa
+                where
+                m_altura_adm=:adm;';
+
+        $sql_2 = $this->sql($q_2, $params_2);
+        if ($sql_2->success) {
+            $sql_1 = $this->sql($q_1, $params_1);
+            if ($sql_1->success && $sql_1->total == 1) {
+                $this->commit();
+                return $sql_1;
+            } else {
+                $this->rollback();
+                return array('success' => false, 'error' => 'Problemas con el registro.');
+            }
+        } else {
+            $this->rollback();
+            return array('success' => false, 'error' => 'Problemas con el registro.');
+        }
+    }
+
+    public function carga_altura_pdf($adm)
+    {
+        $query = "SELECT
+            
+            mod_medicina_altura.*,
+            m_oft_oftalmo_sincorrec_vlejos_od, m_oft_oftalmo_sincorrec_vlejos_oi,
+            m_oft_oftalmo_concorrec_vlejos_od, m_oft_oftalmo_concorrec_vlejos_oi,
+            
+            m_oft_oftalmo_sincorrec_vcerca_od, m_oft_oftalmo_sincorrec_vcerca_oi,
+            m_oft_oftalmo_concorrec_vcerca_od,m_oft_oftalmo_concorrec_vcerca_oi,
+
+            m_oft_oftalmo_esteropsia_od, m_oft_oftalmo_esteropsia_oi, m_oft_oftalmo_esteropsia,
+            m_oft_oftalmo_ishihara,
+            (SELECT m_lab_exam_resultado FROM mod_laboratorio_exam where m_lab_exam_adm=$adm and m_lab_exam_examen=23) lab_glucosa,
+            m_lab_p_lipido_colesterol_hdl,
+            m_lab_p_lipido_colesterol_ldl,
+            m_lab_p_lipido_colesterol_total,
+            m_lab_p_lipido_trigliceridos
+            , medico_cmp, medico_firma
+            FROM admision
+            left join mod_medicina_altura on adm_id=m_altura_adm
+            left join mod_oftalmo_oftalmo on adm_id=m_oft_oftalmo_adm
+            left join mod_laboratorio_p_lipidido on adm_id=m_lab_p_lipido_adm
+            left join medico on medico_id=m_altura_medico_ocupa
+            where adm_id='$adm';";
+        return $this->sql($query);
+    }
+
+    public function load_datos_altura()
+    {
+        $adm = $_POST['adm'];
+        $st = $_POST['st'];
+        $usuario = $this->user->us_id;
+        $medico = "";
+        if ($st < '1') {
+            $medico = ",(SELECT medico_id FROM medico where medico_usu='$usuario') m_altura_medico_ocupa";
+        }
+        $query = "SELECT
+            adm_id,
+            m_oft_oftalmo_sincorrec_vlejos_od, m_oft_oftalmo_sincorrec_vlejos_oi,
+            m_oft_oftalmo_sincorrec_vcerca_od, m_oft_oftalmo_sincorrec_vcerca_oi,
+            m_oft_oftalmo_concorrec_vlejos_od, m_oft_oftalmo_concorrec_vlejos_oi,
+            m_oft_oftalmo_concorrec_vcerca_od,m_oft_oftalmo_concorrec_vcerca_oi,
+
+            m_oft_oftalmo_esteropsia_od, m_oft_oftalmo_esteropsia_oi, m_oft_oftalmo_esteropsia,
+            m_oft_oftalmo_ishihara,
+            (SELECT m_lab_exam_resultado FROM mod_laboratorio_exam where m_lab_exam_adm=$adm and m_lab_exam_examen=23) lab_glucosa,
+            m_lab_p_lipido_colesterol_hdl,
+            m_lab_p_lipido_colesterol_ldl,
+            m_lab_p_lipido_colesterol_total,
+            m_lab_p_lipido_trigliceridos
+            
+            $medico
+            FROM admision
+            left join mod_oftalmo_oftalmo on adm_id=m_oft_oftalmo_adm
+            left join mod_laboratorio_p_lipidido on adm_id=m_lab_p_lipido_adm
+            where adm_id=$adm
+            group by adm_id order by adm_id;";
+        $q = $this->sql($query);
+        return array('success' => true, 'data' => $q->data[0]);
     }
 }
 

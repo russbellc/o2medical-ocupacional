@@ -1716,7 +1716,9 @@ class model extends core
             ,Date_format(m_psico_exam_ante01_fech_ini,'%m-%Y') m_psico_exam_ante01_fech_ini
             ,Date_format(m_psico_exam_ante02_fech_ini,'%m-%Y') m_psico_exam_ante02_fech_ini
             ,Date_format(m_psico_exam_ante03_fech_ini,'%m-%Y') m_psico_exam_ante03_fech_ini
+        , medico_cmp, medico_firma
             FROM mod_psicologia_examen
+            left join medico on medico_id=m_psico_exam_medico
             where m_psico_exam_adm='$adm';";
         return $this->sql($query);
     }

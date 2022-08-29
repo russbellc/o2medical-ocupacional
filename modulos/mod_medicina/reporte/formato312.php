@@ -1519,10 +1519,19 @@ $pdf->Cell(180, $h, 'XVI. RECOMENDACIONES', 1, 1, 'L', 1);
 $h = 3.5;
 $pdf->SetFont('helvetica', 'B', 7);
 
+// foreach ($recomendaciones->data as $i => $row) {
+//     $pdf->SetFont('helvetica', '', 6);
+//     $pdf->MultiCell(180, $h, '      ' . $i + 1 . '.- ' . $row->recom_desc, 1, 'L', 0, 1);
+// }
+
+$recom_text .= '';
 foreach ($recomendaciones->data as $i => $row) {
-    $pdf->SetFont('helvetica', '', 6);
-    $pdf->MultiCell(180, $h, '      ' . $i + 1 . '.- ' . $row->recom_desc, 1, 'L', 0, 1);
+  $recom_text .= $i + 1 . '.- ' . $row->recom_desc . "\n";
 }
+$pdf->SetFont('helvetica', '', 6);
+$pdf->Cell(5, $h, '', 0, 0, 'C', 0);
+$pdf->MultiCell(180, $h, $recom_text, 0, 'L', 0, 1);
+
 
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(180, $h, 'XVII. RESTRICCIONES', 1, 1, 'L', 1);
@@ -1539,79 +1548,23 @@ $pdf->SetFont('helvetica', 'B', $titulo);
 $busca_medico = $model->busca_medico($anexo312->data[0]->m_312_medico_ocupa);
 $pdf->Cell(180, $h, 'MÉDICO EVALUADOR', 1, 1, 'L', 1);
 $pdf->SetFont('helvetica', '', $titulo);
-$pdf->Cell(180, $h, '' , 1, 0, 'L', 0);
+$pdf->Cell(180, $h, '', 1, 0, 'L', 0);
 
 $pdf->ln(0);
 $pdf->Cell(5, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(80, $h, 'Dr.(a) ' . $busca_medico->data[0]->nombres, 0, 0, 'L', 0);
 $pdf->Cell(90, $h, 'CMP ' . $busca_medico->data[0]->medico_cmp, 0, 1, 'L', 0);
-
-// $conteo = array();
-// foreach ($recomendaciones->data as $i => $value) {
-//     $saltos_t = 0;
-//     foreach ($lim_texto as $a => $val) {
-//         ($val < strlen($value->recom_desc)) ? $saltos_t = $a + 1 : null;
-//     }
-//     array_push($conteo, $saltos_t);
-// }
-// $fila_total = array_sum($conteo);
-
-// foreach ($recomendaciones->data as $i => $row2) {
-//     $salteos = (($conteo[$i] != 0) ? $conteo[$i] + 1 : 1);
-//     if ($i === 0) {
-//         $pdf->SetFont('helvetica', 'B', $texto);
-//         $pdf->Cell(33, $h_text * ($recomen_total + $fila_total + 0.08), 'RECOMENDACIONES', 1, 0, 'C', 1);
-//         $pdf->SetFont('helvetica', '', $texto - 1);
-//         $pdf->MultiCell(122, $h_text * $salteos, $i + 1 . '.- ' . $row2->recom_desc, 1, 'L', 0, 0);
-//         $pdf->SetFont('helvetica', 'B', $texto - 1);
-//         $pdf->Cell(10, $h_text * $salteos, 'PLAZO', 1, 0, 'C', 1);
-//         $pdf->SetFont('helvetica', '', $texto - 1);
-//         $pdf->Cell(15, $h_text * $salteos, $row2->recom_plazo, 1, 1, 'C', 0);
-//     } else {
-//         $pdf->SetFont('helvetica', 'B', $texto);
-//         $pdf->Cell(33, $h_text * $salteos, '', 0, 0, 'L', 0);
-//         $pdf->SetFont('helvetica', '', $texto - 1);
-//         $pdf->MultiCell(122, $h_text * $salteos, $i + 1 . '.- ' . $row2->recom_desc, 1, 'L', 0, 0);
-//         $pdf->SetFont('helvetica', 'B', $texto - 1);
-//         $pdf->Cell(10, $h_text * $salteos, 'PLAZO', 1, 0, 'C', 1);
-//         $pdf->SetFont('helvetica', '', $texto - 1);
-//         $pdf->Cell(15, $h_text * $salteos, $row2->recom_plazo, 1, 1, 'C', 0);
-//     }
-// }
-
-// $pdf->SetFont('helvetica', 'B', $titulo);
-// $pdf->Cell(180, $h, 'VI. EVALUACIÓN MÉDICA', 1, 1, 'L', 1);
+$pdf->ln(0);
+$pdf->Cell(5, $h, '', 0, 0, 'C', 0);
+$pdf->Cell(118, $h, '', 0, 0, 'L', 0);
+$pdf->Cell(57, 0, (($busca_medico->data[0]->medico_firma == '1')? $pdf->Image('images/firma/' . $busca_medico->data[0]->medico_cmp . '.jpg', '', '', 50, '', 'JPG'):''), 'T', 0, 'L', 0);
 
 
 
-
-// $pdf->SetFont('helvetica', 'B', $titulo);
-// $pdf->Cell(180, $h, 'XIV. RECOMENDACIONES', 1, 1, 'L', 1);
-// $h = 3.5;
-// $pdf->ln(1);
-// $pdf->SetFont('helvetica', 'B', 7);
-
-// foreach ($recomendaciones->data as $i => $row) {
-//     $pdf->ln(1);
-//     $pdf->SetFont('helvetica', '', 6);
-//     $pdf->MultiCell(180, $h, $i + 1 . '.- ' . $row->reco_desc, 'B', 'L', 0, 1);
-// }
-
-
-
-// $pdf->SetFont('helvetica', 'B', $titulo);
-// $pdf->Cell(180, $h, 'XV. RESTRICCIONES', 1, 1, 'L', 1);
-// $pdf->SetFont('helvetica', '', $titulo);
-// $pdf->MultiCell(180, $h, $validacion->data[0]->val_rectric, 1, 'L', 0, 1);
-
-
-
-// $pdf->SetFont('helvetica', 'B', $titulo);
-// $pdf->Cell(180, $h, 'XVI. OBSERVACIONES', 1, 1, 'L', 1);
-// $pdf->SetFont('helvetica', '', $titulo);
-// $pdf->MultiCell(180, $h, $validacion->data[0]->val_obser, 1, 'L', 0, 1);
-
-
+if ($busca_medico->data[0]->medico_firma == '1') {
+    // $pdf->Image('images/firma/' . $busca_medico->data[0]->medico_cmp . '.jpg', 140, 180, 50, '', 'JPG');
+    // $pdf->Image('images/firma/' . $busca_medico->data[0]->medico_cmp . '.jpg', 0, 0, 50, '', 'JPG');
+}
 
 
 

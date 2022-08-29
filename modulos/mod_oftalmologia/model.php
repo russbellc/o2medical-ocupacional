@@ -278,6 +278,7 @@ class model extends core {
         $params_2[':m_oft_oftalmo_nistagmos'] = $_POST['m_oft_oftalmo_nistagmos'];
         $params_2[':m_oft_oftalmo_pterigion'] = $_POST['m_oft_oftalmo_pterigion'];
         $params_2[':m_oft_oftalmo_ampliacion'] = $_POST['m_oft_oftalmo_ampliacion'];
+        $params_2[':m_oft_oftalmo_medico'] = $_POST['m_oft_oftalmo_medico'];
 
 
 
@@ -329,7 +330,9 @@ class model extends core {
                 :m_oft_oftalmo_catarata,
                 :m_oft_oftalmo_nistagmos,
                 :m_oft_oftalmo_pterigion,
-                :m_oft_oftalmo_ampliacion);";
+                :m_oft_oftalmo_ampliacion,
+                :m_oft_oftalmo_medico
+                );";
 
         $verifica = $this->sql("SELECT 
 		m_oftalmo_adm, concat(usu_nombres,' ',usu_appat,' ',usu_apmat) usuario 
@@ -423,6 +426,7 @@ class model extends core {
         $params_2[':m_oft_oftalmo_nistagmos'] = $_POST['m_oft_oftalmo_nistagmos'];
         $params_2[':m_oft_oftalmo_pterigion'] = $_POST['m_oft_oftalmo_pterigion'];
         $params_2[':m_oft_oftalmo_ampliacion'] = $_POST['m_oft_oftalmo_ampliacion'];
+        $params_2[':m_oft_oftalmo_medico'] = $_POST['m_oft_oftalmo_medico'];
 
         $q_2 = 'Update mod_oftalmo_oftalmo set                    
                     m_oft_oftalmo_correctores=:m_oft_oftalmo_correctores,
@@ -470,7 +474,8 @@ class model extends core {
                     m_oft_oftalmo_catarata=:m_oft_oftalmo_catarata,
                     m_oft_oftalmo_nistagmos=:m_oft_oftalmo_nistagmos,
                     m_oft_oftalmo_pterigion=:m_oft_oftalmo_pterigion,
-                    m_oft_oftalmo_ampliacion=:m_oft_oftalmo_ampliacion
+                    m_oft_oftalmo_ampliacion=:m_oft_oftalmo_ampliacion,
+                    m_oft_oftalmo_medico=:m_oft_oftalmo_medico
                 where
                 m_oft_oftalmo_adm=:adm;';
 
@@ -492,6 +497,32 @@ class model extends core {
 
     //LOAD SAVE UPDATE DIAGNOSTICO
 
+    public function load_medico()
+    {
+        $sede = $this->user->con_sedid;
+        return $this->sql("SELECT medico_id, concat(medico_apepat,' ',medico_apemat,', ',medico_nombre)as nombre
+        FROM medico
+        where medico_sede=$sede and medico_st=1 and medico_tipo = 'OFTALMOLOGIA';");
+    }
+
+    public function load_oftalmo_medico()
+    {
+        $adm = $_POST['adm'];
+        $st = $_POST['st'];
+        $usuario = $this->user->us_id;
+        $medico = "";
+        if ($st < '1') {
+            $medico = ",(SELECT medico_id FROM medico where medico_usu='$usuario') m_oft_oftalmo_medico";
+        }
+        $query = "SELECT
+            adm_id
+            $medico
+            FROM admision
+            where adm_id=$adm
+            group by adm_id order by adm_id;";
+        $q = $this->sql($query);
+        return array('success' => true, 'data' => $q->data[0]);
+    }
 
 
     public function list_diag() {
@@ -698,8 +729,10 @@ class model extends core {
     }
 
     public function rpt_oftalmo($adm) {
-        return $this->sql("SELECT*
+        return $this->sql("SELECT mod_oftalmo_oftalmo.* 
+        , medico_cmp, medico_firma
                     FROM mod_oftalmo_oftalmo
+            left join medico on medico_id=m_oft_oftalmo_medico
                     where m_oft_oftalmo_adm=$adm");
     }
 

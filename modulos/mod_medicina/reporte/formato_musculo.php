@@ -504,7 +504,7 @@ switch ($musculo->data[0]->m_musc_aptitud) {
     break;
 }
 
-$pdf->Cell(180, $h * 4, '', 1, 0, 'L', 0);
+$pdf->Cell(180, $h * 4, '', 'LRT', 0, 'L', 0);
 $pdf->Ln(3);
 $pdf->Cell(5, $h, '', 0, 0, 'L', 0);
 $pdf->Cell(5, $h, $cert01, 1, 0, 'C', 0);
@@ -517,6 +517,9 @@ $pdf->Cell(5, $h, $cert02, 1, 0, 'C', 0);
 $pdf->Cell(90, $h, 'Tiene limitaciones funcionales', 0, 1, 'L', 0);
 
 
+if ($musculo->data[0]->medico_firma == '1') {
+  $pdf->Image('images/firma/'.$musculo->data[0]->medico_cmp.'.jpg', 140, 235, 50, '', 'JPG');
+}
 
 
 
@@ -983,15 +986,25 @@ $pdf->MultiCell(180, $h, $musculo->data[0]->m_musc_colum_aptitud, 1, 'C', 0, 1);
 
 $pdf->Ln($salto);
 
+
+if ($musculo->data[0]->medico_firma == '1') {
+  $pdf->Image('images/firma/'.$musculo->data[0]->medico_cmp.'.jpg', 140, 235, 50, '', 'JPG');
+}
+
 $pdf->SetFont('helvetica', 'B', $titulo);
-$pdf->Cell(100, $h, 'RECOMENDACIONES', 1, 1, 'C', 1);
+$pdf->Cell(100, $h, 'RECOMENDACIONES' , 1, 1, 'C', 1);
 
 $pdf->SetFont('helvetica', '', $titulo);
 ((strlen($musculo->data[0]->m_musc_recom_01) > 0) ? $pdf->MultiCell(180, $h, $musculo->data[0]->m_musc_recom_01, 1, 'L', 0, 1) : '');
 ((strlen($musculo->data[0]->m_musc_recom_02) > 0) ? $pdf->MultiCell(180, $h, $musculo->data[0]->m_musc_recom_02, 1, 'L', 0, 1) : '');
 ((strlen($musculo->data[0]->m_musc_recom_03) > 0) ? $pdf->MultiCell(180, $h, $musculo->data[0]->m_musc_recom_03, 1, 'L', 0, 1) : '');
 
+$pdf->Ln($salto);
 
+// $pdf->Cell(100, $h, '', 0, 0, 'C', 0);
+// if ($musculo->data[0]->medico_firma == '1') {
+//   $pdf->Cell(80, $h, $pdf->Image('images/firma/' . $musculo->data[0]->medico_cmp . '.jpg', '', '', 50, '', 'JPG'), 0, 0, 'C', 0);
+// }
 
 
 // $pdf->Cell(20, $h, 'OBSERVACIONES', 1, 0, 'L', 0);
@@ -1000,4 +1013,4 @@ $pdf->SetFont('helvetica', '', $titulo);
 
 
 //http://localhost/Dropbox/saludocupacional/kaori/system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_medicina&sys_report=inf_nuevo_anexo_16&adm=1003
-$pdf->Output('PSICOLOGIA_EXAMEN_' . $_REQUEST['adm'] . '.PDF', 'I');
+$pdf->Output('musculo_esqueletico_' . $_REQUEST['adm'] . '.PDF', 'I');

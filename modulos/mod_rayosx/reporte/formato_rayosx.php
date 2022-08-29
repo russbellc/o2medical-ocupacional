@@ -65,7 +65,17 @@ $rx_torax = $model->rx_torax_report($_REQUEST['adm']);
 
 $pdf->SetFont('helvetica', 'B', 7);
 //$pdf->Image('images/bambas.png', 16, 7, 20, '', 'PNG');
-$pdf->ImageSVG('images/logo_pdf.svg', 10, 7, 46, '', $link = '', '', 'T');
+// $pdf->ImageSVG('images/logo_pdf.svg', 10, 7, 46, '', $link = '', '', 'T');
+
+//CLINICA O2
+$pdf->Image('images/formato/logo_o2.jpg', 10, 5, 55, '', 'JPEG');
+// 
+
+if ($pac->data[0]->medico_firma == '1') {
+    $pdf->Image('images/firma/' . $pac->data[0]->medico_cmp . '.jpg', 140, 235, 50, '', 'JPG');
+}
+
+
 
 $pdf->SetFont('helvetica', 'BU', 11);
 $pdf->Ln(2);

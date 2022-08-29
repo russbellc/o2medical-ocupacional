@@ -70,8 +70,15 @@ $pdf->SetFillColor(194, 217, 241);
 // Añadir página
 $pdf->AddPage('L', 'A4');
 
-$pdf->ImageSVG('images/logo_pdf.svg', 8, 6, '', '', $link = '', '', 'T');
+// $pdf->ImageSVG('images/logo_pdf.svg', 8, 6, '', '', $link = '', '', 'T');
 //$pdf->Image('images/logo.png', 8, 2, 45, '', 'PNG');
+
+
+$pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
+
+
+
+
 $pdf->Ln(5);
 $h = 4.5;
 $titulo = 7;
