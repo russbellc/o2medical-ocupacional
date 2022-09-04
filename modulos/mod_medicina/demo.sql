@@ -20,7 +20,7 @@ add_fech_reg datetime(3) NOT NULL DEFAULT current_timestamp(3)
 ALTER TABLE mod_adj_informes
 ADD PRIMARY KEY (add_id);
 
-
+ads
 --
 -- AUTO_INCREMENT de la tabla mod_adj_informes
 --
