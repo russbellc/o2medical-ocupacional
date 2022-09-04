@@ -159,12 +159,12 @@ mod.medicina = {
 						new Ext.menu.Menu({
 							items: [
 								{
-									text: "HOJA RESUMEN N°: <B>" + record.get("adm") + "<B>",
+									text: "Certificado Médico N°: <B>" + record.get("adm") + "<B>",
 									iconCls: "reporte",
 									handler: function () {
 										if (record.get("st") >= 1) {
 											new Ext.Window({
-												title: "HOJA RESUMEN N° " + record.get("adm"),
+												title: "Certificado Médico N° " + record.get("adm"),
 												width: 800,
 												height: 600,
 												maximizable: true,
@@ -172,7 +172,10 @@ mod.medicina = {
 												closeAction: "close",
 												resizable: true,
 												html:
-													"<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_medicina&sys_report=formato_resumen&adm=" +
+													// "<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_medicina&sys_report=formato_resumen&adm=" +
+													// record.get("adm") +
+													// "'></iframe>",
+													"<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_medicina&sys_report=certificado312&adm=" +
 													record.get("adm") +
 													"'></iframe>",
 											}).show();

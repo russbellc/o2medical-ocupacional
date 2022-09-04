@@ -1,8 +1,10 @@
 <?php
 
-class model extends core {
+class model extends core
+{
 
-    public function list_pac() {
+    public function list_pac()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 90;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $columna = isset($_POST['columna']) ? $_POST['columna'] : NULL;
@@ -39,7 +41,8 @@ class model extends core {
         return $sql;
     }
 
-    public function load_data_adm() {
+    public function load_data_adm()
+    {
         $query = "SELECT
             adm_id,emp_id, concat(emp_id,' - ', if(LENGTH(emp_acro)>3,emp_acro,emp_desc)) empresa
             ,pac_id, concat(pac_ndoc,' - ', pac_appat,' ',pac_apmat,', ',pac_nombres)as adm_pac
@@ -57,11 +60,12 @@ class model extends core {
         $q = $this->sql($query, array(':adm_id' => $_POST['adm_id']));
         foreach ($q->data as $k => $value) {
             $value->totaletra = $this->numtoletras(round($value->total, 2));
-        }//adm_foto
+        } //adm_foto
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function list_paciente() {
+    public function list_paciente()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 50;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $sede = $this->user->con_sedid;
@@ -86,7 +90,8 @@ class model extends core {
         return $sql;
     }
 
-    public function list_empre() {
+    public function list_empre()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT
             emp_id, emp_desc
@@ -97,11 +102,13 @@ class model extends core {
         return $sql;
     }
 
-    public function list_ginstruccion() {
+    public function list_ginstruccion()
+    {
         return $this->sql("SELECT * FROM ginstruccion where gi_id > 7");
     }
 
-    public function list_profecion() {
+    public function list_profecion()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT
             UPPER(pac_profe) as pac_profe
@@ -112,7 +119,8 @@ class model extends core {
         return $sql;
     }
 
-    public function list_refere() {
+    public function list_refere()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT ref_id,ref_especialidad, concat(ref_appat,' ', ref_apmat,', ', ref_nom) nombres
                 , concat(ref_appat,' ', ref_apmat,', ', ref_nom, ' - ',ref_especialidad) todo
@@ -122,7 +130,8 @@ class model extends core {
         return $sql;
     }
 
-    public function list_servis() {
+    public function list_servis()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $empresa = isset($_POST['empresa']) ? $_POST['empresa'] : NULL;
         $sexo = isset($_POST['sexo']) ? $_POST['sexo'] : NULL;
@@ -139,12 +148,14 @@ class model extends core {
         return $sql;
     }
 
-    public function numeroletra() {
+    public function numeroletra()
+    {
         $total = $_POST['total'];
         return array('success' => true, "letra" => $this->numtoletras(round($total, 2)));
     }
 
-    public function list_detalles() {
+    public function list_detalles()
+    {
         $adm_id = isset($_POST['adm_id']) ? $_POST['adm_id'] : NULL;
         $sql = $this->sql("SELECT
                 det_id, det_serv, adm_emp, serv_desc det_serv_desc,area_desc
@@ -171,12 +182,14 @@ class model extends core {
         return $sql;
     }
 
-    public function list_Tficha() {
+    public function list_Tficha()
+    {
         $sql = $this->sql("SELECT * FROM tficha where tfi_id > 0");
         return $sql;
     }
 
-    public function list_pacient() {
+    public function list_pacient()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("
             SELECT pac_id, pac_ndoc, concat(pac_appat,' ', pac_apmat,', ', pac_nombres) nombres
@@ -189,7 +202,8 @@ class model extends core {
         return $sql;
     }
 
-    public function list_referente() {
+    public function list_referente()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $q = "SELECT
@@ -201,7 +215,8 @@ class model extends core {
         return $sql;
     }
 
-    public function list_emp() {
+    public function list_emp()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 50;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $query = isset($_POST['query']) ? sprintf($_POST['query']) : NULL;
@@ -218,26 +233,31 @@ class model extends core {
         return $sql;
     }
 
-    public function departamento() {
+    public function departamento()
+    {
         return $this->sql("SELECT dep_id, dep_desc
                 FROM departamento order by dep_desc;");
     }
 
-    public function provincia() {
+    public function provincia()
+    {
         return $this->sql(sprintf("SELECT prov_id, prov_depid, prov_desc
                 FROM provincia where prov_depid='%s' order by prov_desc", (isset($_POST['dep_id'])) ? $_POST['dep_id'] : ''));
     }
 
-    public function distrito() {
+    public function distrito()
+    {
         return $this->sql(sprintf("SELECT dis_id, dis_provid, dis_desc
                 FROM distrito where dis_provid='%s' order by dis_desc", (isset($_POST['prov_id'])) ? $_POST['prov_id'] : ''));
     }
 
-    public function tdocumento() {
+    public function tdocumento()
+    {
         return $this->sql("SELECT tdoc_id, tdoc_desc FROM tdocumento;");
     }
 
-    public function st_busca_nombres() {
+    public function st_busca_nombres()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT
                             UPPER(pac_nombres) as pac_nombres
@@ -248,7 +268,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_dni() {
+    public function st_busca_dni()
+    {
         $query = isset($_POST['pac_ndoc']) ? $_POST['pac_ndoc'] : NULL;
         $sql = $this->sql("SELECT pac_ndoc, concat(pac_ndoc,' - ',pac_appat,' ', pac_apmat,', ', pac_nombres) todo
             ,concat( TIMESTAMPDIFF(YEAR,pac_fech_nac,CURRENT_DATE),' Años') edad
@@ -259,7 +280,8 @@ class model extends core {
         return array('success' => true, "data" => $sql->data[0]);
     }
 
-    public function st_busca_area() {
+    public function st_busca_area()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT
             UPPER(adm_area) as adm_area
@@ -270,7 +292,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_puesto() {
+    public function st_busca_puesto()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT
             UPPER(adm_puesto) as adm_puesto
@@ -281,7 +304,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_appaterno() {
+    public function st_busca_appaterno()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT
                             UPPER(pac_appat) as pac_appat
@@ -292,7 +316,8 @@ class model extends core {
         return $sql;
     }
 
-    public function st_busca_apmaterno() {
+    public function st_busca_apmaterno()
+    {
         $query = isset($_POST['query']) ? $_POST['query'] : NULL;
         $sql = $this->sql("SELECT
                             UPPER(pac_apmat) as pac_apmat
@@ -303,7 +328,8 @@ class model extends core {
         return $sql;
     }
 
-    public function load_data_pac() {
+    public function load_data_pac()
+    {
         $query = 'SELECT
                 pac_tdocid,tdoc_desc , pac_ndoc, pac_appat, pac_apmat, pac_nombres
                 , pac_sexo, pac_fech_nac, pac_cel, pac_correo
@@ -326,7 +352,8 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function save_adm() {
+    public function save_adm()
+    {
         $params = array();
         $params[':adm_pac'] = $_POST['adm_pac'];
         $params[':adm_ruta'] = $_POST['adm_ruta'];
@@ -393,7 +420,8 @@ class model extends core {
         }
     }
 
-    public function update_adm() {
+    public function update_adm()
+    {
         $params = array();
         $params[':adm_id'] = $_POST['adm_id'];
         $params[':adm_pac'] = $_POST['adm_pac'];
@@ -439,7 +467,8 @@ class model extends core {
         }
     }
 
-    public function save_pac() {
+    public function save_pac()
+    {
         $params = array();
         $params[':pac_usu'] = $this->user->us_id;
         $params[':pac_tdocid'] = $_POST['pac_tdoc'];
@@ -505,7 +534,8 @@ class model extends core {
         }
     }
 
-    public function update_pac() {
+    public function update_pac()
+    {
         $params = array();
         $params[':pac_id'] = $_POST['pac_id'];
         $params[':pac_usu'] = $this->user->us_id;
@@ -563,7 +593,8 @@ class model extends core {
         }
     }
 
-    public function list_perfil() {
+    public function list_perfil()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 100;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $pk_emp = $_POST['emp_id'];
@@ -588,7 +619,8 @@ class model extends core {
         return $sql;
     }
 
-    public function list_perfil2() {
+    public function list_perfil2()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 100;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $pk_id = $_POST['pk_id'];
@@ -605,7 +637,8 @@ class model extends core {
         return $sql;
     }
 
-    public function list_sede() {
+    public function list_sede()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $sede_emp = $_POST['emp_id'];
@@ -617,7 +650,8 @@ class model extends core {
         return $sql;
     }
 
-    public function list_cargo() {
+    public function list_cargo()
+    {
         $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
         $start = isset($_POST['start']) ? $_POST['start'] : 0;
         $cargo_emp = $_POST['emp_id'];
@@ -629,7 +663,8 @@ class model extends core {
         return $sql;
     }
 
-    public function load_data_emp() {
+    public function load_data_emp()
+    {
         $query = 'SELECT
             seg_ruc, seg_empr
             , seg_acro, seg_contac, seg_repres
@@ -647,7 +682,8 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function save_emp() {
+    public function save_emp()
+    {
         $params = array();
         $params[':seg_usu'] = $this->user->us_id;
         $params[':seg_ruc'] = $_POST['seg_ruc'];
@@ -693,7 +729,8 @@ class model extends core {
         }
     }
 
-    public function update_emp() {
+    public function update_emp()
+    {
         $params = array();
         $params[':seg_usu'] = $this->user->us_id;
         $params[':seg_id'] = $_POST['emp'];
@@ -718,7 +755,8 @@ class model extends core {
         return $this->sql($q, $params);
     }
 
-    public function save_ref() {
+    public function save_ref()
+    {
         $params = array();
         $params[':ref_usu'] = $this->user->us_id;
         $params[':ref_appat'] = $_POST['ref_appat'];
@@ -753,7 +791,8 @@ class model extends core {
         }
     }
 
-    public function update_ref() {
+    public function update_ref()
+    {
         $params = array();
         $params[':ref_id'] = $_POST['ref_id'];
         $params[':ref_usu'] = $this->user->us_id;
@@ -787,7 +826,8 @@ class model extends core {
         }
     }
 
-    public function load_data_ref() {
+    public function load_data_ref()
+    {
         $query = 'SELECT
             ref_appat, ref_apmat, ref_nom, ref_especialidad, ref_cell, ref_correo
             FROM referente
@@ -797,11 +837,12 @@ class model extends core {
         return array('success' => true, 'data' => $q->data[0]);
     }
 
-    public function report($adm) {
+    public function report($adm)
+    {
         $sql = "SELECT adm_id
                 ,emp_desc,pac_nombres,pac_appat,pac_apmat,tfi_desc
                 ,concat(adm_area,' - ', adm_puesto) puesto,tdoc_desc,pac_ndoc,pac_cel,pac_sexo,pac_id,adm_foto
-                ,Date_format(adm_fech,'%d-%m-%Y %h:%i %p') AS adm_fech
+                ,Date_format(adm_fech,'%d-%m-%Y') AS adm_fech
                 ,TIMESTAMPDIFF(YEAR,pac_fech_nac,CURRENT_DATE) as edad
                 ,pac_domdir,dis_desc,prov_desc,dep_desc
                 FROM admision
@@ -817,7 +858,8 @@ class model extends core {
         return $this->sql($sql);
     }
 
-    public function area($adm_id, $sexo) {
+    public function area($adm_id, $sexo)
+    {
         $sql = "SELECT ar_id, ar_desc, ex_id, ex_desc
             FROM admision a
             inner join pack on adm_ruta=pk_id
@@ -831,7 +873,8 @@ class model extends core {
         return $area;
     }
 
-    public function reporte_servicios($adm_id) {
+    public function reporte_servicios($adm_id)
+    {
         $sql = $this->sql("SELECT
                 det_id, det_serv, adm_emp, serv_desc det_serv_desc,area_desc
                 FROM admision
@@ -857,4 +900,84 @@ class model extends core {
         return $sql;
     }
 
+    public function list_add_formatos()
+    {
+        $limit = isset($_POST['limit']) ? $_POST['limit'] : 30;
+        $start = isset($_POST['start']) ? $_POST['start'] : 0;
+        $adm = $_POST['adm'];
+        $q = "SELECT
+        add_id, add_adm, add_servicio, add_detalle, add_especialidad, add_st, Date_format(add_fech_reg,'%d-%m-%Y') AS add_fech_reg, add_file,add_usuario
+        FROM mod_adj_informes
+        where add_adm='$adm';";
+        $sql = $this->sql($q);
+        $sql->data = array_slice($sql->data, $start, $limit);
+        return $sql;
+    }
+
+    public function st_add_especialidad()
+    {
+        $query = isset($_POST['query']) ? $_POST['query'] : NULL;
+        $sql = $this->sql("SELECT add_especialidad FROM mod_adj_informes
+                            where
+                            add_especialidad like '%$query%'
+                            group by add_especialidad");
+        return $sql;
+    }
+
+    public function save_nuevo_informe()
+    {
+        $this->begin();
+
+        $params = array();
+        $params[':adm'] = $_POST['adm'];
+        // $adm = $_POST['adm'];
+        // $usuario = $this->user->us_id;
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////
+
+        $params[':add_servicio'] = $_POST['add_servicio'];
+        $params[':add_detalle'] = $_POST['add_detalle'];
+        $params[':add_especialidad'] = $_POST['add_especialidad'];
+        $params[':add_file'] = $_POST['add_file'];
+        $params[':add_usuario'] = $this->user->us_id;
+
+
+
+        $q2 = "INSERT INTO mod_adj_informes VALUES 
+                (NULL,
+                :adm,
+                :add_servicio,
+                :add_detalle,
+                :add_especialidad,
+                1,
+                now(),
+                :add_file,
+                :add_usuario
+                );";
+
+        $sql = $this->sql($q2, $params);
+        if ($sql->success) {
+            $name = $_POST['add_file'];
+            $extension = end(explode('.', $_FILES['photo-path']['name']));
+            $nombre_nuevo = $name . "." . $extension;
+            $ruta = "adjuntos/" . $nombre_nuevo;
+            $permitidos = array("application/pdf");
+            $limite_kb = 50000;
+            if (in_array($_FILES['photo-path']['type'], $permitidos) && $_FILES['photo-path']['size'] <= $limite_kb * 1024) {
+                $resultado = move_uploaded_file($_FILES['photo-path']['tmp_name'], $ruta);
+                // sleep(1);
+                // echo '{success:true, file:"archivo subido"}';
+
+                $this->commit();
+                return $sql;
+            }
+            // $this->commit();
+            // return $sql;
+            // return array('success' => true);
+        } else {
+            $this->rollback();
+            return array('success' => false);
+        }
+    }
 }

@@ -243,18 +243,23 @@ if (strlen($anexo312->data[0]->m_312_diag_cie8) > 1) {
 $pdf->Ln($salto);
 
 
+$apto = '';
+$aptoRestric = '';
+$observ = '';
+$noApto = '';
+
 switch ($anexo312->data[0]->m_312_aptitud) {
   case 'APTO':
-    $pdf->ImageSVG('images/delete.svg', 82.5, 142, 5, '', $link = '', '', 'T');
+    $apto = 'X';
     break;
   case 'APTO CON RESTRICCIONES':
-    $pdf->ImageSVG('images/delete.svg', 82.5, 152, 5, '', $link = '', '', 'T');
+    $aptoRestric = 'X';
     break;
   case 'OBSERVADO':
-    $pdf->ImageSVG('images/delete.svg', 82.5, 161.5, 5, '', $link = '', '', 'T');
+    $observ = 'X';
     break;
   case 'NO APTO':
-    $pdf->ImageSVG('images/delete.svg', 82.5, 171.5, 5, '', $link = '', '', 'T');
+    $noApto = 'X';
     break;
 }
 
@@ -272,7 +277,7 @@ $pdf->Ln($salto);
 // $h=5;
 $pdf->Cell(5, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(60, $h, 'APTO', 'LRT', 0, 'L', 0);
-$pdf->Cell(10, $h, '', 'LRT', 0, 'C', 0);
+$pdf->Cell(10, $h * 2, $apto, 'LRT', 0, 'C', 0);
 $pdf->Cell(10, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(90, $h, 'RESTRICCIONES', 1, 1, 'C', 0);
 
@@ -292,7 +297,7 @@ $pdf->Cell(5, $h, '', 0, 0, 'C', 0);
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(60, $h, 'APTO CON RESTRICCIÓN', 'LRT', 0, 'L', 0);
 $pdf->SetFont('helvetica', '', $titulo);
-$pdf->Cell(10, $h, '', 'LRT', 0, 'C', 0);
+$pdf->Cell(10, $h * 2, $aptoRestric, 'LRT', 0, 'C', 0);
 $pdf->Cell(10, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(90, $h, '', 0, 1, 'C', 0);
 
@@ -309,7 +314,7 @@ $pdf->Cell(5, $h, '', 0, 0, 'C', 0);
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(60, $h, 'OBSERVADO', 'LRT', 0, 'L', 0);
 $pdf->SetFont('helvetica', '', $titulo);
-$pdf->Cell(10, $h, '', 'LRT', 0, 'C', 0);
+$pdf->Cell(10, $h * 2, $observ, 'LRT', 0, 'C', 0);
 $pdf->Cell(10, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(90, $h, '', 0, 1, 'C', 0);
 
@@ -327,7 +332,7 @@ $pdf->Cell(90, $h, 'OBSERVACIONES', 1, 1, 'C', 0);
 $pdf->Cell(5, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(60, $h, 'NO APTO', 'LRT', 0, 'L', 0);
 $pdf->SetFont('helvetica', '', $titulo);
-$pdf->Cell(10, $h, '', 'LRT', 0, 'C', 0);
+$pdf->Cell(10, $h * 2, $noApto, 'LRT', 0, 'C', 0);
 $pdf->Cell(10, $h, '', 0, 0, 'C', 0);
 
 $pdf->SetFont('helvetica', '', 6.3);
@@ -367,7 +372,8 @@ foreach ($recomendaciones->data as $i => $row) {
 }
 $pdf->SetFont('helvetica', '', 6);
 $pdf->Cell(5, $h, '', 0, 0, 'C', 0);
-$pdf->MultiCell(115, $h * 10, $recom_text, 0, 'L', 0, 1);
+$pdf->MultiCell(115, $h * 10, $recom_text, 0, 'L', 0, 0);
+$pdf->Cell(5, $h * 10, (($anexo312->data[0]->medico_firma == '1') ? $pdf->Image('images/firma/' . $anexo312->data[0]->medico_cmp . '.jpg', 145, '', 45, '', 'JPG') : ''), 0, 1, 'C', 0);
 
 
 $pdf->Ln($salto);
@@ -394,9 +400,9 @@ $pdf->Cell(60, $h, 'SELLO Y FIRMA DEL MEDICO QUE CERTIFICA', 1, 1, 'C', 0);
 
 $pdf->SetFont('helvetica', 'B', 7);
 
-if ($anexo312->data[0]->medico_firma == '1') {
-  $pdf->Image('images/firma/'.$anexo312->data[0]->medico_cmp.'.jpg', 140, 169, 50, '', 'JPG');
-}
+// if ($anexo312->data[0]->medico_firma == '1') {
+//   $pdf->Image('images/firma/'.$anexo312->data[0]->medico_cmp.'.jpg', 140, 169, 50, '', 'JPG');
+// }
 
 
 

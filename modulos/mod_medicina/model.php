@@ -5254,6 +5254,17 @@ class model extends core
                 ");
         return $sql;
     }
+    public function mod_medico_antecedentes($adm)
+    {
+        $sql = $this->sql("SELECT concat(medico_apepat,' ', medico_apemat,', ',medico_nombre) medico , medico_cmp, medico_firma
+        
+        FROM mod_medicina_312
+            left join medico on medico_id=m_312_medico_ocupa
+            where
+            m_312_adm=$adm;
+                ");
+        return $sql;
+    }
 
     //LOAD SAVE UPDATE musculo
 
@@ -6496,6 +6507,42 @@ class model extends core
             group by adm_id order by adm_id;";
         $q = $this->sql($query);
         return array('success' => true, 'data' => $q->data[0]);
+    }
+
+    public function triaje_312($adm)
+    {
+        $sql = $this->sql("SELECT
+        m_tri_triaje_talla, m_tri_triaje_peso, m_tri_triaje_imc
+        , concat(m_tri_triaje_pa_sistolica,'/', m_tri_triaje_pa_diastolica) pa
+        , m_tri_triaje_fc, m_tri_triaje_fr, m_tri_triaje_temperatura
+        , m_tri_triaje_perimt_abdominal
+        , Date_format(m_tri_triaje_fur,'%d-%m-%Y') m_tri_triaje_fur
+        FROM mod_triaje_triaje
+        where
+        m_tri_triaje_adm=$adm;
+                ");
+        return $sql;
+    }
+    public function oftalmo_312($adm)
+    {
+        $sql = $this->sql("SELECT
+
+        m_oft_oftalmo_id, m_oft_oftalmo_adm,
+        m_oft_oftalmo_fondo_od, m_oft_oftalmo_fondo_oi,
+        
+        m_oft_oftalmo_sincorrec_vlejos_od, m_oft_oftalmo_sincorrec_vlejos_oi,
+        m_oft_oftalmo_sincorrec_vcerca_od, m_oft_oftalmo_sincorrec_vcerca_oi,
+        
+        m_oft_oftalmo_concorrec_vlejos_od, m_oft_oftalmo_concorrec_vlejos_oi,
+        m_oft_oftalmo_concorrec_vcerca_od, m_oft_oftalmo_concorrec_vcerca_oi,
+        
+        m_oft_oftalmo_esteropsia_od, m_oft_oftalmo_esteropsia_oi, m_oft_oftalmo_esteropsia,
+        m_oft_oftalmo_ishihara
+        
+         FROM mod_oftalmo_oftalmo
+         where m_oft_oftalmo_adm=$adm;
+                ");
+        return $sql;
     }
 }
 

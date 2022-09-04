@@ -148,6 +148,17 @@ mod.admision = {
 									}).show();
 								},
 							},
+							{
+								text:
+									"<b>Adjuntar Informes a la ruta N° " +
+									record.get("adm_id") +
+									"</b>",
+								iconCls: "nuevo",
+								handler: function () {
+									mod.admision.informes.init(record);
+									// mod.admision.informes.init(record.get("adm_id"));
+								},
+							},
 						],
 					}).showAt(event.xy);
 				},
@@ -291,6 +302,446 @@ mod.admision = {
 				//                    items: [this.detalle]
 				//                }
 			],
+		});
+	},
+};
+mod.admision.informes = {
+	win: null,
+	frm: null,
+	record: null,
+	init: function (r) {
+		this.record = r;
+		this.crea_stores();
+		this.crea_controles();
+		this.st.load();
+		this.win.show();
+	},
+	crea_stores: function () {
+		this.st = new Ext.data.JsonStore({
+			url: "<[controller]>",
+			baseParams: {
+				acction: "list_add_formatos",
+				format: "json",
+			},
+			listeners: {
+				beforeload: function () {
+					this.baseParams.adm = mod.admision.informes.record.get("adm_id");
+				},
+			},
+			root: "data",
+			totalProperty: "total",
+			fields: [
+				"add_id",
+				"add_adm",
+				"add_servicio",
+				"add_detalle",
+				"add_especialidad",
+				"add_fech_reg",
+				"add_usuario",
+				"add_file",
+			],
+		});
+	},
+	crea_controles: function () {
+		this.paginador = new Ext.PagingToolbar({
+			pageSize: 30,
+			store: this.st,
+			displayInfo: true,
+			displayMsg: "Mostrando {0} - {1} de {2} Formatos",
+			emptyMsg: "No Existe Registros",
+			plugins: new Ext.ux.ProgressBarPager(),
+		});
+		this.tbar = new Ext.Toolbar({
+			items: [
+				"-",
+				{
+					text: "ADJUNTAR UN NUEVO INFORME",
+					iconCls: "nuevo",
+					handler: function () {
+						mod.admision.nuevo_informe.init(mod.admision.informes.record);
+					},
+				},
+				"-",
+			],
+		});
+		this.dt_grid = new Ext.grid.GridPanel({
+			store: this.st,
+			tbar: this.tbar,
+			region: "west",
+			border: false,
+			loadMask: true,
+			iconCls: "icon-grid",
+			plugins: new Ext.ux.PanelResizer({
+				minHeight: 100,
+			}),
+			bbar: this.paginador,
+			height: 263,
+			listeners: {
+				rowdblclick: function (grid, rowIndex, e) {
+					e.stopEvent();
+					var record = grid.getStore().getAt(rowIndex);
+					// mod.admision.nuevo_informes.init(record);
+					new Ext.Window({
+						title:
+							"PDF Adjunto N° " + mod.admision.informes.record.get("adm_id"),
+						width: 800,
+						height: 600,
+						maximizable: true,
+						modal: true,
+						closeAction: "close",
+						resizable: true,
+						html:
+							"<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_admision&sys_report=adjuntos&adm=" +
+							record.get("add_file") +
+							"'></iframe>",
+					}).show();
+				},
+				rowcontextmenu: function (grid, index, event) {
+					event.stopEvent();
+					var record = grid.getStore().getAt(index);
+					new Ext.menu.Menu({
+						items: [
+							{
+								text:
+									"<b>PDF Adjunto N° " +
+									mod.admision.informes.record.get("adm_id") +
+									"</b>",
+								iconCls: "reporte",
+								handler: function () {
+									new Ext.Window({
+										title:
+											"PDF Adjunto N° " +
+											mod.admision.informes.record.get("adm_id"),
+										width: 800,
+										height: 600,
+										maximizable: true,
+										modal: true,
+										closeAction: "close",
+										resizable: true,
+										html:
+											"<iframe width='100%' height='100%' src='system/loader.php?sys_acction=sys_loadreport&sys_modname=mod_admision&sys_report=adjuntos&adm=" +
+											record.get("add_file") +
+											"'></iframe>",
+									}).show();
+								},
+							},
+						],
+					}).showAt(event.xy);
+				},
+			},
+			autoExpandColumn: "add_servicio",
+			columns: [
+				new Ext.grid.RowNumberer(),
+				{
+					id: "add_servicio",
+					header: "SERVICIO",
+					dataIndex: "add_servicio",
+				},
+				{
+					header: "DETALLE",
+					dataIndex: "add_detalle",
+					width: 300,
+				},
+				{
+					header: "ESPECIALIDAD",
+					dataIndex: "add_especialidad",
+					width: 150,
+				},
+				{
+					header: "FECHA DE REGISTRO",
+					dataIndex: "add_fech_reg",
+					width: 120,
+				},
+			],
+		});
+		this.frm = new Ext.FormPanel({
+			region: "center",
+			url: "<[controller]>",
+			monitorValid: true,
+			layout: "column",
+			items: [
+				{
+					columnWidth: 0.999,
+					border: false,
+					layout: "form",
+					items: [this.dt_grid],
+				},
+			],
+		});
+		this.win = new Ext.Window({
+			width: 800,
+			height: 300,
+			modal: true,
+			title: "ADJUNTAR INFORMES HR: " + this.record.get("adm_id"),
+			border: false,
+			collapsible: true,
+			maximizable: true,
+			resizable: false,
+			draggable: true,
+			closable: true,
+			layout: "border",
+			items: [this.frm],
+		});
+	},
+};
+
+mod.admision.nuevo_informe = {
+	rec: null,
+	win: null,
+	frm: null,
+	init: function (r) {
+		this.rec = r;
+		this.crea_stores();
+		this.crea_controles();
+		if (this.rec !== null) {
+			this.cargar_data();
+		}
+		this.win.show();
+	},
+	cargar_data: function () {
+		this.frm.getForm().load({
+			waitMsg: "Recuperando Informacion...",
+			waitTitle: "Espere",
+			params: {
+				acction: "load_antec_16",
+				format: "json",
+				m_antec_16_id: this.rec.get("m_antec_16_id"),
+				m_antec_16_adm: this.rec.get("m_antec_16_adm"),
+			},
+			scope: this,
+			success: function (frm, action) {
+				r = action.result.data;
+			},
+		});
+	},
+	crea_stores: function () {
+		//add_especialidad
+		this.st_add_especialidad = new Ext.data.JsonStore({
+			url: "<[controller]>",
+			baseParams: {
+				acction: "st_add_especialidad",
+				format: "json",
+			},
+			fields: ["add_especialidad"],
+			root: "data",
+		});
+	},
+	crea_controles: function () {
+		///////////////////////////add_servicio
+		this.add_servicio = new Ext.form.ComboBox({
+			store: new Ext.data.ArrayStore({
+				fields: ["campo", "descripcion"],
+				data: [
+					["-", "-"],
+					["AUDIOMETRIA", "AUDIOMETRIA"],
+					["CARDIOLOGIA", "CARDIOLOGIA"],
+					["ESPIROMETRIA", "ESPIROMETRIA"],
+					["PSICOLOGIA", "PSICOLOGIA"],
+					["OFTALMOLOGIA", "OFTALMOLOGIA"],
+					["LABORATORIO", "LABORATORIO"],
+					["ODONTOLOGIA", "ODONTOLOGIA"],
+					["RAYOS X", "RAYOS X"],
+					["MEDICINA", "MEDICINA"],
+					["INTERCONSULTA", "INTERCONSULTA"],
+					["OTROS", "OTROS"],
+				],
+			}),
+			displayField: "descripcion",
+			valueField: "campo",
+			hiddenName: "add_servicio",
+			fieldLabel: "<b>SERVICIO</b>",
+			allowBlank: false,
+			typeAhead: true,
+			mode: "local",
+			forceSelection: true,
+			triggerAction: "all",
+			selectOnFocus: true,
+			anchor: "95%",
+			listeners: {
+				afterrender: function (descripcion) {
+					descripcion.setValue("-");
+					descripcion.setRawValue("-");
+				},
+			},
+		});
+
+		//add_detalle
+		this.add_detalle = new Ext.form.TextArea({
+			name: "add_detalle",
+			fieldLabel: "<b>DETALLE</b>",
+			anchor: "95%",
+			height: 100,
+		});
+
+		///////////////////////////add_especialidad
+		this.Tpl_add_especialidad = new Ext.XTemplate(
+			'<tpl for="."><div class="search-item">',
+			'<div class="div-table-col">',
+			"<h3><b>{add_especialidad}</b></h3>",
+			"</div>",
+			"</div></tpl>"
+		);
+		this.add_especialidad = new Ext.form.ComboBox({
+			store: this.st_add_especialidad,
+			loadingText: "Searching...",
+			pageSize: 10,
+			tpl: this.Tpl_add_especialidad,
+			hideTrigger: true,
+			itemSelector: "div.search-item",
+			selectOnFocus: true,
+			minChars: 1,
+			hiddenName: "add_especialidad",
+			displayField: "add_especialidad",
+			valueField: "add_especialidad",
+			typeAhead: false,
+			triggerAction: "all",
+			fieldLabel: "<b>ESPECIALIDAD</b>",
+			mode: "remote",
+			anchor: "95%",
+		});
+
+		this.archivo = new Ext.ux.form.FileUploadField({
+			// renderTo: "fi-basic",
+			anchor: "95%",
+			id: "photo-path",
+			emptyText: "Seleccione el archivo...",
+			fieldLabel: "Adjuntar",
+			name: "photo-path",
+			buttonText: "",
+			buttonCfg: {
+				iconCls: "upload-icon",
+			},
+			listeners: {
+				fileselected: function (fb, v) {
+					if (fb.value.match(/.(pdf)$/)) {
+						//                        alert("pdf");
+					} else {
+						Ext.MessageBox.alert(
+							"Ojo",
+							"<center>Archivo no Permitido... </br>este archivo tiene que ser PDF carge de nuevo.</center>"
+						);
+						// mod.escaner.upload.win.close();
+					}
+				},
+			},
+		});
+
+		this.add_file = new Ext.form.Hidden({
+			fieldLabel: "<b>add_file</b>",
+			name: "add_file",
+			value: this.rec.get("adm_id") + Date.now(),
+			anchor: "90%",
+		});
+
+		this.frm = new Ext.FormPanel({
+			region: "center",
+			url: "<[controller]>",
+			monitorValid: true,
+			fileUpload: true,
+			frame: true,
+			layout: "column",
+			bodyStyle: "padding:10px;",
+			labelWidth: 99,
+			items: [
+				{
+					columnWidth: 0.5,
+					border: false,
+					labelAlign: "top",
+					layout: "form",
+					items: [this.add_servicio],
+				},
+				{
+					columnWidth: 0.5,
+					border: false,
+					labelAlign: "top",
+					layout: "form",
+					items: [this.add_especialidad],
+				},
+				{
+					columnWidth: 0.5,
+					border: false,
+					labelAlign: "top",
+					layout: "form",
+					items: [this.add_detalle],
+				},
+				{
+					columnWidth: 0.5,
+					border: false,
+					labelAlign: "top",
+					layout: "form",
+					items: [this.archivo],
+				},
+				{
+					columnWidth: 0.5,
+					border: false,
+					labelAlign: "top",
+					layout: "form",
+					items: [this.add_file],
+				},
+			],
+			buttons: [
+				{
+					text: "Guardar",
+					iconCls: "guardar",
+					formBind: true,
+					scope: this,
+					handler: function () {
+						mod.admision.nuevo_informe.win.el.mask(
+							"Guardando…",
+							"x-mask-loading"
+						);
+
+						this.frm.getForm().submit({
+							params: {
+								acction: "save_nuevo_informe",
+								adm: this.rec.get("adm_id"),
+								// id: this.rec !== null ? this.rec.get("m_antec_16_id") : null,
+							},
+							success: function (form, action) {
+								obj = Ext.util.JSON.decode(action.response.responseText);
+								mod.admision.nuevo_informe.win.el.unmask();
+								mod.admision.informes.st.reload();
+								mod.admision.nuevo_informe.win.close();
+							},
+							failure: function (form, action) {
+								// switch (action.failureType) {
+								// 	case Ext.form.Action.CLIENT_INVALID:
+								// 		Ext.Msg.alert("Failure", "Existen valores Invalidos");
+								// 		break;
+								// 	case Ext.form.Action.CONNECT_FAILURE:
+								// 		Ext.Msg.alert(
+								// 			"Failure",
+								// 			"Error de comunicacion con servidor"
+								// 		);
+								// 		break;
+								// 	case Ext.form.Action.SERVER_INVALID:
+								// 		Ext.Msg.alert("Failure mik", action.result.error);
+								// 		break;
+								// 	default:
+								// 		Ext.Msg.alert("Failure", action.result.error);
+								// }
+								mod.admision.nuevo_informe.win.el.unmask();
+								mod.admision.informes.st.reload();
+								mod.admision.nuevo_informe.win.close();
+							},
+						});
+					},
+				},
+			],
+		});
+
+		this.win = new Ext.Window({
+			width: 650,
+			height: 280,
+			modal: true,
+			title: "REGISTRO DE ADJUNTO DE INFORMES",
+			border: false,
+			maximizable: true,
+			resizable: false,
+			draggable: true,
+			closable: true,
+			layout: "border",
+			items: [this.frm],
 		});
 	},
 };
@@ -1344,7 +1795,7 @@ mod.admision.registro = {
 									layout: "form",
 									bodyStyle:
 										"background: #D3E1F1;color:#267ED7;padding: 22px 5px 22px 5px;font-size: 20px;",
-									html: "<center><B>CENTRO MÉDICO OCUPACIONAL OPTIMA S.A.C.</B></center>",
+									html: "<center><B>O2 Medical Network</B></center>",
 									//                                    html: '<center><B>....</B></center>'
 								},
 							],

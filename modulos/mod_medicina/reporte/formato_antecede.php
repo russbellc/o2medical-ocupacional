@@ -87,8 +87,14 @@ $paciente = $model->paciente($_REQUEST['adm']);
 // Añadir página
 $pdf->AddPage('L', 'A4');
 
-$pdf->ImageSVG('images/logo_pdf.svg', 8, 6, '', '', $link = '', '', 'T');
+// $pdf->ImageSVG('images/logo_pdf.svg', 8, 6, '', '', $link = '', '', 'T');
 //$pdf->Image('images/logo.png', 8, 2, 45, '', 'PNG');
+
+//CLINICA O2
+$pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
+// $pdf->Image('images/formato/contactos_o2.jpg', 148, 5, 50, '', 'JPEG');
+
+
 $pdf->Ln(2);
 $h = 3.5;
 $titulo = 7;
@@ -327,8 +333,11 @@ foreach ($ante_ocupa->data as $i => $row) {
 //////////////////////////////////////////////////////////////////////////////
 }
 
+$anexo312 = $model->mod_medico_antecedentes($_REQUEST['adm']);
 
-
+if ($anexo312->data[0]->medico_firma == '1') {
+    $pdf->Image('images/firma/'.$anexo312->data[0]->medico_cmp.'.jpg', 220, 145, 50, '', 'JPG');
+}
 
 
 

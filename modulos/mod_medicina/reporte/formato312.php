@@ -64,7 +64,9 @@ $pdf->SetFillColor(194, 217, 241);
 $paciente = $model->paciente($_REQUEST['adm']);
 $anexo312 = $model->mod_medicina_312($_REQUEST['adm']);
 
-// $triaje312 = $model->triaje312($_REQUEST['adm']);
+$triaje312 = $model->triaje_312($_REQUEST['adm']);
+
+$oftalmo312 = $model->oftalmo_312($_REQUEST['adm']);
 // $oftalmo = $model->oftalmo($_REQUEST['adm']);
 // $ficha_312 = $model->ficha_312($_REQUEST['adm']);
 // $recomendaciones = $model->recomendaciones($_REQUEST['adm']);
@@ -805,43 +807,43 @@ $pdf->Cell(5, $h, '', 0, 0, 'L');
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(20, $h, 'TALLA(m)', 1, 0, 'C');
 $pdf->SetFont('helvetica', '', $titulo);
-$pdf->Cell(15, $h, $triaje312->data[0]->tri_talla, 1, 0, 'L');
+$pdf->Cell(15, $h, $triaje312->data[0]->m_tri_triaje_talla . ' m', 1, 0, 'C');
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(20, $h, 'PESO(Kg)', 1, 0, 'C');
 $pdf->SetFont('helvetica', '', $titulo);
-$pdf->Cell(15, $h, $triaje312->data[0]->tri_peso, 1, 0, 'L');
+$pdf->Cell(15, $h, $triaje312->data[0]->m_tri_triaje_peso . ' Kg', 1, 0, 'C');
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(15, $h, 'IMC Kg/m²', 1, 0, 'C');
 $pdf->SetFont('helvetica', '', $titulo);
-$pdf->Cell(15, $h, $triaje312->data[0]->tri_img, 1, 0, 'L');
+$pdf->Cell(15, $h, $triaje312->data[0]->m_tri_triaje_imc . ' Kg/m²', 1, 0, 'C');
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(40, $h, 'PERIMETRO ABDOMINAL (cm.)', 1, 0, 'C');
 $pdf->SetFont('helvetica', '', $titulo);
-$pdf->Cell(30, $h, $triaje312->data[0]->tri_ptorax, 1, 1, 'L');
+$pdf->Cell(30, $h, $triaje312->data[0]->m_tri_triaje_perimt_abdominal . ' cm.', 1, 1, 'C');
 
 $pdf->SetFont('helvetica', '', $titulo);
 $pdf->Cell(5, $h, '', 0, 0, 'L');
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(20, $h, 'F. RESP (X min)', 1, 0, 'C');
 $pdf->SetFont('helvetica', '', $titulo);
-$pdf->Cell(15, $h, $triaje312->data[0]->tri_fr, 1, 0, 'L');
+$pdf->Cell(15, $h, $triaje312->data[0]->m_tri_triaje_fr, 1, 0, 'C');
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(20, $h, 'F. CARD (X min)', 1, 0, 'C');
 $pdf->SetFont('helvetica', '', $titulo);
-$pdf->Cell(15, $h, $triaje312->data[0]->tri_fc, 1, 0, 'L');
+$pdf->Cell(15, $h, $triaje312->data[0]->m_tri_triaje_fc, 1, 0, 'C');
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(15, $h, 'PA', 1, 0, 'C');
 $pdf->SetFont('helvetica', '', $titulo);
-$pdf->Cell(15, $h, $triaje312->data[0]->tri_pa, 1, 0, 'L');
+$pdf->Cell(15, $h, $triaje312->data[0]->pa, 1, 0, 'C');
 $pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(30, $h, 'TEMPERATURA (°C)', 1, 0, 'C');
 $pdf->SetFont('helvetica', '', $titulo);
-$pdf->Cell(15, $h, $triaje312->data[0]->tri_temp, 1, 0, 'C');
+$pdf->Cell(15, $h, $triaje312->data[0]->m_tri_triaje_temperatura . ' °C', 1, 0, 'C');
 $pdf->SetFont('helvetica', 'B', $titulo);
 if ($paciente->data[0]->sexo == 'FEMENINO') {
     $pdf->Cell(10, $h, 'FUR:', 1, 0, 'C');
     $pdf->SetFont('helvetica', '', $titulo);
-    $pdf->Cell(15, $h, $triaje312->data[0]->tri_pa, 1, 1, 'L');
+    $pdf->Cell(15, $h, $triaje312->data[0]->m_tri_triaje_fur, 1, 1, 'C');
 } else {
     $pdf->Cell(25, $h, '', 1, 1, 'C');
 }
@@ -878,8 +880,10 @@ $pdf->Cell(25, $h * 2, 'AGUDEZA VISUAL', 1, 0, 'C');
 $pdf->Cell(30, $h, 'SIN CORREGIR', 1, 0, 'C');
 $pdf->Cell(30, $h, 'CORREGIDA', 1, 0, 'C');
 $pdf->Cell(35, $h, 'VISION DE PROFUNDIDAD', 1, 0, 'C');
-$pdf->Cell(25, $h, 'NORMAL', 1, 1, 'L');                //==================>VALUE
+$pdf->SetFont('helvetica', '', $titulo);
+$pdf->Cell(25, $h, $oftalmo312->data[0]->m_oft_oftalmo_esteropsia . '%', 1, 1, 'L');                //==================>VALUE   oftalmo312
 
+$pdf->SetFont('helvetica', 'B', $titulo);
 $pdf->Cell(5, $h, '', 0, 0, 'L');
 $pdf->Cell(25, $h, '', 0, 0, 'C');
 $pdf->Cell(25, $h, '', 0, 0, 'C');
@@ -888,27 +892,32 @@ $pdf->Cell(15, $h, 'OI', 1, 0, 'C');
 $pdf->Cell(15, $h, 'OD', 1, 0, 'C');
 $pdf->Cell(15, $h, 'OI', 1, 0, 'C');
 $pdf->Cell(35, $h, 'VISION DE COLORES', 1, 0, 'C');
-$pdf->Cell(25, $h, 'NORMAL', 1, 1, 'L');                //==================>VALUE
+$pdf->SetFont('helvetica', '', $titulo);
+$pdf->Cell(25, $h, $oftalmo312->data[0]->m_oft_oftalmo_ishihara, 1, 1, 'L');                //==================>VALUE
+$pdf->SetFont('helvetica', 'B', $titulo);
 
 $pdf->Cell(5, $h, '', 0, 0, 'L');
 $pdf->Cell(25, $h, '', 0, 0, 'C');
 $pdf->Cell(25, $h, 'VISION DE LEJOS', 1, 0, 'C');
-$pdf->Cell(15, $h, 'OD', 1, 0, 'C');                    //==================>VALUE
-$pdf->Cell(15, $h, 'OI', 1, 0, 'C');                    //==================>VALUE
-$pdf->Cell(15, $h, 'OD', 1, 0, 'C');                    //==================>VALUE
-$pdf->Cell(15, $h, 'OI', 1, 0, 'C');                    //==================>VALUE
-$pdf->Cell(35, $h, 'FONDO DE OJO', 1, 0, 'C');
-$pdf->Cell(25, $h, 'NORMAL', 1, 1, 'L');                //==================>VALUE
+$pdf->Cell(15, $h, $oftalmo312->data[0]->m_oft_oftalmo_sincorrec_vlejos_od, 1, 0, 'C');                    //==================>VALUE
+$pdf->Cell(15, $h, $oftalmo312->data[0]->m_oft_oftalmo_sincorrec_vlejos_oi, 1, 0, 'C');                    //==================>VALUE
+$pdf->Cell(15, $h, $oftalmo312->data[0]->m_oft_oftalmo_concorrec_vlejos_od, 1, 0, 'C');                    //==================>VALUE
+$pdf->Cell(15, $h, $oftalmo312->data[0]->m_oft_oftalmo_concorrec_vlejos_oi, 1, 0, 'C');                    //==================>VALUE
+$pdf->Cell(35, $h * 2, 'FONDO DE OJO', 1, 0, 'C');
+$pdf->SetFont('helvetica', '', $titulo);
+$pdf->Cell(25, $h, 'OD:' . $oftalmo312->data[0]->m_oft_oftalmo_fondo_od, 1, 1, 'L');                //==================>VALUE
+$pdf->SetFont('helvetica', 'B', $titulo);
 
 $pdf->Cell(5, $h, '', 0, 0, 'L');
 $pdf->Cell(25, $h, '', 0, 0, 'C');
 $pdf->Cell(25, $h, 'VISION DE CERCA', 1, 0, 'C');
-$pdf->Cell(15, $h, 'OD', 1, 0, 'C');                    //==================>VALUE
-$pdf->Cell(15, $h, 'OI', 1, 0, 'C');                    //==================>VALUE
-$pdf->Cell(15, $h, 'OD', 1, 0, 'C');                    //==================>VALUE
-$pdf->Cell(15, $h, 'OI', 1, 0, 'C');                    //==================>VALUE
-$pdf->Cell(35, $h, 'EXTERNO', 1, 0, 'C');
-$pdf->Cell(25, $h, 'NORMAL', 1, 1, 'L');                //==================>VALUE
+$pdf->Cell(15, $h, $oftalmo312->data[0]->m_oft_oftalmo_sincorrec_vcerca_od, 1, 0, 'C');                    //==================>VALUE
+$pdf->Cell(15, $h, $oftalmo312->data[0]->m_oft_oftalmo_sincorrec_vcerca_oi, 1, 0, 'C');                    //==================>VALUE
+$pdf->Cell(15, $h, $oftalmo312->data[0]->m_oft_oftalmo_concorrec_vcerca_od, 1, 0, 'C');                    //==================>VALUE
+$pdf->Cell(15, $h, $oftalmo312->data[0]->m_oft_oftalmo_concorrec_vcerca_oi, 1, 0, 'C');                    //==================>VALUE
+$pdf->Cell(35, $h, '', 0, 0, 'C');
+$pdf->SetFont('helvetica', '', $titulo);
+$pdf->Cell(25, $h, 'OI:' . $oftalmo312->data[0]->m_oft_oftalmo_fondo_oi, 1, 1, 'L');                //==================>VALUE
 
 
 $pdf->Ln(3);
@@ -1526,7 +1535,7 @@ $pdf->SetFont('helvetica', 'B', 7);
 
 $recom_text .= '';
 foreach ($recomendaciones->data as $i => $row) {
-  $recom_text .= $i + 1 . '.- ' . $row->recom_desc . "\n";
+    $recom_text .= $i + 1 . '.- ' . $row->recom_desc . "\n";
 }
 $pdf->SetFont('helvetica', '', 6);
 $pdf->Cell(5, $h, '', 0, 0, 'C', 0);
@@ -1557,7 +1566,7 @@ $pdf->Cell(90, $h, 'CMP ' . $busca_medico->data[0]->medico_cmp, 0, 1, 'L', 0);
 $pdf->ln(0);
 $pdf->Cell(5, $h, '', 0, 0, 'C', 0);
 $pdf->Cell(118, $h, '', 0, 0, 'L', 0);
-$pdf->Cell(57, 0, (($busca_medico->data[0]->medico_firma == '1')? $pdf->Image('images/firma/' . $busca_medico->data[0]->medico_cmp . '.jpg', '', '', 50, '', 'JPG'):''), 'T', 0, 'L', 0);
+$pdf->Cell(57, 0, (($busca_medico->data[0]->medico_firma == '1') ? $pdf->Image('images/firma/' . $busca_medico->data[0]->medico_cmp . '.jpg', '', '', 50, '', 'JPG') : ''), 'T', 0, 'L', 0);
 
 
 

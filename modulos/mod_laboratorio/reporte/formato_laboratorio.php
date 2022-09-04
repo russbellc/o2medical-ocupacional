@@ -81,10 +81,7 @@ $pdf->AddPage('P', 'A4');
 //CLINICA O2
 $pdf->Image('images/formato/logo_o2.jpg', 10, 5, 55, '', 'JPEG');
 // 
-
-if ($paciente->data[0]->medico_firma == '1') {
-    $pdf->Image('images/firma/' . $paciente->data[0]->medico_cmp . '.jpg', 140, 235, 50, '', 'JPG');
-}
+$pdf->Image('images/firma/030663.jpg', 140, 235, 50, '', 'JPG');
 
 
 $h = 3.5;

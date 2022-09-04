@@ -4,17 +4,8 @@
 .window{
     background-image: url(<[sys_images]>/user-icon.png) !important;
 }
-.biggertext {
-    font-size: 32px;
-} 
-.cam{
-    background-image: url(<[sys_images]>/cam.png) !important;
-}
 .add{
     background-image: url(<[sys_images]>/add.png) !important;
-}
-.list{
-    background-image: url(<[sys_images]>/list.png) !important;
 }
 .homes{
     background-image: url(<[sys_images]>/home_1.png) !important;
@@ -43,14 +34,7 @@
 .imprimir{
     background-image: url(<[sys_images]>/icon_print.png) !important;
 }
-.upload-icon {
-    background-image: url(<[sys_images]>/image_add.png) !important;
-    /*background: url(<[sys_images]>/image_add.png) no-repeat 0 0 !important;*/
-}
-.upload {
-    background-image: url(<[sys_images]>/upload.png) !important;
-    /*background: url(<[sys_images]>/image_add.png) no-repeat 0 0 !important;*/
-}
+
 .child-blue{ 
     background-color: #b8c7ff; 
     color: #004c99; 
@@ -68,20 +52,8 @@
 
 
 
-.stkBlak{
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#45484d+0,000000+100;Black+3D+%231 */
-    background: #45484d; /* Old browsers */
-    background: -moz-linear-gradient(top, #45484d 0%, #000000 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#45484d), color-stop(100%,#000000)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #45484d 0%,#000000 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #45484d 0%,#000000 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #45484d 0%,#000000 100%); /* IE10+ */
-    background: linear-gradient(to bottom, #45484d 0%,#000000 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
-    color: white;
-    font-weight: bold;
-    text-align: right;
-}
+
+
 .stkRed{
     background: #ff3019; /* Old browsers */
     background: -moz-linear-gradient(top,  #ff3019 0%, #990503 100%); /* FF3.6+ */
@@ -130,6 +102,20 @@
     background: -ms-linear-gradient(top, #7db9e8 0%,#2989d8 50%,#2989d8 50%,#1e5799 92%,#1e5799 100%); /* IE10+ */
     background: linear-gradient(to bottom, #7db9e8 0%,#2989d8 50%,#2989d8 50%,#1e5799 92%,#1e5799 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7db9e8', endColorstr='#1e5799',GradientType=0 ); /* IE6-9 */
+    color: white;
+    font-weight: bold;
+    text-align: right;
+}
+.stkBlak{
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#45484d+0,000000+100;Black+3D+%231 */
+    background: #45484d; /* Old browsers */
+    background: -moz-linear-gradient(top, #45484d 0%, #000000 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#45484d), color-stop(100%,#000000)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #45484d 0%,#000000 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #45484d 0%,#000000 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #45484d 0%,#000000 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #45484d 0%,#000000 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
     color: white;
     font-weight: bold;
     text-align: right;
