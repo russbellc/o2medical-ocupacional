@@ -176,7 +176,7 @@ script;
     }
 
     public function sys_getlogo() {
-        return '<div class="post-body entry-content" expr:id="&quot;post-body-&quot; + data:post.id" itemprop="articleBody" oncontextmenu="return false" ondragstart="return false" onmousedown="return false" onselectstart="return false"><center><IMG SRC="images/' . $this->user->emp_id . '/logo.svg" style="padding: 0 0 0 0" width="190" ></center></div>';
+        return '<div class="post-body entry-content" expr:id="&quot;post-body-&quot; + data:post.id" itemprop="articleBody" oncontextmenu="return false" ondragstart="return false" onmousedown="return false" onselectstart="return false" style="background-color:white"><center><IMG SRC="images/1/logo_o2.jpg" style="padding: 15px 0 20px 0" width="190" ></center></div>';
     }
 
     public function sys_usuperfiles() {

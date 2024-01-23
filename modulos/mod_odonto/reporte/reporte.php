@@ -1,24 +1,31 @@
 <?php
 
-class MYPDF extends TCPDF {
+class MYPDF extends TCPDF
+{
 
     public $user;
 
-    public function Header() {
-        
+    public function Header()
+    {
     }
 
-    public function Footer() {
+    public function Footer()
+    {
         $this->SetY(-15);
         $this->SetFont('helvetica', 'I', 8);
         $this->Cell(0, 10, $this->user->sed_desc, 0, false, 'L', 0, '', 0, false, 'T', 'M');
         $this->Cell(0, 10, 'Pagina - ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, false, 'R', 0, '', 0, false, 'T', 'M');
     }
-
 }
 
 $pdf = new MYPDF(
-        PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    PDF_PAGE_ORIENTATION,
+    PDF_UNIT,
+    PDF_PAGE_FORMAT,
+    true,
+    'UTF-8',
+    false
+);
 $model = new model();
 $pdf->user = $model->user;
 
@@ -32,8 +39,8 @@ $pdf->SetKeywords('');
 
 // Contenido de la cabecera
 // Fuente de la cabecera y el pie de página
-$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+$pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
 // Márgenes
 $pdf->SetMargins(PDF_MARGIN_LEFT, 15, PDF_MARGIN_RIGHT);
@@ -93,7 +100,7 @@ $pdf->Cell(20, $h, ': ' . $datos_report->data[0]->pac_ndoc, $f, 1);
 $pdf->SetFont('helvetica', 'B', $texh);
 $pdf->Cell($w - 25, $h, 'EMPRESA ', $f, 0, $ali);
 $pdf->SetFont('helvetica', '', $texh2);
-$pdf->Cell(115, $h, ': ' . $datos_report->data [0]->EMPRESA, $f, 0);
+$pdf->Cell(115, $h, ': ' . $datos_report->data[0]->EMPRESA, $f, 0);
 
 $pdf->SetFont('helvetica', 'B', $texh);
 $pdf->Cell(22, $h, 'TIPO DE FICHA ', $f, 0, $ali);
@@ -108,12 +115,12 @@ $pdf->Cell($w2 + 35, $h, ': ' . $datos_report->data[0]->adm_act, $f, 0);
 $pdf->SetFont('helvetica', 'B', $texh);
 $pdf->Cell(10, $h, 'SEXO ', $f, 0, $ali);
 $pdf->SetFont('helvetica', '', $texh2);
-$pdf->Cell(21, $h, ': ' . $datos_report->data [0]->SEXO, $f, 0);
+$pdf->Cell(21, $h, ': ' . $datos_report->data[0]->SEXO, $f, 0);
 
 $pdf->SetFont('helvetica', 'B', $texh);
 $pdf->Cell(31, $h, 'FECHA DE REGISTRO ', $f, 0, $ali);
 $pdf->SetFont('helvetica', '', $texh2);
-$pdf->Cell($w2, $h, ': ' . $datos_report->data [0]->FECHA, $f, 1);
+$pdf->Cell($w2, $h, ': ' . $datos_report->data[0]->FECHA, $f, 1);
 
 
 $pdf->Ln(5);
@@ -173,12 +180,13 @@ foreach ($diente_1->data as $i => $row) {
         }
     }
     $p = $p + 10.8;
-    
-    
-    //$link="http://app.cm-optima.com/extras";
-    
-    $pdf->ImageSVG("http://app.cm-optima.com/extras/svg.php?color1=$fondo1&color2=$fondo2&color3=$fondo3&color4=$fondo4&color5=$fondo5", $p, 78, 30, 30);
-    $pdf->ImageSVG("http://app.cm-optima.com/extras/diag.php?diagnos=$diagnos", $p, 78, 30, 30);
+
+
+    $link="http://localhost/Dropbox/saludocupacional/kaori/app_kaori/extras";
+
+    // $pdf->ImageSVG('images/logo_pdf.svg', 8, 6, '', '', $link = '', '', 'T');
+    $pdf->ImageSVG("$link/svg.php?color1=$fondo1&color2=$fondo2&color3=$fondo3&color4=$fondo4&color5=$fondo5", $p, 78, 30, 30);
+    $pdf->ImageSVG("$link/diag.php?diagnos=$diagnos", $p, 78, 30, 30);
 }
 
 
@@ -215,8 +223,8 @@ foreach ($diente_2->data as $i => $row) {
         }
     }
     $p = $p + 10.8;
-    $pdf->ImageSVG("http://app.cm-optima.com/extras/svg.php?color1=$fondo1&color2=$fondo2&color3=$fondo3&color4=$fondo4&color5=$fondo5", $p, 89, 30, 30);
-    $pdf->ImageSVG("http://app.cm-optima.com/extras/diag.php?diagnos=$diagnos", $p, 89, 30, 30);
+    $pdf->ImageSVG("$link/svg.php?color1=$fondo1&color2=$fondo2&color3=$fondo3&color4=$fondo4&color5=$fondo5", $p, 89, 30, 30);
+    $pdf->ImageSVG("$link/diag.php?diagnos=$diagnos", $p, 89, 30, 30);
 }
 
 
@@ -256,8 +264,8 @@ foreach ($diente_3->data as $i => $row) {
         }
     }
     $p = $p + 10.8;
-    $pdf->ImageSVG("http://app.cm-optima.com/extras/svg.php?color1=$fondo1&color2=$fondo2&color3=$fondo3&color4=$fondo4&color5=$fondo5", $p, 117, 30, 30);
-    $pdf->ImageSVG("http://app.cm-optima.com/extras/diag.php?diagnos=$diagnos", $p, 117, 30, 30);
+    $pdf->ImageSVG("$link/svg.php?color1=$fondo1&color2=$fondo2&color3=$fondo3&color4=$fondo4&color5=$fondo5", $p, 117, 30, 30);
+    $pdf->ImageSVG("$link/diag.php?diagnos=$diagnos", $p, 117, 30, 30);
 }
 
 
@@ -296,8 +304,8 @@ foreach ($diente_4->data as $i => $row) {
         }
     }
     $p = $p + 10.8;
-    $pdf->ImageSVG("http://app.cm-optima.com/extras/svg.php?color1=$fondo1&color2=$fondo2&color3=$fondo3&color4=$fondo4&color5=$fondo5", $p, 128, 30, 30);
-    $pdf->ImageSVG("http://app.cm-optima.com/extras/diag.php?diagnos=$diagnos", $p, 128, 30, 30);
+    $pdf->ImageSVG("$link/svg.php?color1=$fondo1&color2=$fondo2&color3=$fondo3&color4=$fondo4&color5=$fondo5", $p, 128, 30, 30);
+    $pdf->ImageSVG("$link/diag.php?diagnos=$diagnos", $p, 128, 30, 30);
 }
 
 
@@ -550,4 +558,4 @@ $pdf->SetAlpha(0.1);
 $pdf->ImageSVG("images/fondo_pdf.svg", 50, 90, 110, '', $link = '', 'PNG');
 $pdf->SetAlpha(0.9);
 $pdf->setVisibility('all');
-$pdf->Output('ODONTOGRAMA_'.$_REQUEST['adm'].'.pdf', 'I');
+$pdf->Output('ODONTOGRAMA_' . $_REQUEST['adm'] . '.pdf', 'I');

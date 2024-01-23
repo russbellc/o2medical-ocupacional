@@ -121,11 +121,6 @@ $pdf->SetFont('helvetica', 'B', $texh);
 $pdf->Cell(180, $h, 'ODONTOGRAMA', 0, 1, 'C', 1);
 //$pdf->Ln(6);
 
-
-
-    
-    
-    //$link="http://app.cm-optima.com/extras";
     
 
 
@@ -195,6 +190,9 @@ foreach ($diente_1->data as $i => $row) {
 $pdf->ln(3);
 
 
+
+$link="http://localhost/Dropbox/saludocupacional/kaori/app_kaori/extras";
+
 //nivel pieza1
 $pdf->Cell(8, 15.75, '', 0, 0, 'C', 0); //comentario
 $p = 15;
@@ -226,7 +224,7 @@ foreach ($diente_1->data as $i => $row) {
         }
     }
     $p = $p + 10;
-    $pdf->ImageSVG("http://app.cm-optima.com/extras/svg$pose.php?color1=$fondo3&color2=$fondo4&color3=$fondo2&color4=$fondo5&color5=$fondo1", $p, 70, 50, 50);
+    $pdf->ImageSVG("$link/svg$pose.php?color1=$fondo3&color2=$fondo4&color3=$fondo2&color4=$fondo5&color5=$fondo1", $p, 70, 50, 50);
 }
 $p = 14.5;
 foreach ($diente_1->data as $i => $row) {
@@ -278,7 +276,7 @@ foreach ($diente_2->data as $i => $row2) {
         }
     }
     $p = $p + 10;
-    $pdf->ImageSVG("http://app.cm-optima.com/extras/svg$pose.php?color1=$fondo3&color2=$fondo4&color3=$fondo2&color4=$fondo5&color5=$fondo1", $p, 86, 50, 50);
+    $pdf->ImageSVG("$link/svg$pose.php?color1=$fondo3&color2=$fondo4&color3=$fondo2&color4=$fondo5&color5=$fondo1", $p, 86, 50, 50);
 }
 $p = 44.5;
 foreach ($diente_2->data as $i => $row2) {
@@ -344,7 +342,7 @@ foreach ($diente_3->data as $i => $row3) {
         }
     }
     $p = $p + 10;
-    $pdf->ImageSVG("http://app.cm-optima.com/extras/svg$pose.php?color1=$fondo3&color2=$fondo4&color3=$fondo2&color4=$fondo5&color5=$fondo1", $p, 116, 50, 50);
+    $pdf->ImageSVG("$link/svg$pose.php?color1=$fondo3&color2=$fondo4&color3=$fondo2&color4=$fondo5&color5=$fondo1", $p, 116, 50, 50);
 }
 $p = 44.5;
 foreach ($diente_3->data as $i => $row3) {
@@ -392,7 +390,7 @@ foreach ($diente_4->data as $i => $row4) {
         }
     }
     $p = $p + 10;
-    $pdf->ImageSVG("http://app.cm-optima.com/extras/svg$pose.php?color1=$fondo3&color2=$fondo4&color3=$fondo2&color4=$fondo5&color5=$fondo1", $p, 133, 50, 50);
+    $pdf->ImageSVG("$link/svg$pose.php?color1=$fondo3&color2=$fondo4&color3=$fondo2&color4=$fondo5&color5=$fondo1", $p, 133, 50, 50);
 }
 $p = 14.3;
 foreach ($diente_4->data as $i => $row4) {

@@ -74,6 +74,14 @@ $pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
 $pdf->Image('images/formato/contactos_o2.jpg', 145, 5, 50, '', 'JPEG');
 // $pdf->ImageSVG('images/logo_pdf.svg', 4, 6, '', '', $link = '', '', 'T');
 
+
+$pdf->setVisibility('screen');
+$pdf->SetAlpha(0.3);
+$pdf->Image('images/formato/marca_agua_o2.jpg', 25, 70, 160, '', 'JPEG');
+$pdf->SetAlpha(1);
+$pdf->setVisibility('all');
+
+
 // TITULO
 $pdf->SetFont('helveticaB', 'B', 12);
 $pdf->Cell(0, 0, 'HOJA DE RUTA - EMO: ' . $pac->data[0]->adm_id, 0, 1, 'C');
@@ -214,11 +222,7 @@ $pdf->Cell(180, $h, "", 'T', 1, 'C');
 $pdf->ln(2);
 $pdf->SetFont('helvetica', 'B', 8);
 $pdf->Cell(180, 5, '** OJO: AL CONCLUIR ENTREGAR ESTA HOJA EN TECNOLOGIA DE LA INFORMACIÓN', 0, 0, 'L');
-$pdf->setVisibility('screen');
-$pdf->SetAlpha(8);
 
-$pdf->Image('images/formato/marca_agua_o2.jpg', 25, 70, 160, '', 'JPEG');
-$pdf->setVisibility('all');
 
 
 
@@ -230,6 +234,13 @@ $pdf->setJPEGQuality(100);
 
 //clinica O2
 $pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
+
+
+$pdf->setVisibility('screen');
+$pdf->SetAlpha(0.3);
+$pdf->Image('images/formato/marca_agua_o2.jpg', 25, 70, 160, '', 'JPEG');
+$pdf->SetAlpha(1);
+$pdf->setVisibility('all');
 
 
 $pdf->SetFont('helvetica', 'B', 15);
@@ -326,6 +337,13 @@ $pdf->setJPEGQuality(100);
 $pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
 
 
+$pdf->setVisibility('screen');
+$pdf->SetAlpha(0.3);
+$pdf->Image('images/formato/marca_agua_o2.jpg', 25, 70, 160, '', 'JPEG');
+$pdf->SetAlpha(1);
+$pdf->setVisibility('all');
+
+
 $pdf->Ln(10);
 $pdf->SetFont('helvetica', 'B', 15);
 $pdf->Cell(0, 0, 'DECLARACION JURADA', 0, 1, 'C');
@@ -385,6 +403,13 @@ $pdf->setJPEGQuality(100);
 
 //clinica O2
 $pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
+
+
+$pdf->setVisibility('screen');
+$pdf->SetAlpha(0.3);
+$pdf->Image('images/formato/marca_agua_o2.jpg', 25, 70, 160, '', 'JPEG');
+$pdf->SetAlpha(1);
+$pdf->setVisibility('all');
 
 
 // $pdf->Ln(10);
@@ -640,6 +665,13 @@ if ($rpr_prueba == 1) {
     $pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
 
 
+$pdf->setVisibility('screen');
+$pdf->SetAlpha(0.3);
+$pdf->Image('images/formato/marca_agua_o2.jpg', 25, 70, 160, '', 'JPEG');
+$pdf->SetAlpha(1);
+$pdf->setVisibility('all');
+
+
     $pdf->Ln(10);
     $pdf->SetFont('helvetica', 'B', 15);
     $pdf->Cell(0, 0, 'CONSENTIMIENTO PARA REALIZAR ', 0, 1, 'C');
@@ -699,6 +731,13 @@ if ($hcg == 1 && $pac->data[0]->pac_sexo == 'F') {
 
     //clinica O2
     $pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
+
+
+$pdf->setVisibility('screen');
+$pdf->SetAlpha(0.3);
+$pdf->Image('images/formato/marca_agua_o2.jpg', 25, 70, 160, '', 'JPEG');
+$pdf->SetAlpha(1);
+$pdf->setVisibility('all');
 
 
     $pdf->Ln(10);
@@ -762,6 +801,13 @@ if ($pac->data[0]->pac_sexo == 'F') {
     $pdf->Image('images/formato/logo_o2.jpg', 15, 5, 55, '', 'JPEG');
 
 
+$pdf->setVisibility('screen');
+$pdf->SetAlpha(0.3);
+$pdf->Image('images/formato/marca_agua_o2.jpg', 25, 70, 160, '', 'JPEG');
+$pdf->SetAlpha(1);
+$pdf->setVisibility('all');
+
+
     $pdf->Ln(30);
     $pdf->SetFont('helvetica', 'B', 15);
     $pdf->Cell(0, 0, 'DECLARACIÓN JURADO DE NO ESTAR EMBARAZADA', 0, 1, 'C');
@@ -799,9 +845,6 @@ Autorizo al personal de PREVENCIONES OCUPACIONALES DE SALUD para que lleve a cab
 
 
 
-
-$pdf->setVisibility('screen');
-$pdf->ImageSVG("images/fondo_pdf.svg", 50, 90, 110, '', $link = '', '', 'T', false, 300, '', false, false, 0, false, false, false);
 
 
 $pdf->Output('HOJA DE RUTA.pdf', 'I');

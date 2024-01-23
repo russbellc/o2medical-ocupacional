@@ -13,9 +13,20 @@ define("__log", __DIR__."/errors.log.txt")
 */
 
 #datos configuracion local solo emergencias
-define("__driver","mysql");
+/*define("__driver","mysql");
 define("__dbserver", "localhost");
 define("__dbname", "db_kaori_bk_1");
+define("__dbuser", "root");
+define("__dbpass", "");
+define("__sesname","code");
+define("__modpath", "modulos");
+define("__tinactivida", 28800);
+define("__log", __DIR__."/errors.log.txt")*/
+
+define("__driver","mysql");
+define("__dbserver", "localhost");
+// define("__dbname", "db_kaori_bk_1");
+define("__dbname", "db_o2Medical");
 define("__dbuser", "root");
 define("__dbpass", "");
 define("__sesname","code");
