@@ -1,34 +1,10 @@
 <?php
-/*
-#datos configuracion
-define("__driver","mysql");
-define("__dbserver", "cm-optima.com");
-define("__dbname", "livecode_db_kaori");
-define("__dbuser", "livecode_vigpro");
-define("__dbpass", "Admin_01");
-define("__sesname","code");
-define("__modpath", "modulos");
-define("__tinactivida", 28800);
-define("__log", __DIR__."/errors.log.txt")
-*/
-
-#datos configuracion local solo emergencias
-/*define("__driver","mysql");
-define("__dbserver", "localhost");
-define("__dbname", "db_kaori_bk_1");
-define("__dbuser", "root");
-define("__dbpass", "");
-define("__sesname","code");
-define("__modpath", "modulos");
-define("__tinactivida", 28800);
-define("__log", __DIR__."/errors.log.txt")*/
 
 define("__driver","mysql");
-define("__dbserver", "localhost");
-// define("__dbname", "db_kaori_bk_1");
-define("__dbname", "db_o2Medical");
-define("__dbuser", "root");
-define("__dbpass", "");
+define("__dbserver", "127.0.0.1");
+define("__dbname", "u679470698_o2medical");
+define("__dbuser", "u679470698_o2medical");
+define("__dbpass", "X6$6v|GF7/x");
 define("__sesname","code");
 define("__modpath", "modulos");
 define("__tinactivida", 28800);
